@@ -97,8 +97,57 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/shinichi-dz/phucshins
   })
   
   AddButton(Tab2o, {
-     Name = "script Quantum Hub",
+     Name = "script Zero x Hub Kaitun",
     Callback = function()
 	  loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "script Quantum Hub",
+    Callback = function()
+	  getgenv().Team = "Pirates"
+getgenv().Config = {
+    ["Farm"] = {
+        ["Skip Level"] = true,
+        ["Raids"] = { 
+            ["Lock Fragment"] = 15000,
+            ["Awakening Fruit"] = false
+        },
+        ["Lock Race"] = {},
+        ["Evo Race"] = true
+    },
+    ["Quest"] = {
+        ["Citizen Quest"] = true,
+        ["RGP Color"] = true,
+        ["Pull Lever"] = false
+    },
+    ["Item"] = {
+        ["Get Pole"] = false,
+        ["Get Saber"] = true,
+        ["Get Soul Cane"] = true,
+        ["Get Bisento"] = true,
+        ["Get Rengoku"] = true,
+        ["Get Midnight Blade"] = true,
+        ["Skull Guitar"] = true,
+        ["Cursed Dual Katana"] = true,
+        ["Get Kabucha"] = true,
+        ["Get Mirror Fractal when have God's Chalice"] = true,
+        ["Collect Berries"] = false
+    },
+    ["Settings"] = {
+        ["FPS Boost"] = true,
+        ["Black Screen"] = false,
+        ["Method"] = "Half", -- Mastery Sword
+        ["Buy Zoro Sw"] = false,
+        ["Bring Range"] = 350,
+        ["Hop if any player is nearby"] = true
+    },
+    ["Fruit"] = {
+        ["Select Fruit"] = "", -- Dough-Dough
+        ["Snipe Fruit"] = false
+    }
+} 
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ca16cb42816b395e079fa7a114352ba9.lua"))()
   end
   })
