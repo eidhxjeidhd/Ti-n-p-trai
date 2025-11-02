@@ -35,119 +35,41 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 ------- BUTTON
     
     AddButton(Tab1o, {
-     Name = "script TDT Hub Kaitun",
+     Name = "script redz hub",
     Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/TRANDUYTHINH/scriptdt/refs/heads/main/7bc2bab10110ef77%20(1).lua"))()
+	  local Settings = {
+JoinTeam = "Pirates"; -- Pirates/Marines
+Translator = true; -- true/false
+}
+getgenv().BETA_VERSION = true
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))(Settings)
   end
   })
-  
-  AddButton(Tab1o, {
-     Name = "script Crystal Hub Kaitun",
-    Callback = function()
-	  getgenv().Configs = {
-    ["Quest"] = {
-        ["Evo Race V2"] = true;
-        ["Evo Race V3"] = true;
-        ["RGB Haki"] = true;
-        ["Pull Lerver"] = true;
-    };
-        ["Webhook"] = {
-        ["Url Webhook"] = "";
-        ["Ping discord"] = "";      
-        ["Time Send"] = "10m";
-    };
-    ["Sword"] = {
-        "Dual-Headed Blade";
-        "Smoke Admiral";
-        "Wardens Sword";
-        "Cutlass";
-        "Katana";
-        "Dual Katana";
-        "Triple Katana";
-        "Iron Mace";
-        "Saber";
-        "Pole (1st Form)";
-        "Gravity Blade";
-        "Longsword";
-        "Rengoku";
-        "Midnight Blade";
-        "Soul Cane";
-        "Bisento";
-        "Yama";
-        "Tushita";
-        "Cursed Dual Katana";
-    };
-    ["Gun"] = {
-        "Skull Guitar";
-        "Kabucha";
-        "Venom Bow";
-        "Musket";
-        "Flintlock";
-        "Refined Slingshot"; 
-        "Magma Blaster";
-        "Dual Flintlock";
-        "Cannon";
-        "Bizarre Revolver";
-        "Bazooka";
-    };
-    ["FPS Booster"] = true;
-};
-loadstring(game:HttpGet("https://raw.githubusercontent.com/shinichi-dz/phucshinsayhi/refs/heads/main/KaitunBloxFruit.lua"))()
-  end
-  })
-  
-  AddButton(Tab2o, {
-     Name = "script Zero x Hub Kaitun",
+
+AddButton(Tab1o, {
+     Name = "script ?",
     Callback = function()
 	  loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
   end
   })
-  
-  AddButton(Tab2o, {
-     Name = "script Quantum Hub",
+
+AddButton(Tab1o, {
+     Name = "script NgocBongVn",
     Callback = function()
-	  getgenv().Team = "Pirates"
-getgenv().Config = {
-    ["Farm"] = {
-        ["Skip Level"] = true,
-        ["Raids"] = { 
-            ["Lock Fragment"] = 15000,
-            ["Awakening Fruit"] = false
-        },
-        ["Lock Race"] = {},
-        ["Evo Race"] = true
-    },
-    ["Quest"] = {
-        ["Citizen Quest"] = true,
-        ["RGP Color"] = true,
-        ["Pull Lever"] = false
-    },
-    ["Item"] = {
-        ["Get Pole"] = false,
-        ["Get Saber"] = true,
-        ["Get Soul Cane"] = true,
-        ["Get Bisento"] = true,
-        ["Get Rengoku"] = true,
-        ["Get Midnight Blade"] = true,
-        ["Skull Guitar"] = true,
-        ["Cursed Dual Katana"] = true,
-        ["Get Kabucha"] = true,
-        ["Get Mirror Fractal when have God's Chalice"] = true,
-        ["Collect Berries"] = false
-    },
-    ["Settings"] = {
-        ["FPS Boost"] = true,
-        ["Black Screen"] = false,
-        ["Method"] = "Half", -- Mastery Sword
-        ["Buy Zoro Sw"] = false,
-        ["Bring Range"] = 350,
-        ["Hop if any player is nearby"] = true
-    },
-    ["Fruit"] = {
-        ["Select Fruit"] = "", -- Dough-Dough
-        ["Snipe Fruit"] = false
-    }
-} 
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ca16cb42816b395e079fa7a114352ba9.lua"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/ngocbonggaming/script/refs/heads/main/NgocBongVn.lua"))()
+  end
+  })
+
+AddButton(Tab1o, {
+     Name = "script ong hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/479e9f38148118df2d14fc0795ece576.lua"))()
+  end
+  })
+ 
+AddButton(Tab1o, {
+     Name = "script w-azure",
+    Callback = function()
+	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/85e904ae1ff30824c1aa007fc7324f8f.lua"))()
   end
   })
