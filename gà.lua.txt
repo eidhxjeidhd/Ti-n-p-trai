@@ -561,6 +561,3 @@ for name, cf in pairs(UltraLocations) do
         Character.HumanoidRootPart.CFrame = cf
     end)
 end
-
--- ████████ ULTRA MISC FEATURES ████████
-local MiscSection = CreateUltraSection(MiscTab, "ULTRA
