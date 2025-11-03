@@ -1,4 +1,5 @@
--- Blox Fruits Auto Farm Teleport & Shop Script
+-- Gà Gaming Hub - Blox Fruits Script
+-- Professional UI like Redz Hub
 -- Created by Gà Gaming
 
 local Players = game:GetService("Players")
@@ -6,418 +7,334 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local localPlayer = Players.LocalPlayer
 
-local Remotes = ReplicatedStorage.Remotes
-
--- ID ẢNH CÁ NHÂN CỦA EM
-local GAMING_IMAGE_IDS = {
-    Logo = "rbxassetid://84957548476668",  -- ID ảnh cá nhân của em
-    Background = "rbxassetid://84957548476668",  -- Dùng chung hoặc thay ID khác
-    Banner = "rbxassetid://84957548476668",  -- Dùng chung hoặc thay ID khác
-    Profile = "rbxassetid://84957548476668"  -- Ảnh profile
+-- Configuration
+getgenv().GaGaming = {
+    AutoFarm = false,
+    AutoTeleport = false,
+    AutoNewWorld = false,
+    AutoThirdWorld = false,
+    AutoBartilo = false,
+    AutoBoss = false,
+    AutoSword = false,
+    AutoSaber = false,
+    AutoPole = false,
+    AutoFactory = false,
+    AutoBuyFruits = false,
+    AutoStoreFruits = false,
+    AutoRipIndra = false,
+    AutoCakePrince = false,
+    AutoFarmBone = false,
+    AutoEctoplasm = false,
+    AutoKillPlayer = false,
+    AutoMuscleBeach = false,
+    AutoSeaBeast = false,
+    AutoTushita = false,
+    AutoYama = false,
+    AutoElite = false,
+    AutoRainbowHaki = false,
+    AutoDarkBeard = false,
+    AutoBuddySword = false
 }
 
--- Cấu hình Auto Farm
-_G.AutoFarm = true
-_G.AutoTeleport = true
-_G.AutoBuyDevilFruits = true
-_G.AutoBuySwords = true
-_G.AutoFarmBones = false
-_G.AutoCollectDrops = true
-_G.AutoSkipBusyServer = false
+-- Modern UI Library
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RobloxianRoblox/UI-Libraries/main/Stormwind%20UI/Source.lua"))()
 
--- Tạo GUI Menu đẹp với ảnh của em
-function createGamingGUI()
-    local ScreenGui = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local LogoImage = Instance.new("ImageLabel")
-    local TitleLabel = Instance.new("TextLabel")
-    local CloseButton = Instance.new("TextButton")
-    local ProfileImage = Instance.new("ImageLabel")
-    
-    -- ScreenGui
-    ScreenGui.Name = "GaGamingMenu"
-    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    
-    -- Main Frame
-    MainFrame.Name = "MainFrame"
-    MainFrame.Parent = ScreenGui
-    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
-    MainFrame.Size = UDim2.new(0, 450, 0, 550)
-    MainFrame.Active = true
-    MainFrame.Draggable = true
-    
-    -- Background với ảnh của em
-    local Background = Instance.new("ImageLabel")
-    Background.Name = "Background"
-    Background.Parent = MainFrame
-    Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Background.BackgroundTransparency = 1.000
-    Background.Size = UDim2.new(1, 0, 1, 0)
-    Background.Image = GAMING_IMAGE_IDS.Background
-    Background.ImageColor3 = Color3.fromRGB(50, 50, 50)
-    Background.ImageTransparency = 0.8
-    Background.ScaleType = Enum.ScaleType.Crop
-    Background.TileSize = UDim2.new(0, 100, 0, 100)
-    
-    -- Overlay để dễ nhìn text
-    local Overlay = Instance.new("Frame")
-    Overlay.Name = "Overlay"
-    Overlay.Parent = MainFrame
-    Overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    Overlay.BackgroundTransparency = 0.3
-    Overlay.Size = UDim2.new(1, 0, 1, 0)
-    Overlay.ZIndex = 0
-    
-    -- Logo chính với ảnh của em
-    LogoImage.Name = "LogoImage"
-    LogoImage.Parent = MainFrame
-    LogoImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    LogoImage.BackgroundTransparency = 1.000
-    LogoImage.Position = UDim2.new(0.35, 0, 0.02, 0)
-    LogoImage.Size = UDim2.new(0, 120, 0, 120)
-    LogoImage.Image = GAMING_IMAGE_IDS.Logo
-    LogoImage.ScaleType = Enum.ScaleType.Crop
-    LogoImage.ZIndex = 3
-    
-    -- Thêm khung viền cho logo
-    local LogoCorner = Instance.new("UICorner")
-    LogoCorner.CornerRadius = UDim.new(0.2, 0)
-    LogoCorner.Parent = LogoImage
-    
-    local LogoStroke = Instance.new("UIStroke")
-    LogoStroke.Parent = LogoImage
-    LogoStroke.Color = Color3.fromRGB(255, 215, 0)
-    LogoStroke.Thickness = 3
-    
-    -- Ảnh profile nhỏ
-    ProfileImage.Name = "ProfileImage"
-    ProfileImage.Parent = MainFrame
-    ProfileImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    ProfileImage.BackgroundTransparency = 1.000
-    ProfileImage.Position = UDim2.new(0.05, 0, 0.03, 0)
-    ProfileImage.Size = UDim2.new(0, 60, 0, 60)
-    ProfileImage.Image = GAMING_IMAGE_IDS.Profile
-    ProfileImage.ScaleType = Enum.ScaleType.Crop
-    ProfileImage.ZIndex = 3
-    
-    local ProfileCorner = Instance.new("UICorner")
-    ProfileCorner.CornerRadius = UDim.new(0.5, 0)
-    ProfileCorner.Parent = ProfileImage
-    
-    local ProfileStroke = Instance.new("UIStroke")
-    ProfileStroke.Parent = ProfileImage
-    ProfileStroke.Color = Color3.fromRGB(0, 150, 255)
-    ProfileStroke.Thickness = 2
-    
-    -- Title
-    TitleLabel.Name = "TitleLabel"
-    TitleLabel.Parent = MainFrame
-    TitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TitleLabel.BackgroundTransparency = 1.000
-    TitleLabel.Position = UDim2.new(0, 0, 0.25, 0)
-    TitleLabel.Size = UDim2.new(1, 0, 0, 50)
-    TitleLabel.Font = Enum.Font.GothamBlack
-    TitleLabel.Text = "🐔 GÀ GAMING\nAUTO SCRIPT"
-    TitleLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
-    TitleLabel.TextScaled = true
-    TitleLabel.TextSize = 20.000
-    TitleLabel.TextWrapped = true
-    TitleLabel.ZIndex = 3
-    
-    -- Close Button
-    CloseButton.Name = "CloseButton"
-    CloseButton.Parent = MainFrame
-    CloseButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
-    CloseButton.BorderSizePixel = 0
-    CloseButton.Position = UDim2.new(0.85, 0, 0.03, 0)
-    CloseButton.Size = UDim2.new(0, 40, 0, 40)
-    CloseButton.Font = Enum.Font.GothamBlack
-    CloseButton.Text = "X"
-    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    CloseButton.TextSize = 16.000
-    CloseButton.ZIndex = 3
-    
-    local CloseCorner = Instance.new("UICorner")
-    CloseCorner.CornerRadius = UDim.new(0.5, 0)
-    CloseCorner.Parent = CloseButton
-    
-    CloseButton.MouseButton1Click:Connect(function()
-        ScreenGui:Destroy()
-    end)
-    
-    -- Tạo các nút chức năng
-    createButtons(MainFrame)
-    
-    -- Hiệu ứng hover cho nút đóng
-    CloseButton.MouseEnter:Connect(function()
-        CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    end)
-    
-    CloseButton.MouseLeave:Connect(function()
-        CloseButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
-    end)
-    
-    return ScreenGui
-end
+local Window = Library:CreateWindow({
+    Name = "🐔 Gà Gaming Hub | Blox Fruits",
+    Theme = "Dark",
+    Size = UDim2.new(0, 500, 0, 450)
+})
 
--- Tạo các nút điều khiển
-function createButtons(parent)
-    local buttonConfigs = {
-        {"🔄 Auto Farm", "AutoFarm", UDim2.new(0.1, 0, 0.35, 0), Color3.fromRGB(0, 150, 255)},
-        {"⚡ Auto Teleport", "AutoTeleport", UDim2.new(0.55, 0, 0.35, 0), Color3.fromRGB(0, 200, 100)},
-        {"🍎 Buy Fruits", "AutoBuyDevilFruits", UDim2.new(0.1, 0, 0.45, 0), Color3.fromRGB(255, 100, 100)},
-        {"⚔️ Buy Swords", "AutoBuySwords", UDim2.new(0.55, 0, 0.45, 0), Color3.fromRGB(150, 100, 255)},
-        {"💀 Farm Bones", "AutoFarmBones", UDim2.new(0.1, 0, 0.55, 0), Color3.fromRGB(100, 100, 100)},
-        {"🎒 Collect Drops", "AutoCollectDrops", UDim2.new(0.55, 0, 0.55, 0), Color3.fromRGB(255, 200, 0)},
-        {"🛡️ Safety Mode", "AutoSkipBusyServer", UDim2.new(0.325, 0, 0.65, 0), Color3.fromRGB(255, 150, 50)}
-    }
-    
-    for _, config in pairs(buttonConfigs) do
-        local text, variable, position, color = config[1], config[2], config[3], config[4]
-        
-        local button = Instance.new("TextButton")
-        button.Name = variable .. "Button"
-        button.Parent = parent
-        button.BackgroundColor3 = color
-        button.BorderSizePixel = 0
-        button.Position = position
-        button.Size = UDim2.new(0, 160, 0, 45)
-        button.Font = Enum.Font.GothamBold
-        button.Text = text
-        button.TextColor3 = Color3.fromRGB(255, 255, 255)
-        button.TextSize = 12.000
-        button.TextWrapped = true
-        button.ZIndex = 3
-        
-        -- Thêm góc bo tròn
-        local buttonCorner = Instance.new("UICorner")
-        buttonCorner.CornerRadius = UDim.new(0.2, 0)
-        buttonCorner.Parent = button
-        
-        -- Thêm viền
-        local buttonStroke = Instance.new("UIStroke")
-        buttonStroke.Parent = button
-        buttonStroke.Color = Color3.fromRGB(255, 255, 255)
-        buttonStroke.Thickness = 1.5
-        
-        -- Cập nhật trạng thái nút
-        updateButton(button, _G[variable])
-        
-        -- Hiệu ứng hover
-        button.MouseEnter:Connect(function()
-            button.BackgroundColor3 = Color3.fromRGB(
-                math.min(button.BackgroundColor3.R * 255 + 30, 255),
-                math.min(button.BackgroundColor3.G * 255 + 30, 255),
-                math.min(button.BackgroundColor3.B * 255 + 30, 255)
-            )
-        end)
-        
-        button.MouseLeave:Connect(function()
-            updateButton(button, _G[variable])
-        end)
-        
-        button.MouseButton1Click:Connect(function()
-            _G[variable] = not _G[variable]
-            updateButton(button, _G[variable])
-            print("🎮 " .. text .. ": " .. tostring(_G[variable]))
+-- Tabs
+local MainTab = Window:CreateTab("🏠 Main")
+local FarmingTab = Window:CreateTab("⚔️ Farming")
+local BossTab = Window:CreateTab("👑 Boss")
+local SwordTab = Window:CreateTab("⚔️ Sword")
+local QuestTab = Window:CreateTab("📜 Quest")
+local PlayerTab = Window:CreateTab("👤 Player")
+
+-- Main Tab
+local AutoFarmSection = MainTab:CreateSection("Auto Farm")
+AutoFarmSection:AddToggle("Auto Farm", function(Value)
+    getgenv().GaGaming.AutoFarm = Value
+    if Value then
+        StartAutoFarm()
+    end
+end)
+
+AutoFarmSection:AddToggle("Auto Teleport", function(Value)
+    getgenv().GaGaming.AutoTeleport = Value
+end)
+
+AutoFarmSection:AddToggle("Auto Collect Drops", function(Value)
+    getgenv().GaGaming.AutoCollectDrops = Value
+    if Value then
+        StartCollectDrops()
+    end
+end)
+
+local WorldSection = MainTab:CreateSection("World")
+WorldSection:AddToggle("Auto New World", function(Value)
+    getgenv().GaGaming.AutoNewWorld = Value
+    if Value then
+        AutoNewWorld()
+    end
+end)
+
+WorldSection:AddToggle("Auto Third World", function(Value)
+    getgenv().GaGaming.AutoThirdWorld = Value
+    if Value then
+        AutoThirdSea()
+    end
+end)
+
+-- Farming Tab
+local LevelSection = FarmingTab:CreateSection("Level Farming")
+LevelSection:AddToggle("Auto Bartilo Quest", function(Value)
+    getgenv().GaGaming.AutoBartilo = Value
+    if Value then
+        AutoBartiloQuest()
+    end
+end)
+
+LevelSection:AddToggle("Auto Ectoplasm", function(Value)
+    getgenv().GaGaming.AutoEctoplasm = Value
+    if Value then
+        AutoEctoplasm()
+    end
+end)
+
+LevelSection:AddToggle("Auto Bone", function(Value)
+    getgenv().GaGaming.AutoFarmBone = Value
+    if Value then
+        AutoFarmBone()
+    end
+end)
+
+LevelSection:AddToggle("Auto Muscle Beach", function(Value)
+    getgenv().GaGaming.AutoMuscleBeach = Value
+    if Value then
+        AutoMuscleBeach()
+    end
+end)
+
+-- Boss Tab
+local BossSection = BossTab:CreateSection("Boss Farming")
+BossSection:AddToggle("Auto Boss", function(Value)
+    getgenv().GaGaming.AutoBoss = Value
+    if Value then
+        AutoBoss()
+    end
+end)
+
+BossSection:AddDropdown("Select Boss", {
+    "Saber Expert",
+    "The Saw",
+    "Greybeard",
+    "Darkbeard",
+    "Cake Prince",
+    "Dough King"
+}, function(Selected)
+    getgenv().SelectedBoss = Selected
+end)
+
+BossSection:AddToggle("Auto Elite Hunter", function(Value)
+    getgenv().GaGaming.AutoElite = Value
+    if Value then
+        AutoEliteHunter()
+    end
+end)
+
+BossSection:AddToggle("Auto Tushita", function(Value)
+    getgenv().GaGaming.AutoTushita = Value
+    if Value then
+        AutoTushita()
+    end
+end)
+
+BossSection:AddToggle("Auto Yama", function(Value)
+    getgenv().GaGaming.AutoYama = Value
+    if Value then
+        AutoYama()
+    end
+end)
+
+-- Sword Tab
+local SwordSection = SwordTab:CreateSection("Sword")
+SwordSection:AddToggle("Auto Saber", function(Value)
+    getgenv().GaGaming.AutoSaber = Value
+    if Value then
+        AutoSaber()
+    end
+end)
+
+SwordSection:AddToggle("Auto Buddy Sword", function(Value)
+    getgenv().GaGaming.AutoBuddySword = Value
+    if Value then
+        AutoBuddySword()
+    end
+end)
+
+SwordSection:AddToggle("Auto Rengoku", function(Value)
+    getgenv().GaGaming.AutoRengoku = Value
+    if Value then
+        AutoRengoku()
+    end
+end)
+
+SwordSection:AddToggle("Auto Canvander", function(Value)
+    getgenv().GaGaming.AutoCanvander = Value
+    if Value then
+        AutoCanvander()
+    end
+end)
+
+-- Player Tab
+local PlayerSection = PlayerTab:CreateSection("Player")
+PlayerSection:AddSlider("WalkSpeed", 16, 200, 16, function(Value)
+    localPlayer.Character.Humanoid.WalkSpeed = Value
+end)
+
+PlayerSection:AddSlider("JumpPower", 50, 200, 50, function(Value)
+    localPlayer.Character.Humanoid.JumpPower = Value
+end)
+
+PlayerSection:AddButton("Reset Character", function()
+    localPlayer.Character:BreakJoints()
+end)
+
+PlayerSection:AddToggle("Anti AFK", function(Value)
+    if Value then
+        local VirtualUser = game:GetService("VirtualUser")
+        game:GetService("Players").LocalPlayer.Idled:connect(function()
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
         end)
     end
-    
-    -- Status Label
-    local StatusLabel = Instance.new("TextLabel")
-    StatusLabel.Name = "StatusLabel"
-    StatusLabel.Parent = parent
-    StatusLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    StatusLabel.BackgroundTransparency = 1.000
-    StatusLabel.Position = UDim2.new(0.1, 0, 0.75, 0)
-    StatusLabel.Size = UDim2.new(0.8, 0, 0, 120)
-    StatusLabel.Font = Enum.Font.GothamBold
-    StatusLabel.Text = "📊 STATUS: Script Đang Hoạt Động\n🎯 Chúc Bạn Chơi Game Vui Vẻ!\n🐔 Gà Gaming - Personal Edition\n🖼️ Ảnh: " .. game.Players.LocalPlayer.Name
-    StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    StatusLabel.TextSize = 14.000
-    StatusLabel.TextWrapped = true
-    StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
-    StatusLabel.TextYAlignment = Enum.TextYAlignment.Top
-    StatusLabel.ZIndex = 3
-end
+end)
 
--- Cập nhật màu nút theo trạng thái
-function updateButton(button, isEnabled)
-    if isEnabled then
-        button.BackgroundColor3 = Color3.fromRGB(0, 180, 0)  -- Xanh sáng khi bật
-        button.Text = "✅ " .. string.sub(button.Text, 4)  -- Thêm icon check
-    else
-        button.BackgroundColor3 = Color3.fromRGB(180, 0, 0)  -- Đỏ khi tắt
-        button.Text = "❌ " .. string.sub(button.Text, 4)  -- Thêm icon X
-    end
-end
+-- Status Section
+local StatusSection = PlayerTab:CreateSection("Status")
+local LevelLabel = StatusSection:AddLabel("Level: " .. (localPlayer.Data:FindFirstChild("Level") and localPlayer.Data.Level.Value or "N/A"))
+local BeliLabel = StatusSection:AddLabel("Beli: " .. (localPlayer.Data:FindFirstChild("Beli") and localPlayer.Data.Beli.Value or "N/A"))
+local FragmentLabel = StatusSection:AddLabel("Fragments: " .. (localPlayer.Data:FindFirstChild("Fragments") and localPlayer.Data.Fragments.Value or "N/A"))
 
--- Kiểm tra an toàn
-function safetyCheck()
-    if not localPlayer.Character or not localPlayer.Character:FindFirstChild("Humanoid") or localPlayer.Character.Humanoid.Health <= 0 then
-        return false
+-- Update Status
+spawn(function()
+    while wait(5) do
+        if LevelLabel then
+            LevelLabel:SetText("Level: " .. (localPlayer.Data:FindFirstChild("Level") and localPlayer.Data.Level.Value or "N/A"))
+        end
+        if BeliLabel then
+            BeliLabel:SetText("Beli: " .. (localPlayer.Data:FindFirstChild("Beli") and localPlayer.Data.Beli.Value or "N/A"))
+        end
+        if FragmentLabel then
+            FragmentLabel:SetText("Fragments: " .. (localPlayer.Data:FindFirstChild("Fragments") and localPlayer.Data.Fragments.Value or "N/A"))
+        end
     end
-    return true
+end)
+
+-- Auto Farm Function
+function StartAutoFarm()
+    spawn(function()
+        while wait() do
+            if not getgenv().GaGaming.AutoFarm then break end
+            
+            -- Tìm enemy gần nhất
+            local target = FindNearestEnemy()
+            if target then
+                -- Teleport đến enemy
+                if getgenv().GaGaming.AutoTeleport then
+                    SafeTeleport(target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 8))
+                end
+                
+                -- Tấn công
+                AttackEnemy(target)
+            end
+        end
+    end)
 end
 
 -- Tìm enemy gần nhất
-function findNearestEnemy()
-    local nearestEnemy = nil
-    local shortestDistance = math.huge
+function FindNearestEnemy()
+    local nearest = nil
+    local distance = math.huge
     
     for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
         if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-            local distance = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-            if distance < shortestDistance then
-                shortestDistance = distance
-                nearestEnemy = enemy
+            local dist = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
+            if dist < distance then
+                distance = dist
+                nearest = enemy
             end
         end
     end
     
-    return nearestEnemy
+    return nearest
+end
+
+-- Teleport an toàn
+function SafeTeleport(cframe)
+    localPlayer.Character.HumanoidRootPart.CFrame = cframe
+end
+
+-- Tấn công enemy
+function AttackEnemy(enemy)
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, "X", false, game)
+    wait(0.1)
+    game:GetService("VirtualInputManager"):SendKeyEvent(false, "X", false, game)
 end
 
 -- Thu thập item rơi
-function collectDrops()
-    for _, drop in pairs(Workspace:GetChildren()) do
-        if drop.Name == "Drop" and drop:FindFirstChild("Handle") then
-            localPlayer.Character.HumanoidRootPart.CFrame = drop.Handle.CFrame
-            wait(0.3)
-        end
-    end
-end
-
--- Auto Farm với Teleport
-function autoFarmWithTeleport()
-    while wait(0.5) do
-        if not _G.AutoFarm then break end
-        if not safetyCheck() then continue end
-        
-        local enemy = findNearestEnemy()
-        if enemy then
-            if _G.AutoTeleport then
-                localPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
-            end
+function StartCollectDrops()
+    spawn(function()
+        while wait(3) do
+            if not getgenv().GaGaming.AutoCollectDrops then break end
             
-            game:GetService("VirtualInputManager"):SendKeyEvent(true, "X", false, game)
-            wait(0.1)
-            game:GetService("VirtualInputManager"):SendKeyEvent(false, "X", false, game)
-            
-            if _G.AutoCollectDrops then
-                collectDrops()
+            for _, drop in pairs(Workspace:GetChildren()) do
+                if drop.Name == "Drop" and drop:FindFirstChild("Handle") then
+                    SafeTeleport(drop.Handle.CFrame)
+                    wait(0.5)
+                end
             end
         end
-    end
+    end)
 end
 
--- Auto Buy Devil Fruits
-function buyDevilFruits()
-    local fruitShop = Workspace:FindFirstChild("FruitShop")
-    if fruitShop then
-        for _, fruit in pairs(fruitShop:GetChildren()) do
-            if fruit:IsA("Model") and fruit:FindFirstChild("Handle") then
-                Remotes.CommF_:InvokeServer("PurchaseRawFruit", fruit.Name)
-                wait(0.5)
-            end
-        end
-    end
+-- Các hàm auto khác (sẽ implement sau)
+function AutoNewWorld()
+    print("Auto New World started")
 end
 
--- Auto Buy Swords
-function buySwords()
-    local swordShop = Workspace:FindFirstChild("SwordShop")
-    if swordShop then
-        for _, sword in pairs(swordShop:GetChildren()) do
-            if sword:IsA("Model") and sword:FindFirstChild("Handle") then
-                Remotes.CommF_:InvokeServer("BuyItem", sword.Name)
-                wait(0.5)
-            end
-        end
-    end
+function AutoThirdSea()
+    print("Auto Third Sea started")
 end
 
--- Auto Farm Bones
-function farmBones()
-    while wait(1) do
-        if not _G.AutoFarmBones then break end
-        if not safetyCheck() then continue end
-        
-        for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
-            if enemy.Name:lower():find("skeleton") and enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                localPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
-                wait(0.3)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, "X", false, game)
-            end
-        end
-    end
+function AutoBartiloQuest()
+    print("Auto Bartilo Quest started")
 end
 
--- Chống AFK
-local VirtualUser = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    VirtualUser:CaptureController()
-    VirtualUser:ClickButton2(Vector2.new())
-end)
+function AutoEctoplasm()
+    print("Auto Ectoplasm started")
+end
 
--- Khởi tạo GUI
-spawn(function()
-    wait(2)
-    createGamingGUI()
-end)
+function AutoFarmBone()
+    print("Auto Farm Bone started")
+end
 
--- Main Execution
-spawn(function()
-    while wait(5) do
-        if _G.AutoFarm then
-            autoFarmWithTeleport()
-        end
-    end
-end)
+function AutoBoss()
+    print("Auto Boss started")
+end
 
-spawn(function()
-    while wait(10) do
-        if _G.AutoBuyDevilFruits then
-            buyDevilFruits()
-        end
-        if _G.AutoBuySwords then
-            buySwords()
-        end
-    end
-end)
+function AutoSaber()
+    print("Auto Saber started")
+end
 
-spawn(function()
-    while wait() do
-        if _G.AutoFarmBones then
-            farmBones()
-        end
-    end
-end)
-
-spawn(function()
-    while wait(3) do
-        if _G.AutoCollectDrops then
-            collectDrops()
-        end
-    end
-end)
-
--- Hiển thị thông tin
-print("====================================")
-print("🐔 GÀ GAMING AUTO SCRIPT - PERSONAL EDITION")
-print("🖼️ Ảnh cá nhân: " .. GAMING_IMAGE_IDS.Logo)
-print("🎮 GUI Menu Đã Được Tạo!")
-print("✅ Auto Farm: " .. tostring(_G.AutoFarm))
-print("✅ Auto Teleport: " .. tostring(_G.AutoTeleport))
-print("✅ Auto Buy Devil Fruits: " .. tostring(_G.AutoBuyDevilFruits))
-print("✅ Auto Buy Swords: " .. tostring(_G.AutoBuySwords))
-print("✅ Auto Farm Bones: " .. tostring(_G.AutoFarmBones))
-print("🔄 Auto Collect Drops: " .. tostring(_G.AutoCollectDrops))
-print("🛡️ Safety Check: Enabled")
-print("⏰ Anti-AFK: Enabled")
-print("====================================")
+-- Init
+Library:Init()
+print("🐔 Gà Gaming Hub loaded successfully!")
+print("🎯 Version: 1.0.0")
+print("🔥 Enjoy the script!")
