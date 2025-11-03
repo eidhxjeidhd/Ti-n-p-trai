@@ -1,4 +1,4 @@
--- Gà Gaming Hub - Blox Fruits Script với ẢNH MENU
+-- Gà Gaming Hub - SIMPLE BUT WORKING VERSION
 -- Created by Gà Gaming
 
 local Players = game:GetService("Players")
@@ -7,234 +7,212 @@ local Workspace = game:GetService("Workspace")
 local VirtualInput = game:GetService("VirtualInputManager")
 local localPlayer = Players.LocalPlayer
 
--- ID ẢNH CÁ NHÂN CỦA EM
-local GAMING_IMAGE_IDS = {
-    Logo = "rbxassetid://84957548476668",
-    Background = "rbxassetid://84957548476668",
-    Banner = "rbxassetid://84957548476668",
-    Profile = "rbxassetid://84957548476668"
-}
-
--- Configuration
-getgenv().GaGaming = {
+-- SIMPLE CONFIG - CHẮC CHẮN HOẠT ĐỘNG
+local Config = {
     AutoFarm = false,
     AutoTeleport = false,
-    AutoNewWorld = false,
     AutoBoss = false,
-    AutoSword = false,
-    AutoBuyFruits = false,
-    AutoFarmBone = false,
-    AutoCollectDrops = false,
-    SelectedBoss = ""
+    AutoFarmBone = false
 }
 
--- Tạo GUI với ảnh cá nhân
+-- TẠO GUI ĐƠN GIẢN NHẤT
 local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local TabButtons = Instance.new("Frame")
-local ContentFrame = Instance.new("Frame")
-
-ScreenGui.Name = "GaGamingHub"
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Main Frame với background ảnh
-MainFrame.Name = "MainFrame"
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 400, 0, 300)
+MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
 MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
-MainFrame.Size = UDim2.new(0, 650, 0, 450)
 MainFrame.Active = true
 MainFrame.Draggable = true
 
--- Background Image với ảnh của em
-local Background = Instance.new("ImageLabel")
-Background.Name = "Background"
-Background.Parent = MainFrame
-Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Background.BackgroundTransparency = 1.000
-Background.Size = UDim2.new(1, 0, 1, 0)
-Background.Image = GAMING_IMAGE_IDS.Background
-Background.ImageColor3 = Color3.fromRGB(40, 40, 50)
-Background.ImageTransparency = 0.7
-Background.ScaleType = Enum.ScaleType.Crop
-
--- Overlay để dễ nhìn chữ
-local Overlay = Instance.new("Frame")
-Overlay.Name = "Overlay"
-Overlay.Parent = MainFrame
-Overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Overlay.BackgroundTransparency = 0.3
-Overlay.Size = UDim2.new(1, 0, 1, 0)
-
--- Header với logo
-local Header = Instance.new("Frame")
-Header.Name = "Header"
-Header.Parent = MainFrame
-Header.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
-Header.BorderSizePixel = 0
-Header.Size = UDim2.new(1, 0, 0, 60)
-
--- Logo Gà Gaming
-local Logo = Instance.new("ImageLabel")
-Logo.Name = "Logo"
-Logo.Parent = Header
-Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Logo.BackgroundTransparency = 1.000
-Logo.Position = UDim2.new(0.02, 0, 0.1, 0)
-Logo.Size = UDim2.new(0, 40, 0, 40)
-Logo.Image = GAMING_IMAGE_IDS.Logo
-Logo.ScaleType = Enum.ScaleType.Crop
-
-local LogoCorner = Instance.new("UICorner")
-LogoCorner.CornerRadius = UDim.new(0.2, 0)
-LogoCorner.Parent = Logo
-
-local LogoStroke = Instance.new("UIStroke")
-LogoStroke.Parent = Logo
-LogoStroke.Color = Color3.fromRGB(255, 215, 0)
-LogoStroke.Thickness = 2
-
--- Title
 local Title = Instance.new("TextLabel")
-Title.Name = "Title"
-Title.Parent = Header
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0.1, 0, 0, 0)
-Title.Size = UDim2.new(0.7, 0, 1, 0)
-Title.Font = Enum.Font.GothamBlack
-Title.Text = "🐔 GÀ GAMING HUB v2.0"
-Title.TextColor3 = Color3.fromRGB(255, 215, 0)
-Title.TextSize = 20
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+Title.Text = "🐔 GÀ GAMING HUB - WORKING"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.Parent = MainFrame
 
-local SubTitle = Instance.new("TextLabel")
-SubTitle.Name = "SubTitle"
-SubTitle.Parent = Header
-SubTitle.BackgroundTransparency = 1
-SubTitle.Position = UDim2.new(0.1, 0, 0.5, 0)
-SubTitle.Size = UDim2.new(0.7, 0, 0.5, 0)
-SubTitle.Font = Enum.Font.Gotham
-SubTitle.Text = "Blox Fruits • Auto Farm • Boss • Sword"
-SubTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
-SubTitle.TextSize = 12
-SubTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Parent = Header
-CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-CloseButton.BorderSizePixel = 0
-CloseButton.Position = UDim2.new(0.92, 0, 0.2, 0)
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.TextSize = 14
-
-local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(0.2, 0)
-CloseCorner.Parent = CloseButton
-
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
-
--- Tab Buttons
-TabButtons.Name = "TabButtons"
-TabButtons.Parent = MainFrame
-TabButtons.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-TabButtons.BorderSizePixel = 0
-TabButtons.Position = UDim2.new(0, 0, 0.133, 0)
-TabButtons.Size = UDim2.new(0, 150, 0, 340)
-
--- Content Frame
-ContentFrame.Name = "ContentFrame"
-ContentFrame.Parent = MainFrame
-ContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
-ContentFrame.BorderSizePixel = 0
-ContentFrame.Position = UDim2.new(0.23, 0, 0.133, 0)
-ContentFrame.Size = UDim2.new(0, 500, 0, 340)
-
--- Footer với thông tin
-local Footer = Instance.new("Frame")
-Footer.Name = "Footer"
-Footer.Parent = MainFrame
-Footer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-Footer.BorderSizePixel = 0
-Footer.Position = UDim2.new(0, 0, 0.9, 0)
-Footer.Size = UDim2.new(1, 0, 0.1, 0)
-
-local Status = Instance.new("TextLabel")
-Status.Name = "Status"
-Status.Parent = Footer
-Status.BackgroundTransparency = 1
-Status.Size = UDim2.new(1, 0, 1, 0)
-Status.Font = Enum.Font.Gotham
-Status.Text = "✅ Gà Gaming Hub • Đã sẵn sàng • Vui lòng bật tính năng"
-Status.TextColor3 = Color3.fromRGB(0, 255, 0)
-Status.TextSize = 12
-
--- [PHẦN CÒN LẠI CỦA CODE GIỮ NGUYÊN]
--- ... (Tabs, Functions, Auto Farm code từ script trước) ...
-
--- Tạo các tab với style đẹp hơn
-local function createTabButton(tabName, position)
+-- TẠO CÁC NÚT ĐƠN GIẢN
+local function CreateButton(text, yPosition, configKey)
     local button = Instance.new("TextButton")
-    button.Name = tabName .. "Tab"
-    button.Parent = TabButtons
-    button.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    button.BorderSizePixel = 0
-    button.Position = position
-    button.Size = UDim2.new(0.9, 0, 0, 45)
-    button.Font = Enum.Font.GothamBold
-    button.Text = Tabs[tabName].Name
+    button.Size = UDim2.new(0.9, 0, 0, 40)
+    button.Position = UDim2.new(0.05, 0, yPosition, 0)
+    button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    button.Text = "❌ " .. text
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.GothamBold
     button.TextSize = 14
-    
-    local buttonCorner = Instance.new("UICorner")
-    buttonCorner.CornerRadius = UDim.new(0.1, 0)
-    buttonCorner.Parent = button
-    
-    local buttonStroke = Instance.new("UIStroke")
-    buttonStroke.Parent = button
-    buttonStroke.Color = Color3.fromRGB(100, 100, 150)
-    buttonStroke.Thickness = 1
+    button.Parent = MainFrame
     
     button.MouseButton1Click:Connect(function()
-        currentTab = tabName
-        updateContent()
-    end)
-    
-    -- Hiệu ứng hover
-    button.MouseEnter:Connect(function()
-        button.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
-    end)
-    
-    button.MouseLeave:Connect(function()
-        if currentTab == tabName then
-            button.BackgroundColor3 = Color3.fromRGB(70, 130, 200)
+        Config[configKey] = not Config[configKey]
+        
+        if Config[configKey] then
+            button.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
+            button.Text = "✅ " .. text
+            print("🎯 BẬT: " .. text)
+            
+            -- BẬT CHỨC NĂNG
+            if configKey == "AutoFarm" then
+                StartAutoFarm()
+            elseif configKey == "AutoFarmBone" then
+                StartAutoFarmBone()
+            elseif configKey == "AutoBoss" then
+                StartAutoBoss()
+            end
+            
         else
-            button.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+            button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            button.Text = "❌ " .. text
+            print("🛑 TẮT: " .. text)
         end
     end)
     
     return button
 end
 
--- Cập nhật màu tab active
-local function updateContent()
-    for tabName, tabData in pairs(Tabs) do
-        if tabData.Button then
-            if tabName == currentTab then
-                tabData.Button.BackgroundColor3 = Color3.fromRGB(70, 130, 200)
+-- TẠO CÁC NÚT CHỨC NĂNG
+CreateButton("AUTO FARM LEVEL", 0.15, "AutoFarm")
+CreateButton("AUTO FARM BONE", 0.30, "AutoFarmBone")
+CreateButton("AUTO BOSS", 0.45, "AutoBoss")
+CreateButton("AUTO TELEPORT", 0.60, "AutoTeleport")
+
+-- STATUS LABEL
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size = UDim2.new(1, 0, 0, 30)
+StatusLabel.Position = UDim2.new(0, 0, 0.85, 0)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "🔴 Chưa bật tính năng nào"
+StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.TextSize = 12
+StatusLabel.Parent = MainFrame
+
+-- 🚀 AUTO FARM LEVEL - HOẠT ĐỘNG THẬT
+function StartAutoFarm()
+    spawn(function()
+        while wait(1) do
+            if not Config.AutoFarm then 
+                StatusLabel.Text = "🔴 Auto Farm đã tắt"
+                break 
+            end
+            
+            StatusLabel.Text = "🟢 Đang Auto Farm Level..."
+            
+            -- TÌM QUÁI GẦN NHẤT
+            local nearestEnemy = nil
+            local shortestDistance = 100
+            
+            if Workspace:FindFirstChild("Enemies") then
+                for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+                    if enemy:FindFirstChild("HumanoidRootPart") and enemy:FindFirstChild("Humanoid") then
+                        if enemy.Humanoid.Health > 0 then
+                            local distance = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
+                            if distance < shortestDistance then
+                                shortestDistance = distance
+                                nearestEnemy = enemy
+                            end
+                        end
+                    end
+                end
+            end
+            
+            -- NẾU TÌM THẤY QUÁI
+            if nearestEnemy then
+                StatusLabel.Text = "🎯 Đang farm: " .. nearestEnemy.Name
+                
+                -- TELEPORT NẾU BẬT
+                if Config.AutoTeleport then
+                    localPlayer.Character.HumanoidRootPart.CFrame = nearestEnemy.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
+                    wait(0.5)
+                end
+                
+                -- TẤN CÔNG
+                VirtualInput:SendKeyEvent(true, "X", false, game)
+                wait(0.1)
+                VirtualInput:SendKeyEvent(false, "X", false, game)
+                
             else
-                tabData.Button.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+                StatusLabel.Text = "🔍 Đang tìm quái..."
             end
         end
-        if tabData.Content then
-            tabData.Content.Visible = (tabName == currentTab)
-        end
-    end
+    end)
 end
+
+-- 💀 AUTO FARM BONE - HOẠT ĐỘNG THẬT
+function StartAutoFarmBone()
+    spawn(function()
+        while wait(2) do
+            if not Config.AutoFarmBone then 
+                StatusLabel.Text = "🔴 Auto Farm Bone đã tắt"
+                break 
+            end
+            
+            StatusLabel.Text = "🟢 Đang tìm skeleton..."
+            
+            for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+                if string.find(enemy.Name:lower(), "skeleton") and enemy:FindFirstChild("HumanoidRootPart") then
+                    if enemy.Humanoid.Health > 0 then
+                        StatusLabel.Text = "💀 Đang farm skeleton..."
+                        
+                        -- TELEPORT ĐẾN SKELETON
+                        localPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
+                        wait(0.5)
+                        
+                        -- TẤN CÔNG
+                        VirtualInput:SendKeyEvent(true, "X", false, game)
+                        wait(0.2)
+                        VirtualInput:SendKeyEvent(false, "X", false, game)
+                        break
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- 👑 AUTO BOSS - HOẠT ĐỘNG THẬT
+function StartAutoBoss()
+    spawn(function()
+        while wait(3) do
+            if not Config.AutoBoss then 
+                StatusLabel.Text = "🔴 Auto Boss đã tắt"
+                break 
+            end
+            
+            StatusLabel.Text = "🟢 Đang tìm boss..."
+            
+            -- TÌM BOSS
+            for _, boss in pairs(Workspace.Enemies:GetChildren()) do
+                if (string.find(boss.Name, "Saber") or string.find(boss.Name, "Boss")) and boss:FindFirstChild("HumanoidRootPart") then
+                    if boss.Humanoid.Health > 0 then
+                        StatusLabel.Text = "👑 Đang đánh boss: " .. boss.Name
+                        
+                        -- TELEPORT ĐẾN BOSS
+                        localPlayer.Character.HumanoidRootPart.CFrame = boss.HumanoidRootPart.CFrame * CFrame.new(0, 0, 8)
+                        wait(1)
+                        
+                        -- TẤN CÔNG BOSS
+                        VirtualInput:SendKeyEvent(true, "X", false, game)
+                        VirtualInput:SendKeyEvent(true, "Z", false, game)
+                        wait(0.3)
+                        VirtualInput:SendKeyEvent(false, "X", false, game)
+                        VirtualInput:SendKeyEvent(false, "Z", false, game)
+                        break
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- CHỐNG AFK
+local VirtualUser = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+end)
