@@ -6275,5 +6275,364 @@ spawn(function()
     end
 end)
 end
+local ToggleAutoBuyFruit = Tabs.Fruit:AddToggle("ToggleAutoBuyFruit", {Title = "Auto Buy Random Fruit", Default = false })
+ToggleAutoBuyFruit:OnChanged(function(Value)
+    _G.AutoBuyRandomFruit = Value
+end)
+Options.ToggleAutoBuyFruit:SetValue(false)
 
-------------------------------------------------------------------------------------------------------------------------------------------
+spawn(function()
+    while wait(10) do
+        if _G.AutoBuyRandomFruit then
+            pcall(function()
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
+            end)
+        end
+    end
+end)
+local AdvancedFarm = Tabs.Main:AddSection("Advanced Farming")
+
+local ToggleSkipCutscene = Tabs.Main:AddToggle("ToggleSkipCutscene", {Title = "Auto Skip Cutscene", Default = true })
+ToggleSkipCutscene:OnChanged(function(Value)
+    _G.SkipCutscene = Value
+end)
+Options.ToggleSkipCutscene:SetValue(true)
+
+-- Auto skip cutscene
+spawn(function()
+    while wait() do
+        if _G.SkipCutscene then
+            pcall(function()
+                game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Enabled = false
+            end)
+        end
+    end
+end)
+
+local ToggleSuperFastAttack = Tabs.Main:AddToggle("ToggleSuperFastAttack", {Title = "Super Fast Attack", Default = false })
+ToggleSuperFastAttack:OnChanged(function(Value)
+    _G.SuperFastAttack = Value
+end)
+Options.ToggleSuperFastAttack:SetValue(false)
+
+spawn(function()
+    while wait() do
+        if _G.SuperFastAttack then
+            pcall(function()
+                AttackNoCD()
+            end)
+        end
+    end
+end)
+local ToggleSmartFarm = Tabs.Main:AddToggle("ToggleSmartFarm", {Title = "Smart Farm (Auto Switch Island)", Default = false })
+ToggleSmartFarm:OnChanged(function(Value)
+    _G.SmartFarm = Value
+end)
+Options.ToggleSmartFarm:SetValue(false)
+
+local TogglePriorityRaid = Tabs.Main:AddToggle("TogglePriorityRaid", {Title = "Priority Raid when Full", Default = false })
+TogglePriorityRaid:OnChanged(function(Value)
+    _G.PriorityRaid = Value
+end)
+Options.TogglePriorityRaid:SetValue(false)
+local ToggleFarmAllBoss = Tabs.Main:AddToggle("ToggleFarmAllBoss", {Title = "Farm All Available Boss", Default = false })
+ToggleFarmAllBoss:OnChanged(function(Value)
+    _G.FarmAllBoss = Value
+end)
+Options.ToggleFarmAllBoss:SetValue(false)
+
+spawn(function()
+    while wait() do
+        if _G.FarmAllBoss then
+            pcall(function()
+                local Bosses = {}
+                if First_Sea then
+                    Bosses = {"The Gorilla King", "Bobby", "Yeti", "Vice Admiral"}
+                elseif Second_Sea then
+                    Bosses = {"Diamond", "Jeremy", "Fajita"}
+                elseif Third_Sea then
+                    Bosses = {"Stone", "Island Empress", "Kilo Admiral"}
+                end
+                
+                for _, bossName in pairs(Bosses) do
+                    if game:GetService("Workspace").Enemies:FindFirstChild(bossName) or game:GetService("ReplicatedStorage"):FindFirstChild(bossName) then
+                        _G.SelectBoss = bossName
+                        wait(1)
+                        break
+                    end
+                end
+            end)
+        end
+    end
+end)
+local ToggleAntiStuck = Tabs.Main:AddToggle("ToggleAntiStuck", {Title = "Anti-Stuck System", Default = true })
+ToggleAntiStuck:OnChanged(function(Value)
+    _G.AntiStuck = Value
+end)
+Options.ToggleAntiStuck:SetValue(true)
+
+local LastPosition = nil
+local StuckCount = 0
+
+spawn(function()
+    while wait(5) do
+        if _G.AntiStuck then
+            pcall(function()
+                local CurrentPos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                if LastPosition and (CurrentPos - LastPosition).Magnitude < 5 then
+                    StuckCount = StuckCount + 1
+                    if StuckCount >= 3 then
+                        game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                        wait(0.2)
+                        Tween(CFrame.new(CurrentPos + Vector3.new(0, 10, 0)))
+                        StuckCount = 0
+                    end
+                else
+                    StuckCount = 0
+                end
+                LastPosition = CurrentPos
+            end)
+        end
+    end
+end)
+local FarmReport = Tabs.Stats:AddSection("Farm Report")
+
+local StartTime = tick()
+local KilledMobs = 0
+local LastKillTime = tick()
+
+local function UpdateFarmStats()
+    local TotalTime = tick() - StartTime
+    local KillsPerHour = (KilledMobs / TotalTime) * 3600
+    
+    -- Hiển thị thống kê (có thể thêm vào UI)
+    print(string.format("Farm Stats: %d kills | %.1f kills/hour | Time: %.1f minutes", 
+        KilledMobs, KillsPerHour, TotalTime/60))
+end
+
+-- Đếm mob đã tiêu diệt
+spawn(function()
+    while wait(1) do
+        if _G.AutoLevel or _G.AutoBoss or _G.AutoNear then
+            UpdateFarmStats()
+        end
+    end
+end)
+
+-- Reset stats khi bắt đầu farm mới
+local function ResetFarmStats()
+    StartTime = tick()
+    KilledMobs = 0
+end
+local ToggleSafeMode = Tabs.Main:AddToggle("ToggleSafeMode", {Title = "Safe Mode (Anti-Death)", Default = true })
+ToggleSafeMode:OnChanged(function(Value)
+    _G.SafeMode = Value
+end)
+Options.ToggleSafeMode:SetValue(true)
+
+spawn(function()
+    while wait(1) do
+        if _G.SafeMode then
+            pcall(function()
+                local Humanoid = game.Players.LocalPlayer.Character.Humanoid
+                if Humanoid.Health < Humanoid.MaxHealth * 0.3 then
+                    -- Chạy trốn khi máu thấp
+                    CancelTween()
+                    wait(2)
+                    -- Quay lại farm sau khi hồi máu
+                end
+            end)
+        end
+    end
+end)
+local RaidFarmSection = Tabs.Raid:AddSection("Auto Raid Farm")
+
+local ToggleAutoRaid = Tabs.Raid:AddToggle("ToggleAutoRaid", {Title = "Auto Raid", Default = false })
+ToggleAutoRaid:OnChanged(function(Value)
+    _G.AutoRaid = Value
+end)
+Options.ToggleAutoRaid:SetValue(false)
+
+local ToggleRaidHop = Tabs.Raid:AddToggle("ToggleRaidHop", {Title = "Hop if No Raid", Default = false })
+ToggleRaidHop:OnChanged(function(Value)
+    _G.RaidHop = Value
+end)
+Options.ToggleRaidHop:SetValue(false)
+
+spawn(function()
+    while wait(30) do
+        if _G.AutoRaid then
+            pcall(function()
+                if game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Visible == false then
+                    local args = {
+                        [1] = "RaidsNpc",
+                        [2] = "Select",
+                        [3] = _G.SelectRaid
+                    }
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+                    
+                    if _G.RaidHop then
+                        wait(10)
+                        if game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Visible == false then
+                            Hop()
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+local DungeonSection = Tabs.Main:AddSection("Dungeon Farm")
+
+local ToggleAutoDungeon = Tabs.Main:AddToggle("ToggleAutoDungeon", {Title = "Auto Dungeon", Default = false })
+ToggleAutoDungeon:OnChanged(function(Value)
+    AutoDungeon = Value
+end)
+Options.ToggleAutoDungeon:SetValue(false)
+
+spawn(function()
+    while wait() do
+        if AutoDungeon then
+            pcall(function()
+                if game:GetService("Players").LocalPlayer.Data.Level.Value >= 700 then
+                    if game:GetService("Workspace").Map:FindFirstChild("MysticIsland") then
+                        Tween(game:GetService("Workspace").Map.MysticIsland.Center.CFrame)
+                    else
+                        if game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain") then
+                            for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                                if v.Name == "Galley Captain" then
+                                    repeat wait(_G.Fast_Delay)
+                                        AttackNoCD()
+                                        AutoHaki()
+                                        EquipTool(SelectWeapon)
+                                        Tween(v.HumanoidRootPart.CFrame * CFrame.new(posX,posY,posZ))
+                                    until not AutoDungeon or not v.Parent or v.Humanoid.Health <= 0
+                                end
+                            end
+                        else
+                            Tween(CFrame.new(5533.29785, 88.1079102, 4852.3916))
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+local ToggleAntiAFK = Tabs.Misc:AddToggle("ToggleAntiAFK", {Title = "Anti AFK", Default = true })
+ToggleAntiAFK:OnChanged(function(Value)
+    _G.AntiAFK = Value
+end)
+Options.ToggleAntiAFK:SetValue(true)
+
+spawn(function()
+    while wait(60) do
+        if _G.AntiAFK then
+            pcall(function()
+                game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+                wait(1)
+                game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            end)
+        end
+    end
+end)
+local BoneFarmSection = Tabs.Main:AddSection("Bone Farm Advanced")
+
+local ToggleAutoBoneEnhanced = Tabs.Main:AddToggle("ToggleAutoBoneEnhanced", {Title = "Auto Bone [Enhanced]", Default = false })
+ToggleAutoBoneEnhanced:OnChanged(function(Value)
+    _G.AutoBoneEnhanced = Value
+end)
+Options.ToggleAutoBoneEnhanced:SetValue(false)
+
+local ToggleBoneHop = Tabs.Main:AddToggle("ToggleBoneHop", {Title = "Hop if No Bone Quest", Default = false })
+ToggleBoneHop:OnChanged(function(Value)
+    _G.BoneHop = Value
+end)
+Options.ToggleBoneHop:SetValue(false)
+
+local BoneMobs = {"Reborn Skeleton", "Living Zombie", "Demonic Soul", "Posessed Mummy"}
+local CurrentBoneMob = ""
+
+local function GetBestBoneMob()
+    pcall(function()
+        for _, mobName in pairs(BoneMobs) do
+            for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                if v.Name == mobName and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                    return mobName
+                end
+            end
+        end
+        return BoneMobs[1] -- Mặc định trả về mob đầu tiên
+    end)
+end
+
+spawn(function()
+    while wait() do
+        if _G.AutoBoneEnhanced then
+            pcall(function()
+                local QuestTitle = game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text
+                
+                -- Kiểm tra và chọn mob tốt nhất
+                CurrentBoneMob = GetBestBoneMob()
+                
+                if not string.find(QuestTitle, "Demonic Soul") then
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest")
+                end
+                
+                if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
+                    if BypassTP then
+                        if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - CFrame.new(-9516.9931640625, 178.00651550293, 6078.4653320313).Position).Magnitude > 2500 then
+                            BTP(CFrame.new(-9516.9931640625, 178.00651550293, 6078.4653320313))
+                        else
+                            Tween(CFrame.new(-9516.9931640625, 178.00651550293, 6078.4653320313))
+                        end
+                    else
+                        Tween(CFrame.new(-9516.9931640625, 178.00651550293, 6078.4653320313))
+                    end
+                    
+                    if (CFrame.new(-9516.9931640625, 178.00651550293, 6078.4653320313).Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 5 then    
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest","HauntedQuest2",1)
+                    end
+                    
+                    -- Hop server nếu không có quest
+                    if _G.BoneHop and not game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible then
+                        wait(10)
+                        Hop()
+                    end
+                    
+                elseif game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == true then
+                    local foundMob = false
+                    
+                    for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                        if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                            if table.find(BoneMobs, v.Name) then
+                                if string.find(QuestTitle, "Demonic Soul") then
+                                    foundMob = true
+                                    repeat wait(_G.Fast_Delay)
+                                        AttackNoCD()
+                                        AutoHaki()
+                                        EquipTool(SelectWeapon)
+                                        Tween(v.HumanoidRootPart.CFrame * CFrame.new(posX,posY,posZ))
+                                        v.HumanoidRootPart.Size = Vector3.new(60, 60, 60)
+                                        v.HumanoidRootPart.Transparency = 1
+                                        v.Humanoid.JumpPower = 0
+                                        v.Humanoid.WalkSpeed = 0
+                                        v.HumanoidRootPart.CanCollide = false
+                                        FarmPos = v.HumanoidRootPart.CFrame
+                                        MonFarm = v.Name
+                                    until not _G.AutoBoneEnhanced or v.Humanoid.Health <= 0 or not v.Parent or game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false
+                                else
+                                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest")
+                                end
+                            end
+                        end
+                    end
+                    
+                    if not foundMob then
+                        -- Di chuyển đến vị trí spawn mob
+                        Tween(CFrame.new(-8762.27639, 176.0065, 6168.33301))
+                    end
+                end
+            end)
+        end
+    end
+end)
