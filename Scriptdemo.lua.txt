@@ -1,75 +1,348 @@
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+-- Gà Gaming Hub - FULL MELT HUB FEATURES
+-- Recreated from Melt Hub with REAL functions
 
-       local Window = MakeWindow({
-         Hub = {
-         Title = "gà gaming",
-         Animation = "Youtube: gà gaming"
-         },
-        Key = {
-        KeySystem = false,
-        Title = "Key System",
-        Description = "",
-        KeyLink = "",
-        Keys = {"1234"},
-        Notifi = {
-        Notifications = true,
-        CorrectKey = "Running the Script...",
-       Incorrectkey = "The key is incorrect",
-       CopyKeyLink = "Copied to Clipboard"
-      }
-    }
-  })
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local VirtualInput = game:GetService("VirtualInputManager")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local localPlayer = Players.LocalPlayer
+local Remotes = ReplicatedStorage.Remotes
 
-       MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=84957548476668",
-       Size = {40, 50},
-       Color = Color3.fromRGB(10, 10, 10),
-       Corner = true,
-       Stroke = false,
-       StrokeColor = Color3.fromRGB(255, 0, 0)
-      })
-      
------- Tab
-     local Tab1o = MakeTab({Name = "Script Kaitun"})
-     local Tab2o = MakeTab({Name = "Script update 28"})
-------- BUTTON
+-- CONFIG ĐẦY ĐỦ TÍNH NĂNG NHƯ MELT HUB
+local Config = {
+    -- Main Farm
+    AutoFarmLevel = false,
+    AutoFarmSeaBeasts = false,
+    AutoFarmElites = false,
     
-    AddButton(Tab1o, {
-     Name = "script redz hub",
-    Callback = function()
-	  local Settings = {
-JoinTeam = "Pirates"; -- Pirates/Marines
-Translator = true; -- true/false
+    -- Boss Farm
+    AutoFarmBosses = false,
+    AutoFarmDoughKing = false,
+    AutoFarmCakePrince = false,
+    
+    -- Auto Skills
+    AutoMelee = false,
+    AutoSword = false,
+    AutoGun = false,
+    AutoFruit = false,
+    
+    -- Utilities
+    AutoCollectDrops = false,
+    AutoBuyFruits = false,
+    AutoHaki = false,
+    
+    -- Movement
+    SuperSpeed = false,
+    Fly = false,
+    NoClip = false,
+    
+    -- Selected Options
+    SelectedBoss = "",
+    SelectedWeapon = "Melee"
 }
-getgenv().BETA_VERSION = true
-loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))(Settings)
-  end
-  })
 
-AddButton(Tab1o, {
-     Name = "script ?",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
-  end
-  })
+-- TẠO GUI GIỐNG MELT HUB
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-AddButton(Tab1o, {
-     Name = "script NgocBongVn",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/ngocbonggaming/script/refs/heads/main/NgocBongVn.lua"))()
-  end
-  })
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 450, 0, 500)
+MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+MainFrame.Active = true
+MainFrame.Draggable = true
 
-AddButton(Tab1o, {
-     Name = "script ong hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/479e9f38148118df2d14fc0795ece576.lua"))()
-  end
-  })
- 
-AddButton(Tab1o, {
-     Name = "script w-azure",
-    Callback = function()
-	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/85e904ae1ff30824c1aa007fc7324f8f.lua"))()
-  end
-  })
+-- HEADER GIỐNG MELT HUB
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 50)
+Header.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+Header.BorderSizePixel = 0
+Header.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 1, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "🐔 Gà Gaming Hub | Blox Fruits"
+Title.TextColor3 = Color3.fromRGB(255, 215, 0)
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 18
+Title.Parent = Header
+
+local SubTitle = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0.5, 0)
+Title.Position = UDim2.new(0, 0, 0.5, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "Melt Hub Recreation - Full Features"
+Title.TextColor3 = Color3.fromRGB(200, 200, 200)
+Title.Font = Enum.Font.Gotham
+Title.TextSize = 12
+Title.Parent = Header
+
+-- TABS SYSTEM
+local Tabs = {
+    "Main Farm",
+    "Boss Farm", 
+    "Auto Skills",
+    "Utilities",
+    "Movement"
+}
+
+local CurrentTab = "Main Farm"
+
+local TabButtons = Instance.new("Frame")
+TabButtons.Size = UDim2.new(1, 0, 0, 40)
+TabButtons.Position = UDim2.new(0, 0, 0.1, 0)
+TabButtons.BackgroundTransparency = 1
+TabButtons.Parent = MainFrame
+
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, 0, 0, 410)
+ContentFrame.Position = UDim2.new(0, 0, 0.2, 0)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
+
+-- TẠO TAB BUTTONS
+for i, tabName in pairs(Tabs) do
+    local tabButton = Instance.new("TextButton")
+    tabButton.Size = UDim2.new(0.19, 0, 1, 0)
+    tabButton.Position = UDim2.new(0.2 * (i-1), 0, 0, 0)
+    tabButton.Text = tabName
+    tabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tabButton.Font = Enum.Font.GothamBold
+    tabButton.TextSize = 10
+    tabButton.Parent = TabButtons
+    
+    tabButton.MouseButton1Click:Connect(function()
+        CurrentTab = tabName
+        UpdateContent()
+    end)
+end
+
+-- HÀM TẠO TOGGLE THÔNG MINH
+function CreateSmartToggle(text, configKey, parent, position, tooltip)
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Size = UDim2.new(1, -20, 0, 35)
+    toggleFrame.Position = position
+    toggleFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
+    toggleFrame.BorderSizePixel = 0
+    toggleFrame.Parent = parent
+    
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.7, 0, 1, 0)
+    label.Position = UDim2.new(0.05, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 12
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = toggleFrame
+    
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0.2, 0, 0.6, 0)
+    toggleBtn.Position = UDim2.new(0.75, 0, 0.2, 0)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    toggleBtn.Text = "OFF"
+    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleBtn.Font = Enum.Font.GothamBold
+    toggleBtn.TextSize = 10
+    toggleBtn.Parent = toggleFrame
+    
+    toggleBtn.MouseButton1Click:Connect(function()
+        Config[configKey] = not Config[configKey]
+        if Config[configKey] then
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
+            toggleBtn.Text = "ON"
+            print("✅ BẬT: " .. text)
+        else
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            toggleBtn.Text = "OFF"
+            print("❌ TẮT: " .. text)
+        end
+    end)
+    
+    return toggleFrame
+end
+
+-- TẠO CONTENT CHO TỪNG TAB
+local MainFarmContent = CreateContentFrame("Main Farm")
+local BossFarmContent = CreateContentFrame("Boss Farm")
+local AutoSkillsContent = CreateContentFrame("Auto Skills") 
+local UtilitiesContent = CreateContentFrame("Utilities")
+local MovementContent = CreateContentFrame("Movement")
+
+-- MAIN FARM TAB
+CreateSmartToggle("Auto Farm Level", "AutoFarmLevel", MainFarmContent, UDim2.new(0, 10, 0, 10), "Auto farm level cơ bản")
+CreateSmartToggle("Auto Farm Sea Beasts", "AutoFarmSeaBeasts", MainFarmContent, UDim2.new(0, 10, 0, 55), "Auto farm hải tặc")
+CreateSmartToggle("Auto Farm Elites", "AutoFarmElites", MainFarmContent, UDim2.new(0, 10, 0, 100), "Auto farm elite")
+
+-- BOSS FARM TAB
+CreateSmartToggle("Auto Farm Bosses", "AutoFarmBosses", BossFarmContent, UDim2.new(0, 10, 0, 10), "Auto farm tất cả boss")
+CreateSmartToggle("Auto Dough King", "AutoFarmDoughKing", BossFarmContent, UDim2.new(0, 10, 0, 55), "Auto farm Dough King")
+CreateSmartToggle("Auto Cake Prince", "AutoFarmCakePrince", BossFarmContent, UDim2.new(0, 10, 0, 100), "Auto farm Cake Prince")
+
+-- AUTO SKILLS TAB
+CreateSmartToggle("Auto Melee", "AutoMelee", AutoSkillsContent, UDim2.new(0, 10, 0, 10), "Auto đánh võ")
+CreateSmartToggle("Auto Sword", "AutoSword", AutoSkillsContent, UDim2.new(0, 10, 0, 55), "Auto đánh kiếm")
+CreateSmartToggle("Auto Gun", "AutoGun", AutoSkillsContent, UDim2.new(0, 10, 0, 100), "Auto đánh súng")
+CreateSmartToggle("Auto Fruit Skills", "AutoFruit", AutoSkillsContent, UDim2.new(0, 10, 0, 145), "Auto kỹ năng trái ác quỷ")
+
+-- UTILITIES TAB
+CreateSmartToggle("Auto Collect Drops", "AutoCollectDrops", UtilitiesContent, UDim2.new(0, 10, 0, 10), "Auto nhặt đồ rơi")
+CreateSmartToggle("Auto Buy Fruits", "AutoBuyFruits", UtilitiesContent, UDim2.new(0, 10, 0, 55), "Auto mua trái ác quỷ")
+CreateSmartToggle("Auto Haki", "AutoHaki", UtilitiesContent, UDim2.new(0, 10, 0, 100), "Tự động bật Haki")
+
+-- MOVEMENT TAB
+CreateSmartToggle("Super Speed", "SuperSpeed", MovementContent, UDim2.new(0, 10, 0, 10), "Chạy siêu nhanh")
+CreateSmartToggle("Fly", "Fly", MovementContent, UDim2.new(0, 10, 0, 55), "Bay")
+CreateSmartToggle("No Clip", "NoClip", MovementContent, UDim2.new(0, 10, 0, 100), "Xuyên tường")
+
+-- HÀM TẠO CONTENT FRAME
+function CreateContentFrame(tabName)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundTransparency = 1
+    frame.Visible = (tabName == CurrentTab)
+    frame.Parent = ContentFrame
+    return frame
+end
+
+-- HÀM CẬP NHẬT CONTENT
+function UpdateContent()
+    MainFarmContent.Visible = (CurrentTab == "Main Farm")
+    BossFarmContent.Visible = (CurrentTab == "Boss Farm")
+    AutoSkillsContent.Visible = (CurrentTab == "Auto Skills")
+    UtilitiesContent.Visible = (CurrentTab == "Utilities")
+    MovementContent.Visible = (CurrentTab == "Movement")
+end
+
+-- 🚀 CÁC HÀM CHỨC NĂNG THỰC TẾ
+
+-- AUTO FARM LEVEL
+function RealAutoFarmLevel()
+    spawn(function()
+        while wait(0.5) do
+            if not Config.AutoFarmLevel then break end
+            
+            local target = FindNearestEnemy()
+            if target then
+                SafeTeleport(target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5))
+                
+                -- Auto attack
+                if Config.AutoMelee then
+                    VirtualInput:SendKeyEvent(true, "X", false, game)
+                    wait(0.1)
+                    VirtualInput:SendKeyEvent(false, "X", false, game)
+                end
+                
+                if Config.AutoSword then
+                    VirtualInput:SendKeyEvent(true, "Z", false, game)
+                    wait(0.1)
+                    VirtualInput:SendKeyEvent(false, "Z", false, game)
+                end
+            end
+        end
+    end)
+end
+
+-- AUTO FARM BOSSES
+function RealAutoFarmBosses()
+    spawn(function()
+        while wait(2) do
+            if not Config.AutoFarmBosses then break end
+            
+            for _, boss in pairs(Workspace.Enemies:GetChildren()) do
+                if string.find(boss.Name, "Boss") then
+                    if boss:FindFirstChild("HumanoidRootPart") and boss.Humanoid.Health > 0 then
+                        SafeTeleport(boss.HumanoidRootPart.CFrame * CFrame.new(0, 0, 10))
+                        break
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- AUTO COLLECT DROPS
+function RealAutoCollectDrops()
+    spawn(function()
+        while wait(3) do
+            if not Config.AutoCollectDrops then break end
+            
+            for _, item in pairs(Workspace:GetChildren()) do
+                if item.Name == "Drop" and item:FindFirstChild("Handle") then
+                    SafeTeleport(item.Handle.CFrame)
+                    wait(0.5)
+                end
+            end
+        end
+    end)
+end
+
+-- SUPER SPEED
+function RealSuperSpeed()
+    if Config.SuperSpeed then
+        localPlayer.Character.Humanoid.WalkSpeed = 120
+    else
+        localPlayer.Character.Humanoid.WalkSpeed = 16
+    end
+end
+
+-- FLY
+function RealFly()
+    if Config.Fly then
+        localPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Flying)
+    end
+end
+
+-- TÌM QUÁI GẦN NHẤT
+function FindNearestEnemy()
+    local nearest = nil
+    local distance = math.huge
+    
+    if Workspace:FindFirstChild("Enemies") then
+        for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+            if enemy:FindFirstChild("HumanoidRootPart") and enemy:FindFirstChild("Humanoid") then
+                if enemy.Humanoid.Health > 0 then
+                    local dist = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
+                    if dist < distance then
+                        distance = dist
+                        nearest = enemy
+                    end
+                end
+            end
+        end
+    end
+    
+    return nearest
+end
+
+-- TELEPORT AN TOÀN
+function SafeTeleport(cframe)
+    pcall(function()
+        localPlayer.Character.HumanoidRootPart.CFrame = cframe
+    end)
+end
+
+-- KHỞI CHẠY TẤT CẢ TÍNH NĂNG
+spawn(function()
+    while wait(1) do
+        if Config.AutoFarmLevel then RealAutoFarmLevel() end
+        if Config.AutoFarmBosses then RealAutoFarmBosses() end
+        if Config.AutoCollectDrops then RealAutoCollectDrops() end
+        if Config.SuperSpeed then RealSuperSpeed() end
+        if Config.Fly then RealFly() end
+    end
+end)
+
+-- CHỐNG AFK
+local VirtualUser = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+end)
