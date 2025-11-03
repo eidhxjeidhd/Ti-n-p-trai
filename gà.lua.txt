@@ -1,5 +1,5 @@
--- TIẾN HUB PREMIUM - Premium Blox Fruit Script
--- Quality Like Paid Version
+-- TIẾN HUB ULTRA PREMIUM - Paid Version Quality
+-- Premium Features + Ultra Performance
 -- Created by Tiến
 
 if not game:IsLoaded() then
@@ -8,243 +8,489 @@ end
 
 local Player = game:GetService("Players").LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 
--- Premium Loading Screen
+-- Ultra Premium Loading
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "⭐ TIẾN HUB PREMIUM",
-    Text = "Đang tải bản cao cấp...",
-    Duration = 3
+    Title = "🌟 TIẾN HUB ULTRA PREMIUM",
+    Text = "Đang tải bản cao cấp nhất...",
+    Duration = 4,
+    Icon = "rbxassetid://105896068771440"
 })
 
 wait(2)
 
--- Premium UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("⭐ TIẾN HUB PREMIUM | Blox Fruit", "Sentinel")
+-- ████████ ULTRA PREMIUM GUI ████████
+local UltraGui = Instance.new("ScreenGui")
+UltraGui.Name = "TienHubUltraPremium"
+UltraGui.ResetOnSpawn = false
+UltraGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Premium Toggle Image
-local ScreenGui = Instance.new("ScreenGui")
-local ImageButton = Instance.new("ImageButton")
-local PremiumBadge = Instance.new("TextLabel")
+-- Main Container
+local MainContainer = Instance.new("Frame")
+MainContainer.Size = UDim2.new(0, 600, 0, 450)
+MainContainer.Position = UDim2.new(0.5, -300, 0.5, -225)
+MainContainer.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainContainer.BorderSizePixel = 0
+MainContainer.ClipsDescendants = true
 
-ScreenGui.Parent = game.CoreGui
-ScreenGui.Name = "TienHubPremium"
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+-- Ultra Gradient Background
+local Gradient = Instance.new("UIGradient")
+Gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 40)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))
+})
+Gradient.Rotation = 45
+Gradient.Parent = MainContainer
 
--- Premium Image Button
-ImageButton.Parent = ScreenGui
-ImageButton.Size = UDim2.new(0, 60, 0, 60)
-ImageButton.Position = UDim2.new(0, 20, 0.5, -30)
-ImageButton.Image = "rbxassetid://10589606877"
-ImageButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-ImageButton.BackgroundTransparency = 0.2
-ImageButton.BorderSizePixel = 0
-ImageButton.AutoButtonColor = false
+-- Premium Corner
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 12)
+Corner.Parent = MainContainer
+
+-- Premium Shadow
+local Shadow = Instance.new("ImageLabel")
+Shadow.Size = UDim2.new(1, 20, 1, 20)
+Shadow.Position = UDim2.new(0, -10, 0, -10)
+Shadow.BackgroundTransparency = 1
+Shadow.Image = "rbxassetid://5554236805"
+Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Shadow.ImageTransparency = 0.9
+Shadow.ScaleType = Enum.ScaleType.Slice
+Shadow.SliceCenter = Rect.new(23, 23, 277, 277)
+Shadow.Parent = MainContainer
+
+-- Ultra Premium Header
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 60)
+Header.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+Header.BorderSizePixel = 0
+Header.Parent = MainContainer
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 12)
+HeaderCorner.Parent = Header
+
+-- Premium Logo
+local Logo = Instance.new("ImageLabel")
+Logo.Size = UDim2.new(0, 40, 0, 40)
+Logo.Position = UDim2.new(0, 15, 0, 10)
+Logo.Image = "rbxassetid://105896068771440"
+Logo.BackgroundTransparency = 1
+Logo.Parent = Header
+
+-- Premium Title
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -80, 1, 0)
+Title.Position = UDim2.new(0, 70, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "🌟 TIẾN HUB ULTRA PREMIUM"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 20
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
 
 -- Premium Badge
-PremiumBadge.Parent = ImageButton
-PremiumBadge.Size = UDim2.new(1, 0, 0, 15)
-PremiumBadge.Position = UDim2.new(0, 0, 1, -15)
-PremiumBadge.Text = "PREMIUM"
-PremiumBadge.TextColor3 = Color3.fromRGB(255, 215, 0)
-PremiumBadge.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-PremiumBadge.BackgroundTransparency = 0.3
-PremiumBadge.TextSize = 10
+local PremiumBadge = Instance.new("TextLabel")
+PremiumBadge.Size = UDim2.new(0, 80, 0, 20)
+PremiumBadge.Position = UDim2.new(1, -90, 0, 10)
+PremiumBadge.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+PremiumBadge.Text = "ULTRA"
+PremiumBadge.TextColor3 = Color3.fromRGB(0, 0, 0)
+PremiumBadge.TextSize = 12
 PremiumBadge.Font = Enum.Font.GothamBold
+PremiumBadge.Parent = Header
 
--- Premium Effects
-local UIS = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
+local BadgeCorner = Instance.new("UICorner")
+BadgeCorner.CornerRadius = UDim.new(0, 10)
+BadgeCorner.Parent = PremiumBadge
 
-ImageButton.MouseEnter:Connect(function()
-    local tween = TweenService:Create(ImageButton, TweenInfo.new(0.2), {
-        Size = UDim2.new(0, 65, 0, 65),
-        BackgroundTransparency = 0.1
-    })
-    tween:Play()
-end)
+-- Close Button
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -35, 0, 15)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+CloseButton.Text = "×"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 20
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Parent = Header
 
-ImageButton.MouseLeave:Connect(function()
-    local tween = TweenService:Create(ImageButton, TweenInfo.new(0.2), {
-        Size = UDim2.new(0, 60, 0, 60),
-        BackgroundTransparency = 0.2
-    })
-    tween:Play()
-end)
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(1, 0)
+CloseCorner.Parent = CloseButton
 
-local MenuVisible = true
+-- Navigation Tabs
+local TabContainer = Instance.new("Frame")
+TabContainer.Size = UDim2.new(0, 150, 1, -60)
+TabContainer.Position = UDim2.new(0, 0, 0, 60)
+TabContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+TabContainer.BorderSizePixel = 0
+TabContainer.Parent = MainContainer
 
-ImageButton.MouseButton1Click:Connect(function()
-    MenuVisible = not MenuVisible
-    Library:ToggleUI()
+-- Content Area
+local ContentContainer = Instance.new("Frame")
+ContentContainer.Size = UDim2.new(1, -150, 1, -60)
+ContentContainer.Position = UDim2.new(0, 150, 0, 60)
+ContentContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+ContentContainer.BorderSizePixel = 0
+ContentContainer.Parent = MainContainer
+
+-- Scrolling Content
+local ScrollFrame = Instance.new("ScrollingFrame")
+ScrollFrame.Size = UDim2.new(1, 0, 1, 0)
+ScrollFrame.BackgroundTransparency = 1
+ScrollFrame.BorderSizePixel = 0
+ScrollFrame.ScrollBarThickness = 6
+ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 150)
+ScrollFrame.Parent = ContentContainer
+
+local ContentLayout = Instance.new("UIListLayout")
+ContentLayout.Padding = UDim.new(0, 10)
+ContentLayout.Parent = ScrollFrame
+
+-- Parent GUI
+MainContainer.Parent = UltraGui
+UltraGui.Parent = game.CoreGui
+
+-- ████████ ULTRA PREMIUM VARIABLES ████████
+local CurrentTab = nil
+local UltraTabs = {}
+
+-- Ultra Premium Config
+getgenv().UltraConfig = {
+    SuperPunch = {
+        Enabled = false,
+        Range = 2000,
+        Damage = 10000,
+        Cooldown = 0.2,
+        AOE = true,
+        AutoTarget = true
+    },
+    AutoFarm = {
+        Enabled = false,
+        Mode = "StandStill", -- StandStill, Follow, Smart
+        Range = 2500,
+        UseSuperPunch = true,
+        Priority = "Nearest" -- Nearest, HighestLevel, LowestHealth
+    },
+    Player = {
+        WalkSpeed = 16,
+        JumpPower = 50,
+        NoClip = false,
+        Fly = false,
+        InfiniteEnergy = false
+    },
+    Abilities = {
+        AutoBuso = false,
+        AutoKen = false,
+        AutoRace = false,
+        AutoRaid = false
+    }
+}
+
+-- ████████ ULTRA PREMIUM FUNCTIONS ████████
+function CreateUltraTab(tabName, tabIcon)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(1, -10, 0, 45)
+    TabButton.Position = UDim2.new(0, 5, 0, #UltraTabs * 50 + 5)
+    TabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    TabButton.Text = "  " .. tabIcon .. " " .. tabName
+    TabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+    TabButton.TextSize = 14
+    TabButton.Font = Enum.Font.Gotham
+    TabButton.TextXAlignment = Enum.TextXAlignment.Left
+    TabButton.Parent = TabContainer
     
-    -- Premium click effect
-    local tween1 = TweenService:Create(ImageButton, TweenInfo.new(0.1), {
-        Size = UDim2.new(0, 55, 0, 55),
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    })
-    local tween2 = TweenService:Create(ImageButton, TweenInfo.new(0.1), {
-        Size = UDim2.new(0, 60, 0, 60),
-        BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    })
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 8)
+    TabCorner.Parent = TabButton
     
-    tween1:Play()
-    wait(0.1)
-    tween2:Play()
-end)
+    local TabContent = Instance.new("Frame")
+    TabContent.Size = UDim2.new(1, 0, 0, 0)
+    TabContent.BackgroundTransparency = 1
+    TabContent.Visible = false
+    TabContent.Parent = ScrollFrame
+    
+    local TabLayout = Instance.new("UIListLayout")
+    TabLayout.Padding = UDim.new(0, 8)
+    TabLayout.Parent = TabContent
+    
+    TabButton.MouseButton1Click:Connect(function()
+        if CurrentTab then
+            CurrentTab.Content.Visible = false
+            CurrentTab.Button.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+        end
+        
+        CurrentTab = UltraTabs[tabName]
+        CurrentTab.Content.Visible = true
+        TabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+        
+        -- Update scroll size
+        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, TabContent.UIListLayout.AbsoluteContentSize.Y)
+    end)
+    
+    UltraTabs[tabName] = {
+        Button = TabButton,
+        Content = TabContent,
+        UIListLayout = TabLayout
+    }
+    
+    if #UltraTabs == 1 then
+        CurrentTab = UltraTabs[tabName]
+        CurrentTab.Content.Visible = true
+        TabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+    end
+    
+    return UltraTabs[tabName]
+end
 
--- ████████ PREMIUM AUTO FARM ████████
-local AutoFarmTab = Window:NewTab("🌿 Auto Farm")
-local AutoFarmSection = AutoFarmTab:NewSection("Premium Auto Farm")
+function CreateUltraSection(tab, sectionName)
+    local Section = Instance.new("Frame")
+    Section.Size = UDim2.new(1, -20, 0, 0)
+    Section.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+    Section.Parent = tab.Content
+    
+    local SectionCorner = Instance.new("UICorner")
+    SectionCorner.CornerRadius = UDim.new(0, 8)
+    SectionCorner.Parent = Section
+    
+    local SectionHeader = Instance.new("TextLabel")
+    SectionHeader.Size = UDim2.new(1, 0, 0, 35)
+    SectionHeader.BackgroundTransparency = 1
+    SectionHeader.Text = "  " .. sectionName
+    SectionHeader.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SectionHeader.TextSize = 16
+    SectionHeader.Font = Enum.Font.GothamBold
+    SectionHeader.TextXAlignment = Enum.TextXAlignment.Left
+    SectionHeader.Parent = Section
+    
+    local SectionContent = Instance.new("Frame")
+    SectionContent.Size = UDim2.new(1, 0, 0, 0)
+    SectionContent.BackgroundTransparency = 1
+    SectionContent.Parent = Section
+    
+    local SectionLayout = Instance.new("UIListLayout")
+    SectionLayout.Padding = UDim.new(0, 6)
+    SectionLayout.Parent = SectionContent
+    
+    -- Auto resize
+    SectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        SectionContent.Size = UDim2.new(1, 0, 0, SectionLayout.AbsoluteContentSize.Y)
+        Section.Size = UDim2.new(1, -20, 0, SectionLayout.AbsoluteContentSize.Y + 40)
+    end)
+    
+    return SectionContent
+end
 
--- Premium Auto Farm với AI Target Selection
-AutoFarmSection:NewToggle("🤖 AI Auto Farm", "Farm thông minh với AI", function(state)
-    getgenv().AIAutoFarm = state
+function CreateUltraToggle(section, text, description, callback)
+    local ToggleFrame = Instance.new("Frame")
+    ToggleFrame.Size = UDim2.new(1, 0, 0, 35)
+    ToggleFrame.BackgroundTransparency = 1
+    ToggleFrame.Parent = section
+    
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Size = UDim2.new(0, 60, 0, 25)
+    ToggleButton.Position = UDim2.new(1, -65, 0.5, -12.5)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    ToggleButton.Text = ""
+    ToggleButton.Parent = ToggleFrame
+    
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(1, 0)
+    ToggleCorner.Parent = ToggleButton
+    
+    local ToggleIndicator = Instance.new("Frame")
+    ToggleIndicator.Size = UDim2.new(0, 21, 0, 21)
+    ToggleIndicator.Position = UDim2.new(0, 2, 0, 2)
+    ToggleIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleIndicator.Parent = ToggleButton
+    
+    local IndicatorCorner = Instance.new("UICorner")
+    IndicatorCorner.CornerRadius = UDim.new(1, 0)
+    IndicatorCorner.Parent = ToggleIndicator
+    
+    local ToggleLabel = Instance.new("TextLabel")
+    ToggleLabel.Size = UDim2.new(1, -70, 1, 0)
+    ToggleLabel.BackgroundTransparency = 1
+    ToggleLabel.Text = text
+    ToggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleLabel.TextSize = 14
+    ToggleLabel.Font = Enum.Font.Gotham
+    ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    ToggleLabel.Parent = ToggleFrame
+    
+    local State = false
+    
+    local function UpdateToggle()
+        if State then
+            TweenService:Create(ToggleIndicator, TweenInfo.new(0.2), {
+                Position = UDim2.new(1, -23, 0, 2),
+                BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+            }):Play()
+            TweenService:Create(ToggleButton, TweenInfo.new(0.2), {
+                BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+            }):Play()
+        else
+            TweenService:Create(ToggleIndicator, TweenInfo.new(0.2), {
+                Position = UDim2.new(0, 2, 0, 2),
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            }):Play()
+            TweenService:Create(ToggleButton, TweenInfo.new(0.2), {
+                BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+            }):Play()
+        end
+    end
+    
+    ToggleButton.MouseButton1Click:Connect(function()
+        State = not State
+        UpdateToggle()
+        callback(State)
+    end)
+    
+    UpdateToggle()
+    
+    return {
+        SetState = function(newState)
+            State = newState
+            UpdateToggle()
+            callback(State)
+        end
+    }
+end
+
+-- ████████ ULTRA PREMIUM TABS ████████
+local CombatTab = CreateUltraTab("Combat", "💥")
+local FarmTab = CreateUltraTab("Auto Farm", "🌿")
+local PlayerTab = CreateUltraTab("Player", "🎮")
+local AbilityTab = CreateUltraTab("Abilities", "✨")
+local TeleportTab = CreateUltraTab("Teleport", "🌍")
+local MiscTab = CreateUltraTab("Misc", "🔧")
+
+-- ████████ ULTRA COMBAT SYSTEM ████████
+local CombatSection = CreateUltraSection(CombatTab, "ULTRA COMBAT SYSTEM")
+
+-- Ultra Super Punch
+CreateUltraToggle(CombatSection, "🚀 ULTRA SUPER PUNCH", "Đấm siêu xa 2000 studs + AOE", function(state)
+    getgenv().UltraConfig.SuperPunch.Enabled = state
     if state then
         spawn(function()
-            while getgenv().AIAutoFarm do
-                task.wait()
+            while getgenv().UltraConfig.SuperPunch.Enabled do
                 pcall(function()
-                    local enemies = workspace.Enemies:GetChildren()
-                    local closest = nil
-                    local dist = math.huge
-                    
-                    -- AI Target Selection
-                    for _, enemy in pairs(enemies) do
+                    -- Ultra Punch Logic
+                    for _, enemy in pairs(workspace.Enemies:GetChildren()) do
                         if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
                             local distance = (Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-                            if distance < dist then
-                                dist = distance
-                                closest = enemy
+                            if distance <= getgenv().UltraConfig.SuperPunch.Range then
+                                enemy.Humanoid.Health = enemy.Humanoid.Health - getgenv().UltraConfig.SuperPunch.Damage
+                                
+                                -- Ultra Knockback
+                                local dir = (enemy.HumanoidRootPart.Position - Character.HumanoidRootPart.Position).Unit
+                                enemy.HumanoidRootPart.Velocity = dir * 200 + Vector3.new(0, 100, 0)
                             end
                         end
                     end
                     
-                    if closest then
-                        -- Premium Movement
-                        Character.HumanoidRootPart.CFrame = closest.HumanoidRootPart.CFrame * CFrame.new(0, 15, 8)
-                        
-                        -- Auto Attack với cooldown thông minh
+                    -- Ultra Attack
+                    for i = 1, 3 do
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
-                        
-                        -- Auto Skills
-                        for _, tool in pairs(Player.Backpack:GetChildren()) do
-                            if tool:IsA("Tool") and tool:FindFirstChild("RemoteFunction") then
-                                Character.Humanoid:EquipTool(tool)
-                                tool.RemoteFunction:InvokeServer()
-                            end
-                        end
                     end
                 end)
+                wait(getgenv().UltraConfig.SuperPunch.Cooldown)
             end
         end)
     end
 end)
 
--- Auto Farm Level với Progress Tracking
-AutoFarmSection:NewToggle("📈 Auto Farm Level", "Farm level + Theo dõi tiến độ", function(state)
-    getgenv().AutoFarmLevel = state
+-- One Punch Mode
+CreateUltraToggle(CombatSection, "👊 ONE PUNCH MODE", "1 đấm chết tất cả - God Mode", function(state)
+    getgenv().OnePunchMode = state
+    if state then
+        spawn(function()
+            while getgenv().OnePunchMode do
+                pcall(function()
+                    for _, enemy in pairs(workspace.Enemies:GetChildren()) do
+                        if enemy:FindFirstChild("Humanoid") then
+                            enemy.Humanoid.Health = 0
+                        end
+                    end
+                end)
+                wait(0.5)
+            end
+        end)
+    end
 end)
 
-AutoFarmSection:NewToggle("🌊 Auto Sea Events", "Tự động tham gia sự kiện biển", function(state)
-    getgenv().AutoSeaEvents = state
+-- ████████ ULTRA AUTO FARM SYSTEM ████████
+local FarmSection = CreateUltraSection(FarmTab, "ULTRA AUTO FARM")
+
+-- Smart Auto Farm
+CreateUltraToggle(FarmSection, "🤖 ULTRA SMART FARM", "Farm thông minh + Đứng yên", function(state)
+    getgenv().UltraConfig.AutoFarm.Enabled = state
+    if state then
+        spawn(function()
+            while getgenv().UltraConfig.AutoFarm.Enabled do
+                pcall(function()
+                    local enemyCount = 0
+                    
+                    for _, enemy in pairs(workspace.Enemies:GetChildren()) do
+                        if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
+                            local distance = (Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
+                            if distance <= getgenv().UltraConfig.AutoFarm.Range then
+                                enemyCount = enemyCount + 1
+                                
+                                -- Auto attack
+                                if getgenv().UltraConfig.AutoFarm.UseSuperPunch then
+                                    -- Use Super Punch
+                                    for i = 1, 2 do
+                                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
+                                    end
+                                else
+                                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
+                                end
+                            end
+                        end
+                    end
+                    
+                    -- Stay still while farming
+                    Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                end)
+                wait(0.1)
+            end
+        end)
+    end
 end)
 
--- 🎯 PREMIUM AUTO BOSS ████████
-local BossTab = Window:NewTab("⚔️ Auto Boss")
-local BossSection = BossTab:NewSection("Premium Boss Farm")
-
-local BossList = {
-    "Rip_indra True",
-    "Soul Reaper",
-    "Cake Queen", 
-    "Dough King",
-    "Beautiful Pirate",
-    "Stone",
-    "Island Empress",
-    "Kilo Admiral",
-    "Captain Elephant"
-}
-
-BossSection:NewDropdown("🎯 Chọn Boss", "Chọn boss cao cấp", BossList, function(selected)
-    getgenv().SelectedBoss = selected
-end)
-
-BossSection:NewToggle("🤖 Auto Farm Boss", "Farm boss tự động + Auto TP", function(state)
+-- Auto Farm Boss
+CreateUltraToggle(FarmSection, "👑 AUTO FARM BOSS", "Tự động farm boss cao cấp", function(state)
     getgenv().AutoFarmBoss = state
 end)
 
-BossSection:NewToggle("🔮 Auto Hop Server Boss", "Tự động đổi server nếu không có boss", function(state)
-    getgenv().AutoHopBoss = state
-end)
+-- ████████ ULTRA PLAYER ENHANCEMENTS ████████
+local PlayerSection = CreateUltraSection(PlayerTab, "ULTRA PLAYER ENHANCEMENTS")
 
--- ⚡ PREMIUM AUTO ABILITY ████████
-local AbilityTab = Window:NewTab("✨ Auto Ability")
-local AbilitySection = AbilityTab:NewSection("Premium Abilities")
-
-AbilitySection:NewToggle("🛡️ Auto Buso Haki", "Tự động bật Buso + Optimized", function(state)
-    getgenv().AutoBuso = state
+-- Fly System
+CreateUltraToggle(PlayerSection, "🕊️ ULTRA FLY", "Bay lượn cao cấp", function(state)
+    getgenv().UltraConfig.Player.Fly = state
     if state then
-        spawn(function()
-            while getgenv().AutoBuso do
-                task.wait(8)
-                pcall(function()
-                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
-                end)
-            end
-        end)
+        -- Ultra Fly Implementation
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Xi0Nx/Fly/main/Fly.lua"))()
     end
 end)
 
-AbilitySection:NewToggle("🌀 Auto Ken Haki", "Tự động bật Ken + Spam Protection", function(state)
-    getgenv().AutoKen = state
+-- Infinite Energy
+CreateUltraToggle(PlayerSection, "⚡ INFINITE ENERGY", "Năng lượng vô hạn", function(state)
+    getgenv().UltraConfig.Player.InfiniteEnergy = state
 end)
 
-AbilitySection:NewToggle("🎸 Auto Soul Guitar", "Tự động dùng Soul Guitar", function(state)
-    getgenv().AutoSoulGuitar = state
-end)
-
-AbilitySection:NewToggle("⚡ Auto Race V2/V3", "Tự động nâng cấp Race", function(state)
-    getgenv().AutoRace = state
-end)
-
--- 🌊 PREMIUM AUTO SEA ████████
-local SeaTab = Window:NewTab("🌊 Auto Sea")
-local SeaSection = SeaTab:NewSection("Premium Sea Features")
-
-SeaSection:NewToggle("🚢 Auto New World", "Tự động đến New World", function(state)
-    getgenv().AutoNewWorld = state
-end)
-
-SeaSection:NewToggle("🏝️ Auto Third Sea", "Tự động đến Third Sea", function(state)
-    getgenv().AutoThirdSea = state
-end)
-
-SeaSection:NewToggle("🐚 Auto Collect Chest", "Tự động mở rương", function(state)
-    getgenv().AutoChest = state
-end)
-
-SeaSection:NewToggle("🌪️ Auto Tushita", "Tự động làm Tushita", function(state)
-    getgenv().AutoTushita = state
-end)
-
--- 🎮 PREMIUM PLAYER ████████
-local PlayerTab = Window:NewTab("🎮 Player")
-local PlayerSection = PlayerTab:NewSection("Premium Player Settings")
-
-PlayerSection:NewSlider("💨 WalkSpeed", "Tốc độ chạy (16-500)", 500, 16, function(value)
-    Character.Humanoid.WalkSpeed = value
-end)
-
-PlayerSection:NewSlider("🦘 JumpPower", "Lực nhảy (50-500)", 500, 50, function(value)
-    Character.Humanoid.JumpPower = value
-end)
-
-PlayerSection:NewToggle("👻 No Clip", "Đi xuyên tường Premium", function(state)
-    getgenv().NoClip = state
+-- No Clip
+CreateUltraToggle(PlayerSection, "👻 ULTRA NO CLIP", "Đi xuyên tường cao cấp", function(state)
+    getgenv().UltraConfig.Player.NoClip = state
     if state then
         spawn(function()
-            while getgenv().NoClip do
+            while getgenv().UltraConfig.Player.NoClip do
                 task.wait()
                 pcall(function()
                     for _, part in pairs(Character:GetDescendants()) do
@@ -258,207 +504,63 @@ PlayerSection:NewToggle("👻 No Clip", "Đi xuyên tường Premium", function(
     end
 end)
 
-PlayerSection:NewToggle("🔒 Anti AFK", "Chống AFK cao cấp", function(state)
-    getgenv().AntiAFK = state
+-- ████████ ULTRA ABILITIES ████████
+local AbilitySection = CreateUltraSection(AbilityTab, "ULTRA ABILITIES")
+
+CreateUltraToggle(AbilitySection, "🛡️ AUTO BUSO HAKI", "Tự động bật Buso Haki", function(state)
+    getgenv().UltraConfig.Abilities.AutoBuso = state
+    if state then
+        spawn(function()
+            while getgenv().UltraConfig.Abilities.AutoBuso do
+                task.wait(8)
+                pcall(function()
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
+                end)
+            end
+        end)
+    end
 end)
 
-PlayerSection:NewToggle("🎯 Auto Stats", "Tự động add điểm stats", function(state)
-    getgenv().AutoStats = state
+CreateUltraToggle(AbilitySection, "🌀 AUTO KEN HAKI", "Tự động bật Ken Haki", function(state)
+    getgenv().UltraConfig.Abilities.AutoKen = state
 end)
 
--- 🌍 PREMIUM TELEPORT ████████
-local TeleportTab = Window:NewTab("🌍 Teleport")
-local TeleportSection = TeleportTab:NewSection("Premium Teleport")
+CreateUltraToggle(AbilitySection, "🌟 AUTO RACE V4", "Tự động nâng cấp Race V4", function(state)
+    getgenv().UltraConfig.Abilities.AutoRace = state
+end)
 
-local PremiumLocations = {
+-- ████████ ULTRA TELEPORT SYSTEM ████████
+local TeleportSection = CreateUltraSection(TeleportTab, "ULTRA TELEPORT SYSTEM")
+
+local UltraLocations = {
     ["🏝️ Starter Island"] = CFrame.new(100, 50, 100),
     ["⚓ Marine Base"] = CFrame.new(-2850, 322, 5300),
     ["🌴 Jungle"] = CFrame.new(-1500, 60, 100),
     ["🏔️ Snow Mountain"] = CFrame.new(1200, 60, -1300),
-    ["🏜️ Desert"] = CFrame.new(900, 60, 4100),
     ["☁️ Sky Island 1"] = CFrame.new(-4600, 800, -2600),
     ["⚡ Sky Island 2"] = CFrame.new(-7800, 5500, -3500),
     ["🐉 Castle on the Sea"] = CFrame.new(-5500, 314, -2700),
-    ["🔱 Fountain City"] = CFrame.new(5200, 50, 4100)
+    ["🔱 Third Sea"] = CFrame.new(-6500, 200, -4500)
 }
 
-for name, cf in pairs(PremiumLocations) do
-    TeleportSection:NewButton(name, "Teleport tới " .. name, function()
+for name, cf in pairs(UltraLocations) do
+    local TeleportBtn = Instance.new("TextButton")
+    TeleportBtn.Size = UDim2.new(1, 0, 0, 35)
+    TeleportBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+    TeleportBtn.Text = name
+    TeleportBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TeleportBtn.TextSize = 14
+    TeleportBtn.Font = Enum.Font.Gotham
+    TeleportBtn.Parent = TeleportSection
+    
+    local BtnCorner = Instance.new("UICorner")
+    BtnCorner.CornerRadius = UDim.new(0, 6)
+    BtnCorner.Parent = TeleportBtn
+    
+    TeleportBtn.MouseButton1Click:Connect(function()
         Character.HumanoidRootPart.CFrame = cf
     end)
 end
 
--- ⚔️ PREMIUM RAID ████████
-local RaidTab = Window:NewTab("⚔️ Raid")
-local RaidSection = RaidTab:NewSection("Premium Raid Features")
-
-RaidSection:NewToggle("🔥 Auto Raid", "Tự động làm raid", function(state)
-    getgenv().AutoRaid = state
-end)
-
-RaidSection:NewToggle("💀 Kill Aura", "Giết mọi quái xung quanh", function(state)
-    getgenv().KillAura = state
-end)
-
-RaidSection:NewToggle("🔄 Auto Hop Raid", "Tự động đổi server để raid", function(state)
-    getgenv().AutoHopRaid = state
-end)
-
--- 🔧 PREMIUM MISCELLANEOUS ████████
-local MiscTab = Window:NewTab("🔧 Miscellaneous")
-local MiscSection = MiscTab:NewSection("Premium Miscellaneous")
-
-MiscSection:NewToggle("🎁 Auto Redeem Code", "Tự động nhập code Premium", function(state)
-    getgenv().AutoRedeem = state
-    if state then
-        local PremiumCodes = {
-            "KITT_RESET",
-            "SUB2GAMERROBOT_EXP1", 
-            "StrawHatMaine",
-            "Sub2OfficialNoobie",
-            "SUB2NOOBMASTER123",
-            "Sub2Daigrock",
-            "Axiore",
-            "TantaiGaming"
-        }
-        for _, code in pairs(PremiumCodes) do
-            pcall(function()
-                game:GetService("ReplicatedStorage").Remotes.Redeem:InvokeServer(code)
-            end)
-        end
-    end
-end)
-
-MiscSection:NewButton("🔄 Rejoin Server", "Rejoin server nhanh", function()
-    game:GetService("TeleportService"):Teleport(game.PlaceId)
-end)
-
-MiscSection:NewButton("🚀 Server Hop", "Chuyển server Premium", function()
-    local Http = game:GetService("HttpService")
-    local TPS = game:GetService("TeleportService")
-    local Api = "https://games.roblox.com/v1/games/"
-    
-    local _place = game.PlaceId
-    local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
-    local function ListServers(cursor)
-        local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
-        return Http:JSONDecode(Raw)
-    end
-    
-    local Next; repeat
-        local Servers = ListServers(Next)
-        for i,v in next, Servers.data do
-            if v.playing < v.maxPlayers then
-                TPS:TeleportToPlaceInstance(_place, v.id)
-                wait(2)
-            end
-        end
-        Next = Servers.nextPageCursor
-    until not Next
-end)
-
--- ⚙️ PREMIUM CONFIG ████████
-local ConfigTab = Window:NewTab("⚙️ Config")
-local ConfigSection = ConfigTab:NewSection("Premium Configuration")
-
-ConfigSection:NewKeybind("🔑 Toggle GUI", "Ẩn/hiện GUI Premium", Enum.KeyCode.RightControl, function()
-    Library:ToggleUI()
-    MenuVisible = not MenuVisible
-end)
-
-ConfigSection:NewButton("💾 Save Config", "Lưu cấu hình Premium", function()
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "⭐ TIẾN HUB PREMIUM",
-        Text = "Configuration saved!",
-        Duration = 3
-    })
-end)
-
-ConfigSection:NewButton("📥 Load Config", "Tải cấu hình Premium", function()
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "⭐ TIẾN HUB PREMIUM", 
-        Text = "Configuration loaded!",
-        Duration = 3
-    })
-end)
-
--- 🚀 PREMIUM STARTUP FUNCTIONS
-spawn(function()
-    while task.wait(10) do
-        if getgenv().AutoBuso then
-            pcall(function()
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
-            end)
-        end
-    end
-end)
-
--- Premium Auto Stats
-spawn(function()
-    while task.wait(1) do
-        if getgenv().AutoStats then
-            pcall(function()
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Melee", 1)
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Defense", 1)
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Sword", 1)
-            end)
-        end
-    end
-end)
-
--- Premium Performance Optimization
-spawn(function()
-    while task.wait() do
-        pcall(function()
-            if getgenv().AIAutoFarm or getgenv().AutoFarmLevel then
-                for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                        if (Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude <= 1000 then
-                            enemy.HumanoidRootPart.Size = Vector3.new(60, 60, 60)
-                            enemy.HumanoidRootPart.Transparency = 0.8
-                            enemy.HumanoidRootPart.CanCollide = false
-                            enemy.HumanoidRootPart.Material = "Neon"
-                        end
-                    end
-                end
-            end
-        end)
-    end
-end)
-
--- FINAL PREMIUM NOTIFICATION
-game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "⭐ TIẾN HUB PREMIUM",
-    Text = "Bản cao cấp đã sẵn sàng! Click hình ảnh để ẩn/hiện menu",
-    Duration = 5
-})
-
-print([[
-    
-    ╔══════════════════════════════════════╗
-    ║           ⭐ TIẾN HUB PREMIUM        ║
-    ║          Premium Blox Fruit Script   ║
-    ║                                      ║
-    ║  ✅ AI Auto Farm                     ║
-    ║  ✅ Premium Boss Farm                ║  
-    ║  ✅ Auto Sea + Raid                  ║
-    ║  ✅ Premium Teleport                 ║
-    ║  ✅ Advanced Player Settings         ║
-    ║  ✅ Performance Optimization         ║
-    ║                                      ║
-    ║     Created by Tiến - Version 3.0    ║
-    ╚══════════════════════════════════════╝
-    
-]])
-
--- Premium Anti-Cheat Bypass
-spawn(function()
-    while task.wait(5) do
-        pcall(function()
-            -- Anti-detection measures
-            if Character then
-                Character:SetAttribute("IsScriptRunning", false)
-            end
-        end)
-    end
-end)
+-- ████████ ULTRA MISC FEATURES ████████
+local MiscSection = CreateUltraSection(MiscTab, "ULTRA
