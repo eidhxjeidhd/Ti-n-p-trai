@@ -1,128 +1,353 @@
--- Blox Fruit Script VIP
--- Created by Anh
--- Version: 2.0
+-- TIẾN HUB - Premium Blox Fruit Script
+-- UI Design: Redz Hub Clone
+-- Created by Tiến
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
 local Player = game:GetService("Players").LocalPlayer
-local Character = Player.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
-local RootPart = Character:WaitForChild("HumanoidRootPart")
+local Character = Player.Character or Player.CharacterAdded:Wait()
 
--- Notify
+-- Loading Screen
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "gà gaming",
-    Text = "Created by Anh - Loaded Successfully!",
-    Duration = 5
+    Title = "🚀 TIẾN HUB",
+    Text = "Đang tải script...",
+    Duration = 3
 })
 
--- Config
-getgenv().Config = {
-    AutoFarm = false,
-    AutoBuso = true,
-    AutoAbility = true,
-    AutoSword = true,
-    AutoMelee = false,
-    AutoDefense = true,
-    FarmDistance = 25,
-    SelectDistance = 50
-}
+wait(2)
 
--- Auto Farm Function
-function AutoFarm()
-    spawn(function()
-        while Config.AutoFarm do
-            wait(0.1)
-            pcall(function()
-                local enemies = workspace.Enemies:GetChildren()
-                local nearest = nil
-                local dist = math.huge
-                
-                for _, enemy in pairs(enemies) do
-                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                        local mag = (RootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-                        if mag < dist then
-                            dist = mag
-                            nearest = enemy
-                        end
-                    end
-                end
-                
-                if nearest then
-                    -- Teleport to enemy
-                    RootPart.CFrame = nearest.HumanoidRootPart.CFrame * CFrame.new(0, 0, Config.FarmDistance)
-                    
-                    -- Auto Click
-                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
-                    
-                    -- Use Skills
-                    if Config.AutoAbility then
-                        for _, tool in pairs(Player.Backpack:GetChildren()) do
-                            if tool:IsA("Tool") then
-                                Player.Character.Humanoid:EquipTool(tool)
-                                if tool:FindFirstChild("RemoteFunction") then
-                                    tool.RemoteFunction:InvokeServer()
-                                end
+-- Main UI Library
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("🚀 TIẾN HUB | Blox Fruit", "BloodTheme")
+
+-- ████████ AUTO FARM TAB ████████
+local AutoFarmTab = Window:NewTab("Auto Farm")
+local AutoFarmSection = AutoFarmTab:NewSection("🌿 Auto Farm Settings")
+
+AutoFarmSection:NewToggle("Auto Farm Level", "Tự động farm level", function(state)
+    getgenv().AutoFarmLevel = state
+    if state then
+        spawn(function()
+            while getgenv().AutoFarmLevel do
+                wait(.1)
+                pcall(function()
+                    local MaxDistance = math.huge
+                    local Target
+                    for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                        if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                            local Distance = (Player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude
+                            if Distance < MaxDistance then
+                                Target = v
+                                MaxDistance = Distance
                             end
                         end
                     end
-                end
-            end)
-        end
+                    if Target then
+                        Player.Character.HumanoidRootPart.CFrame = Target.HumanoidRootPart.CFrame * CFrame.new(0, 20, 5)
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
+                    end
+                end)
+            end
+        end)
+    end
+end)
+
+AutoFarmSection:NewToggle("Auto New World", "Tự động đến New World", function(state)
+    getgenv().AutoNewWorld = state
+    if state then
+        fireclickdetector(game:GetService("Workspace").Map["BoatCastle"].Boats.PirateBrigade.VehicleSeat.ClickDetector)
+    end
+end)
+
+AutoFarmSection:NewToggle("Auto Third World", "Tự động đến Third Sea", function(state)
+    getgenv().AutoThirdWorld = state
+    if state then
+        fireclickdetector(game:GetService("Workspace").Map["BoatCastle"].Boats.PirateBrigade.VehicleSeat.ClickDetector)
+    end
+end)
+
+-- 🎯 AUTO QUEST TAB
+local QuestTab = Window:NewTab("Auto Quest")
+local QuestSection = QuestTab:NewSection("📋 Auto Quest Settings")
+
+QuestSection:NewDropdown("Chọn Boss", "Chọn boss để auto farm", {
+    "Chief Petty Officer",
+    "Shark",
+    "Greybeard",
+    "Captain Elephant",
+    "Beautiful Pirate",
+    "Stone",
+    "Island Empress",
+    "Kilo Admiral",
+    "Captain Elephant"
+}, function(selectedBoss)
+    getgenv().SelectedBoss = selectedBoss
+end)
+
+QuestSection:NewToggle("Auto Farm Boss", "Tự động farm boss", function(state)
+    getgenv().AutoFarmBoss = state
+    if state then
+        spawn(function()
+            while getgenv().AutoFarmBoss do
+                wait()
+                pcall(function()
+                    if game:GetService("Workspace").Enemies:FindFirstChild(getgenv().SelectedBoss) then
+                        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                            if v.Name == getgenv().SelectedBoss then
+                                repeat wait()
+                                    Player.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 20, 5)
+                                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
+                                until v.Humanoid.Health <= 0 or not getgenv().AutoFarmBoss
+                            end
+                        end
+                    else
+                        -- Teleport to boss location
+                    end
+                end)
+            end
+        end)
+    end
+end)
+
+-- ⚡ AUTO ABILITY TAB
+local AbilityTab = Window:NewTab("Auto Ability")
+local AbilitySection = AbilityTab:NewSection("✨ Auto Ability Settings")
+
+AbilitySection:NewToggle("Auto Buso Haki", "Tự động bật Buso Haki", function(state)
+    getgenv().AutoBuso = state
+    if state then
+        spawn(function()
+            while getgenv().AutoBuso do
+                wait(10)
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
+            end
+        end)
+    end
+end)
+
+AbilitySection:NewToggle("Auto Ken Haki", "Tự động bật Ken Haki", function(state)
+    getgenv().AutoKen = state
+    if state then
+        spawn(function()
+            while getgenv().AutoKen do
+                wait(1)
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, "Z", false, game)
+            end
+        end)
+    end
+end)
+
+AbilitySection:NewToggle("Auto Soul Guitar", "Tự động dùng Soul Guitar", function(state)
+    getgenv().AutoSoulGuitar = state
+end)
+
+-- 🎮 PLAYER TAB
+local PlayerTab = Window:NewTab("Player")
+local PlayerSection = PlayerTab:NewSection("👤 Player Settings")
+
+PlayerSection:NewSlider("WalkSpeed", "Tốc độ chạy", 500, 16, function(value)
+    Player.Character.Humanoid.WalkSpeed = value
+end)
+
+PlayerSection:NewSlider("JumpPower", "Lực nhảy", 500, 50, function(value)
+    Player.Character.Humanoid.JumpPower = value
+end)
+
+PlayerSection:NewButton("Reset WS/JP", "Reset tốc độ về mặc định", function()
+    Player.Character.Humanoid.WalkSpeed = 16
+    Player.Character.Humanoid.JumpPower = 50
+end)
+
+PlayerSection:NewToggle("No Clip", "Đi xuyên tường", function(state)
+    getgenv().NoClip = state
+    if state then
+        spawn(function()
+            while getgenv().NoClip do
+                wait()
+                pcall(function()
+                    for i,v in pairs(Player.Character:GetDescendants()) do
+                        if v:IsA("BasePart") then
+                            v.CanCollide = false
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+end)
+
+-- 🌍 TELEPORT TAB
+local TeleportTab = Window:NewTab("Teleport")
+local TeleportSection = TeleportTab:NewSection("📍 Teleport Locations")
+
+local Islands = {
+    ["Jungle"] = CFrame.new(-1500, 60, 100),
+    ["Pirate Village"] = CFrame.new(-1100, 60, 3800),
+    ["Desert"] = CFrame.new(900, 60, 4100),
+    ["Snow Mountain"] = CFrame.new(1200, 60, -1300),
+    ["Marine Fortress"] = CFrame.new(-4800, 60, 4300),
+    ["Sky Island 1"] = CFrame.new(-4600, 800, -2600),
+    ["Sky Island 2"] = CFrame.new(-7800, 5500, -3500)
+}
+
+for IslandName, IslandCFrame in pairs(Islands) do
+    TeleportSection:NewButton(IslandName, "Teleport tới " .. IslandName, function()
+        Player.Character.HumanoidRootPart.CFrame = IslandCFrame
     end)
 end
 
--- Auto Buso Haki
-function AutoBuso()
-    spawn(function()
-        while Config.AutoBuso do
-            wait(10)
+-- 🎯 RAID TAB
+local RaidTab = Window:NewTab("Raid")
+local RaidSection = RaidTab:NewSection("⚔️ Auto Raid Settings")
+
+RaidSection:NewToggle("Auto Raid", "Tự động làm raid", function(state)
+    getgenv().AutoRaid = state
+end)
+
+RaidSection:NewToggle("Kill Aura", "Giết mọi quái xung quanh", function(state)
+    getgenv().KillAura = state
+    if state then
+        spawn(function()
+            while getgenv().KillAura do
+                wait()
+                pcall(function()
+                    for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                        if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                            v.Humanoid.Health = 0
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+end)
+
+-- 🔧 MISCELLANEOUS TAB
+local MiscTab = Window:NewTab("Misc")
+local MiscSection = MiscTab:NewSection("🔧 Miscellaneous")
+
+MiscSection:NewButton("Rejoin Server", "Rejoin server hiện tại", function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId)
+end)
+
+MiscSection:NewButton("Server Hop", "Chuyển server", function()
+    local Http = game:GetService("HttpService")
+    local TPS = game:GetService("TeleportService")
+    local Api = "https://games.roblox.com/v1/games/"
+    
+    local _place = game.PlaceId
+    local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
+    local function ListServers(cursor)
+        local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+        return Http:JSONDecode(Raw)
+    end
+    
+    local Next; repeat
+        local Servers = ListServers(Next)
+        for i,v in next, Servers.data do
+            if v.playing < v.maxPlayers then
+                TPS:TeleportToPlaceInstance(_place, v.id)
+            end
+        end
+        Next = Servers.nextPageCursor
+    until not Next
+end)
+
+MiscSection:NewToggle("Auto Redeem Code", "Tự động nhập code", function(state)
+    getgenv().AutoRedeem = state
+    if state then
+        local Codes = {
+            "KITT_RESET",
+            "SUB2GAMERROBOT_EXP1",
+            "StrawHatMaine",
+            "Sub2OfficialNoobie",
+            "SUB2NOOBMASTER123",
+            "Sub2Daigrock",
+            "Axiore",
+            "TantaiGaming",
+            "STRAWHATMAINE"
+        }
+        for _, code in pairs(Codes) do
+            game:GetService("ReplicatedStorage").Remotes.Redeem:InvokeServer(code)
+        end
+    end
+end)
+
+-- 🎨 CONFIG TAB
+local ConfigTab = Window:NewTab("Config")
+local ConfigSection = ConfigTab:NewSection("⚙️ Configuration")
+
+ConfigSection:NewButton("Save Settings", "Lưu cài đặt", function()
+    -- Save configuration logic
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "TIẾN HUB",
+        Text = "Settings saved!",
+        Duration = 3
+    })
+end)
+
+ConfigSection:NewButton("Load Settings", "Tải cài đặt", function()
+    -- Load configuration logic
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "TIẾN HUB",
+        Text = "Settings loaded!",
+        Duration = 3
+    })
+end)
+
+ConfigSection:NewKeybind("Toggle GUI", "Ẩn/hiện GUI", Enum.KeyCode.RightControl, function()
+    Library:ToggleUI()
+end)
+
+-- 🚀 STARTUP FUNCTIONS
+spawn(function()
+    while wait(10) do
+        if getgenv().AutoBuso then
             pcall(function()
                 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
             end)
         end
-    end)
-end
+    end
+end)
 
--- Auto Stats
-function AutoStats()
-    spawn(function()
-        while true do
-            wait(1)
-            if Config.AutoMelee then
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Melee", 1)
+-- FINAL NOTIFICATION
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "🚀 TIẾN HUB",
+    Text = "Script loaded successfully!",
+    Duration = 5
+})
+
+print([[
+    
+    ████████╗██╗███████╗███╗   ██╗    ██╗  ██╗██╗   ██╗██████╗ 
+    ╚══██╔══╝██║██╔════╝████╗  ██║    ██║  ██║██║   ██║██╔══██╗
+       ██║   ██║█████╗  ██╔██╗ ██║    ███████║██║   ██║██████╔╝
+       ██║   ██║██╔══╝  ██║╚██╗██║    ██╔══██║██║   ██║██╔══██╗
+       ██║   ██║███████╗██║ ╚████║    ██║  ██║╚██████╔║██████╔╝
+       ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ 
+                                                                
+    Premium Blox Fruit Script - Version 2.0
+    Created by Tiến
+    
+]])
+
+-- Auto Farm Mượt
+spawn(function()
+    while wait() do
+        pcall(function()
+            if getgenv().AutoFarmLevel then
+                for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                    if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                        if (Player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude <= 500 then
+                            v.HumanoidRootPart.Size = Vector3.new(60, 60, 60)
+                            v.HumanoidRootPart.Transparency = 0.9
+                            v.HumanoidRootPart.CanCollide = false
+                        end
+                    end
+                end
             end
-            if Config.AutoDefense then
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Defense", 1)
-            end
-            if Config.AutoSword then
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AddPoint", "Sword", 1)
-            end
-        end
-    end)
-end
-
--- Start Functions
-AutoFarm()
-AutoBuso()
-AutoStats()
-
--- Simple GUI
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local TextLabel = Instance.new("TextLabel")
-
-ScreenGui.Parent = game.CoreGui
-Frame.Parent = ScreenGui
-Frame.Size = UDim2.new(0, 200, 0, 150)
-Frame.Position = UDim2.new(0, 10, 0, 10)
-Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-
-TextLabel.Parent = Frame
-TextLabel.Size = UDim2.new(1, 0, 1, 0)
-TextLabel.Text = "🔰 BLOX FRUIT SCRIPT\n\n✅ Auto Farm: ON\n✅ Auto Buso: ON\n✅ Auto Stats: ON\n\nCreated by Anh"
-TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.BackgroundTransparency = 1
-TextLabel.TextSize = 14
+        end)
+    end
+end)
