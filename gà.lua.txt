@@ -1,307 +1,423 @@
--- Đặt tên: "PVPSystem" trong ServerScriptService
+-- Blox Fruits Auto Farm Teleport & Shop Script
+-- Created by Gà Gaming
+
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local localPlayer = Players.LocalPlayer
 
--- Khởi tạo hệ thống PVP
-local PVPSystem = {}
-PVPSystem.PVPPlayers = {}
-PVPSystem.BountyRewards = {Kill = 1000, Assist = 500}
+local Remotes = ReplicatedStorage.Remotes
 
--- Tạo Remote Events
-local TogglePVPEvent = Instance.new("RemoteEvent")
-TogglePVPEvent.Name = "TogglePVPEvent"
-TogglePVPEvent.Parent = game.ReplicatedStorage
+-- ID ẢNH CÁ NHÂN CỦA EM
+local GAMING_IMAGE_IDS = {
+    Logo = "rbxassetid://84957548476668",  -- ID ảnh cá nhân của em
+    Background = "rbxassetid://84957548476668",  -- Dùng chung hoặc thay ID khác
+    Banner = "rbxassetid://84957548476668",  -- Dùng chung hoặc thay ID khác
+    Profile = "rbxassetid://84957548476668"  -- Ảnh profile
+}
 
-local PlayerKilledEvent = Instance.new("RemoteEvent")
-PlayerKilledEvent.Name = "PlayerKilledEvent"
-PlayerKilledEvent.Parent = game.ReplicatedStorage
+-- Cấu hình Auto Farm
+_G.AutoFarm = true
+_G.AutoTeleport = true
+_G.AutoBuyDevilFruits = true
+_G.AutoBuySwords = true
+_G.AutoFarmBones = false
+_G.AutoCollectDrops = true
+_G.AutoSkipBusyServer = false
 
--- Hàm bật/tắt PVP
-function PVPSystem:TogglePVP(player)
-    if not PVPSystem.PVPPlayers[player] then
-        -- BẬT PVP
-        PVPSystem.PVPPlayers[player] = {
-            PVPEnabled = true,
-            LastCombat = os.time(),
-            Bounty = 0,
-            Kills = 0,
-            Deaths = 0
-        }
+-- Tạo GUI Menu đẹp với ảnh của em
+function createGamingGUI()
+    local ScreenGui = Instance.new("ScreenGui")
+    local MainFrame = Instance.new("Frame")
+    local LogoImage = Instance.new("ImageLabel")
+    local TitleLabel = Instance.new("TextLabel")
+    local CloseButton = Instance.new("TextButton")
+    local ProfileImage = Instance.new("ImageLabel")
+    
+    -- ScreenGui
+    ScreenGui.Name = "GaGamingMenu"
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    -- Main Frame
+    MainFrame.Name = "MainFrame"
+    MainFrame.Parent = ScreenGui
+    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+    MainFrame.Size = UDim2.new(0, 450, 0, 550)
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+    
+    -- Background với ảnh của em
+    local Background = Instance.new("ImageLabel")
+    Background.Name = "Background"
+    Background.Parent = MainFrame
+    Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Background.BackgroundTransparency = 1.000
+    Background.Size = UDim2.new(1, 0, 1, 0)
+    Background.Image = GAMING_IMAGE_IDS.Background
+    Background.ImageColor3 = Color3.fromRGB(50, 50, 50)
+    Background.ImageTransparency = 0.8
+    Background.ScaleType = Enum.ScaleType.Crop
+    Background.TileSize = UDim2.new(0, 100, 0, 100)
+    
+    -- Overlay để dễ nhìn text
+    local Overlay = Instance.new("Frame")
+    Overlay.Name = "Overlay"
+    Overlay.Parent = MainFrame
+    Overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Overlay.BackgroundTransparency = 0.3
+    Overlay.Size = UDim2.new(1, 0, 1, 0)
+    Overlay.ZIndex = 0
+    
+    -- Logo chính với ảnh của em
+    LogoImage.Name = "LogoImage"
+    LogoImage.Parent = MainFrame
+    LogoImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    LogoImage.BackgroundTransparency = 1.000
+    LogoImage.Position = UDim2.new(0.35, 0, 0.02, 0)
+    LogoImage.Size = UDim2.new(0, 120, 0, 120)
+    LogoImage.Image = GAMING_IMAGE_IDS.Logo
+    LogoImage.ScaleType = Enum.ScaleType.Crop
+    LogoImage.ZIndex = 3
+    
+    -- Thêm khung viền cho logo
+    local LogoCorner = Instance.new("UICorner")
+    LogoCorner.CornerRadius = UDim.new(0.2, 0)
+    LogoCorner.Parent = LogoImage
+    
+    local LogoStroke = Instance.new("UIStroke")
+    LogoStroke.Parent = LogoImage
+    LogoStroke.Color = Color3.fromRGB(255, 215, 0)
+    LogoStroke.Thickness = 3
+    
+    -- Ảnh profile nhỏ
+    ProfileImage.Name = "ProfileImage"
+    ProfileImage.Parent = MainFrame
+    ProfileImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ProfileImage.BackgroundTransparency = 1.000
+    ProfileImage.Position = UDim2.new(0.05, 0, 0.03, 0)
+    ProfileImage.Size = UDim2.new(0, 60, 0, 60)
+    ProfileImage.Image = GAMING_IMAGE_IDS.Profile
+    ProfileImage.ScaleType = Enum.ScaleType.Crop
+    ProfileImage.ZIndex = 3
+    
+    local ProfileCorner = Instance.new("UICorner")
+    ProfileCorner.CornerRadius = UDim.new(0.5, 0)
+    ProfileCorner.Parent = ProfileImage
+    
+    local ProfileStroke = Instance.new("UIStroke")
+    ProfileStroke.Parent = ProfileImage
+    ProfileStroke.Color = Color3.fromRGB(0, 150, 255)
+    ProfileStroke.Thickness = 2
+    
+    -- Title
+    TitleLabel.Name = "TitleLabel"
+    TitleLabel.Parent = MainFrame
+    TitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.BackgroundTransparency = 1.000
+    TitleLabel.Position = UDim2.new(0, 0, 0.25, 0)
+    TitleLabel.Size = UDim2.new(1, 0, 0, 50)
+    TitleLabel.Font = Enum.Font.GothamBlack
+    TitleLabel.Text = "🐔 GÀ GAMING\nAUTO SCRIPT"
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+    TitleLabel.TextScaled = true
+    TitleLabel.TextSize = 20.000
+    TitleLabel.TextWrapped = true
+    TitleLabel.ZIndex = 3
+    
+    -- Close Button
+    CloseButton.Name = "CloseButton"
+    CloseButton.Parent = MainFrame
+    CloseButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Position = UDim2.new(0.85, 0, 0.03, 0)
+    CloseButton.Size = UDim2.new(0, 40, 0, 40)
+    CloseButton.Font = Enum.Font.GothamBlack
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 16.000
+    CloseButton.ZIndex = 3
+    
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(0.5, 0)
+    CloseCorner.Parent = CloseButton
+    
+    CloseButton.MouseButton1Click:Connect(function()
+        ScreenGui:Destroy()
+    end)
+    
+    -- Tạo các nút chức năng
+    createButtons(MainFrame)
+    
+    -- Hiệu ứng hover cho nút đóng
+    CloseButton.MouseEnter:Connect(function()
+        CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    end)
+    
+    CloseButton.MouseLeave:Connect(function()
+        CloseButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    end)
+    
+    return ScreenGui
+end
+
+-- Tạo các nút điều khiển
+function createButtons(parent)
+    local buttonConfigs = {
+        {"🔄 Auto Farm", "AutoFarm", UDim2.new(0.1, 0, 0.35, 0), Color3.fromRGB(0, 150, 255)},
+        {"⚡ Auto Teleport", "AutoTeleport", UDim2.new(0.55, 0, 0.35, 0), Color3.fromRGB(0, 200, 100)},
+        {"🍎 Buy Fruits", "AutoBuyDevilFruits", UDim2.new(0.1, 0, 0.45, 0), Color3.fromRGB(255, 100, 100)},
+        {"⚔️ Buy Swords", "AutoBuySwords", UDim2.new(0.55, 0, 0.45, 0), Color3.fromRGB(150, 100, 255)},
+        {"💀 Farm Bones", "AutoFarmBones", UDim2.new(0.1, 0, 0.55, 0), Color3.fromRGB(100, 100, 100)},
+        {"🎒 Collect Drops", "AutoCollectDrops", UDim2.new(0.55, 0, 0.55, 0), Color3.fromRGB(255, 200, 0)},
+        {"🛡️ Safety Mode", "AutoSkipBusyServer", UDim2.new(0.325, 0, 0.65, 0), Color3.fromRGB(255, 150, 50)}
+    }
+    
+    for _, config in pairs(buttonConfigs) do
+        local text, variable, position, color = config[1], config[2], config[3], config[4]
         
-        -- Thêm tag PVP
-        if player.Character then
-            local humanoid = player.Character:FindFirstChild("Humanoid")
-            if humanoid then
-                local pvpTag = Instance.new("BoolValue")
-                pvpTag.Name = "PVPEnabled"
-                pvpTag.Value = true
-                pvpTag.Parent = humanoid
-            end
-        end
+        local button = Instance.new("TextButton")
+        button.Name = variable .. "Button"
+        button.Parent = parent
+        button.BackgroundColor3 = color
+        button.BorderSizePixel = 0
+        button.Position = position
+        button.Size = UDim2.new(0, 160, 0, 45)
+        button.Font = Enum.Font.GothamBold
+        button.Text = text
+        button.TextColor3 = Color3.fromRGB(255, 255, 255)
+        button.TextSize = 12.000
+        button.TextWrapped = true
+        button.ZIndex = 3
         
-        print("✅ " .. player.Name .. " đã BẬT PVP")
-        return true
+        -- Thêm góc bo tròn
+        local buttonCorner = Instance.new("UICorner")
+        buttonCorner.CornerRadius = UDim.new(0.2, 0)
+        buttonCorner.Parent = button
+        
+        -- Thêm viền
+        local buttonStroke = Instance.new("UIStroke")
+        buttonStroke.Parent = button
+        buttonStroke.Color = Color3.fromRGB(255, 255, 255)
+        buttonStroke.Thickness = 1.5
+        
+        -- Cập nhật trạng thái nút
+        updateButton(button, _G[variable])
+        
+        -- Hiệu ứng hover
+        button.MouseEnter:Connect(function()
+            button.BackgroundColor3 = Color3.fromRGB(
+                math.min(button.BackgroundColor3.R * 255 + 30, 255),
+                math.min(button.BackgroundColor3.G * 255 + 30, 255),
+                math.min(button.BackgroundColor3.B * 255 + 30, 255)
+            )
+        end)
+        
+        button.MouseLeave:Connect(function()
+            updateButton(button, _G[variable])
+        end)
+        
+        button.MouseButton1Click:Connect(function()
+            _G[variable] = not _G[variable]
+            updateButton(button, _G[variable])
+            print("🎮 " .. text .. ": " .. tostring(_G[variable]))
+        end)
+    end
+    
+    -- Status Label
+    local StatusLabel = Instance.new("TextLabel")
+    StatusLabel.Name = "StatusLabel"
+    StatusLabel.Parent = parent
+    StatusLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    StatusLabel.BackgroundTransparency = 1.000
+    StatusLabel.Position = UDim2.new(0.1, 0, 0.75, 0)
+    StatusLabel.Size = UDim2.new(0.8, 0, 0, 120)
+    StatusLabel.Font = Enum.Font.GothamBold
+    StatusLabel.Text = "📊 STATUS: Script Đang Hoạt Động\n🎯 Chúc Bạn Chơi Game Vui Vẻ!\n🐔 Gà Gaming - Personal Edition\n🖼️ Ảnh: " .. game.Players.LocalPlayer.Name
+    StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    StatusLabel.TextSize = 14.000
+    StatusLabel.TextWrapped = true
+    StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    StatusLabel.TextYAlignment = Enum.TextYAlignment.Top
+    StatusLabel.ZIndex = 3
+end
+
+-- Cập nhật màu nút theo trạng thái
+function updateButton(button, isEnabled)
+    if isEnabled then
+        button.BackgroundColor3 = Color3.fromRGB(0, 180, 0)  -- Xanh sáng khi bật
+        button.Text = "✅ " .. string.sub(button.Text, 4)  -- Thêm icon check
     else
-        -- TẮT PVP
-        PVPSystem.PVPPlayers[player] = nil
-        
-        -- Xóa tag PVP
-        if player.Character then
-            local humanoid = player.Character:FindFirstChild("Humanoid")
-            if humanoid then
-                local pvpTag = humanoid:FindFirstChild("PVPEnabled")
-                if pvpTag then pvpTag:Destroy() end
-            end
-        end
-        
-        print("❌ " .. player.Name .. " đã TẮT PVP")
+        button.BackgroundColor3 = Color3.fromRGB(180, 0, 0)  -- Đỏ khi tắt
+        button.Text = "❌ " .. string.sub(button.Text, 4)  -- Thêm icon X
+    end
+end
+
+-- Kiểm tra an toàn
+function safetyCheck()
+    if not localPlayer.Character or not localPlayer.Character:FindFirstChild("Humanoid") or localPlayer.Character.Humanoid.Health <= 0 then
         return false
     end
+    return true
 end
 
--- Hàm xử lý khi player chết
-function PVPSystem:HandlePlayerDeath(victim, killer)
-    if not killer or killer == victim then return end
+-- Tìm enemy gần nhất
+function findNearestEnemy()
+    local nearestEnemy = nil
+    local shortestDistance = math.huge
     
-    if PVPSystem.PVPPlayers[victim] and PVPSystem.PVPPlayers[killer] then
-        local victimData = PVPSystem.PVPPlayers[victim]
-        local killerData = PVPSystem.PVPPlayers[killer]
-        
-        -- Tính bounty reward
-        local bountyReward = math.floor(victimData.Bounty * 0.1) + PVPSystem.BountyRewards.Kill
-        
-        -- Cập nhật stats
-        killerData.Kills = killerData.Kills + 1
-        killerData.Bounty = killerData.Bounty + bountyReward
-        victimData.Deaths = victimData.Deaths + 1
-        
-        -- Cập nhật Beli cho killer
-        local killerStats = killer:FindFirstChild("leaderstats")
-        if killerStats then
-            local killerBeli = killerStats:FindFirstChild("Beli")
-            if killerBeli then
-                killerBeli.Value = killerBeli.Value + bountyReward
-            end
-        end
-        
-        -- Gửi thông báo kill
-        PlayerKilledEvent:FireAllClients(killer.Name, victim.Name, bountyReward)
-        print("⚔️ " .. killer.Name .. " đã tiêu diệt " .. victim.Name .. " +" .. bountyReward .. " Beli")
-    end
-end
-
--- Kết nối sự kiện
-TogglePVPEvent.OnServerEvent:Connect(function(player)
-    PVPSystem:TogglePVP(player)
-end)
-
--- Theo dõi player death
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        local humanoid = character:WaitForChild("Humanoid")
-        humanoid.Died:Connect(function()
-            -- Tìm killer
-            local killer = nil
-            if humanoid:FindFirstChild("creator") then
-                killer = humanoid.creator.Value
-            end
-            PVPSystem:HandlePlayerDeath(player, killer)
-        end)
-    end)
-end)
-
--- Auto giảm bounty sau 5 phút không combat
-RunService.Heartbeat:Connect(function()
-    for player, data in pairs(PVPSystem.PVPPlayers) do
-        if os.time() - data.LastCombat > 300 then
-            data.Bounty = math.floor(data.Bounty * 0.95)
-        end
-    end
-end)
--- Đặt trong Sword tool
-local Tool = script.Parent
-local Handle = Tool:WaitForChild("Handle")
-local Damage = 35
-local Cooldown = 1
-local CanAttack = true
-
--- Sound effect
-local SlashSound = Instance.new("Sound")
-SlashSound.SoundId = "rbxassetid://131429975"
-SlashSound.Volume = 0.7
-SlashSound.Parent = Handle
-
-Tool.Activated:Connect(function()
-    if not CanAttack then return end
-    CanAttack = false
-    
-    SlashSound:Play()
-    
-    local attacker = game.Players:GetPlayerFromCharacter(Tool.Parent)
-    if not attacker then 
-        CanAttack = true
-        return 
-    end
-    
-    -- Kiểm tra PVP
-    local PVPSystem = game.ServerScriptService:FindFirstChild("PVPSystem")
-    if not PVPSystem then 
-        CanAttack = true
-        return 
-    end
-    
-    local attackerData = PVPSystem.PVPPlayers[attacker]
-    if not attackerData then
-        print("❌ Bật PVP để tấn công người chơi khác!")
-        CanAttack = true
-        return
-    end
-    
-    -- Cập nhật combat time
-    attackerData.LastCombat = os.time()
-    
-    -- Animation tấn công
-    local originalPos = Tool.GripPos
-    Tool.GripPos = originalPos + Vector3.new(0, 0, -2)
-    wait(0.2)
-    Tool.GripPos = originalPos
-    
-    -- Phát hiện damage
-    local character = attacker.Character
-    if character then
-        local attackerHRP = character:FindFirstChild("HumanoidRootPart")
-        if attackerHRP then
-            for _, target in pairs(game.Players:GetPlayers()) do
-                if target ~= attacker and target.Character then
-                    local targetChar = target.Character
-                    local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
-                    local targetHumanoid = targetChar:FindFirstChild("Humanoid")
-                    
-                    if targetHRP and targetHumanoid then
-                        local distance = (attackerHRP.Position - targetHRP.Position).Magnitude
-                        
-                        if distance <= 15 then
-                            local targetData = PVPSystem.PVPPlayers[target]
-                            if targetData then
-                                -- Gây damage
-                                targetHumanoid:TakeDamage(Damage)
-                                
-                                -- Đánh dấu killer
-                                local creator = Instance.new("ObjectValue")
-                                creator.Name = "creator"
-                                creator.Value = attacker
-                                creator.Parent = targetHumanoid
-                                game.Debris:AddItem(creator, 1)
-                                
-                                -- Cập nhật combat time cho target
-                                targetData.LastCombat = os.time()
-                                
-                                print("🗡️ " .. attacker.Name .. " tấn công " .. target.Name .. " -" .. Damage .. " HP")
-                            end
-                        end
-                    end
-                end
+    for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+        if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
+            local distance = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
+            if distance < shortestDistance then
+                shortestDistance = distance
+                nearestEnemy = enemy
             end
         end
     end
     
-    wait(Cooldown)
-    CanAttack = true
+    return nearestEnemy
+end
+
+-- Thu thập item rơi
+function collectDrops()
+    for _, drop in pairs(Workspace:GetChildren()) do
+        if drop.Name == "Drop" and drop:FindFirstChild("Handle") then
+            localPlayer.Character.HumanoidRootPart.CFrame = drop.Handle.CFrame
+            wait(0.3)
+        end
+    end
+end
+
+-- Auto Farm với Teleport
+function autoFarmWithTeleport()
+    while wait(0.5) do
+        if not _G.AutoFarm then break end
+        if not safetyCheck() then continue end
+        
+        local enemy = findNearestEnemy()
+        if enemy then
+            if _G.AutoTeleport then
+                localPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
+            end
+            
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, "X", false, game)
+            wait(0.1)
+            game:GetService("VirtualInputManager"):SendKeyEvent(false, "X", false, game)
+            
+            if _G.AutoCollectDrops then
+                collectDrops()
+            end
+        end
+    end
+end
+
+-- Auto Buy Devil Fruits
+function buyDevilFruits()
+    local fruitShop = Workspace:FindFirstChild("FruitShop")
+    if fruitShop then
+        for _, fruit in pairs(fruitShop:GetChildren()) do
+            if fruit:IsA("Model") and fruit:FindFirstChild("Handle") then
+                Remotes.CommF_:InvokeServer("PurchaseRawFruit", fruit.Name)
+                wait(0.5)
+            end
+        end
+    end
+end
+
+-- Auto Buy Swords
+function buySwords()
+    local swordShop = Workspace:FindFirstChild("SwordShop")
+    if swordShop then
+        for _, sword in pairs(swordShop:GetChildren()) do
+            if sword:IsA("Model") and sword:FindFirstChild("Handle") then
+                Remotes.CommF_:InvokeServer("BuyItem", sword.Name)
+                wait(0.5)
+            end
+        end
+    end
+end
+
+-- Auto Farm Bones
+function farmBones()
+    while wait(1) do
+        if not _G.AutoFarmBones then break end
+        if not safetyCheck() then continue end
+        
+        for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+            if enemy.Name:lower():find("skeleton") and enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
+                localPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
+                wait(0.3)
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, "X", false, game)
+            end
+        end
+    end
+end
+
+-- Chống AFK
+local VirtualUser = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
 end)
--- Đặt trong StarterGui > ScreenGui
-local Player = game.Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
 
--- Tạo GUI
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "PVPGui"
-ScreenGui.Parent = PlayerGui
-
--- Nút bật/tắt PVP
-local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0, 200, 0, 50)
-ToggleButton.Position = UDim2.new(0, 10, 0, 10)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButton.Text = "PVP: TẮT"
-ToggleButton.TextScaled = true
-ToggleButton.Font = Enum.Font.GothamBold
-ToggleButton.Parent = ScreenGui
-
--- Hiển thị Bounty
-local BountyFrame = Instance.new("Frame")
-BountyFrame.Size = UDim2.new(0, 200, 0, 80)
-BountyFrame.Position = UDim2.new(0, 10, 0, 70)
-BountyFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-BountyFrame.Parent = ScreenGui
-
-local BountyLabel = Instance.new("TextLabel")
-BountyLabel.Size = UDim2.new(1, 0, 0.5, 0)
-BountyLabel.Text = "BOUNTY: 0"
-BountyLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
-BountyLabel.BackgroundTransparency = 1
-BountyLabel.TextScaled = true
-BountyLabel.Font = Enum.Font.GothamBold
-BountyLabel.Parent = BountyFrame
-
-local StatsLabel = Instance.new("TextLabel")
-StatsLabel.Size = UDim2.new(1, 0, 0.5, 0)
-StatsLabel.Position = UDim2.new(0, 0, 0.5, 0)
-StatsLabel.Text = "Kills: 0 | Deaths: 0"
-StatsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-StatsLabel.BackgroundTransparency = 1
-StatsLabel.TextScaled = true
-StatsLabel.Parent = BountyFrame
-
--- Kill Feed
-local KillFeed = Instance.new("Frame")
-KillFeed.Size = UDim2.new(0, 300, 0, 200)
-KillFeed.Position = UDim2.new(1, -310, 0, 10)
-KillFeed.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-KillFeed.Parent = ScreenGui
-
-local KillFeedLabel = Instance.new("TextLabel")
-KillFeedLabel.Size = UDim2.new(1, 0, 1, 0)
-KillFeedLabel.Text = "KILL FEED"
-KillFeedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-KillFeedLabel.BackgroundTransparency = 1
-KillFeedLabel.TextWrapped = true
-KillFeedLabel.TextXAlignment = Enum.TextXAlignment.Left
-KillFeedLabel.TextYAlignment = Enum.TextYAlignment.Top
-KillFeedLabel.Parent = KillFeed
-
--- Kết nối Events
-local TogglePVPEvent = game.ReplicatedStorage:WaitForChild("TogglePVPEvent")
-local PlayerKilledEvent = game.ReplicatedStorage:WaitForChild("PlayerKilledEvent")
-
--- Bật/tắt PVP
-ToggleButton.MouseButton1Click:Connect(function()
-    TogglePVPEvent:FireServer()
+-- Khởi tạo GUI
+spawn(function()
+    wait(2)
+    createGamingGUI()
 end)
 
--- Nhận thông báo kill
-PlayerKilledEvent.OnClientEvent:Connect(function(killer, victim, bounty)
-    local killText = "⚔️ " .. killer .. " đã tiêu diệt " .. victim .. " +" .. bounty .. " Beli\n"
-    KillFeedLabel.Text = killText .. KillFeedLabel.Text
-end)
-
--- Cập nhật Bounty
-game:GetService("RunService").Heartbeat:Connect(function()
-    local leaderstats = Player:FindFirstChild("leaderstats")
-    if leaderstats then
-        local bounty = leaderstats:FindFirstChild("Beli")
-        if bounty then
-            BountyLabel.Text = "BOUNTY: " .. formatNumber(bounty.Value)
+-- Main Execution
+spawn(function()
+    while wait(5) do
+        if _G.AutoFarm then
+            autoFarmWithTeleport()
         end
     end
 end)
 
-function formatNumber(num)
-    if num >= 1000000 then
-        return string.format("%.1fM", num/1000000)
-    elseif num >= 1000 then
-        return string.format("%.1fK", num/1000)
-    else
-        return tostring(num)
+spawn(function()
+    while wait(10) do
+        if _G.AutoBuyDevilFruits then
+            buyDevilFruits()
+        end
+        if _G.AutoBuySwords then
+            buySwords()
+        end
     end
-end
+end)
+
+spawn(function()
+    while wait() do
+        if _G.AutoFarmBones then
+            farmBones()
+        end
+    end
+end)
+
+spawn(function()
+    while wait(3) do
+        if _G.AutoCollectDrops then
+            collectDrops()
+        end
+    end
+end)
+
+-- Hiển thị thông tin
+print("====================================")
+print("🐔 GÀ GAMING AUTO SCRIPT - PERSONAL EDITION")
+print("🖼️ Ảnh cá nhân: " .. GAMING_IMAGE_IDS.Logo)
+print("🎮 GUI Menu Đã Được Tạo!")
+print("✅ Auto Farm: " .. tostring(_G.AutoFarm))
+print("✅ Auto Teleport: " .. tostring(_G.AutoTeleport))
+print("✅ Auto Buy Devil Fruits: " .. tostring(_G.AutoBuyDevilFruits))
+print("✅ Auto Buy Swords: " .. tostring(_G.AutoBuySwords))
+print("✅ Auto Farm Bones: " .. tostring(_G.AutoFarmBones))
+print("🔄 Auto Collect Drops: " .. tostring(_G.AutoCollectDrops))
+print("🛡️ Safety Check: Enabled")
+print("⏰ Anti-AFK: Enabled")
+print("====================================")
