@@ -1,497 +1,307 @@
---[[
-    BLOX FRUITS ADVANCED EXPLOITATION FRAMEWORK
-    SHADOW-CORE DEVELOPED | AUTHORIZED USE ONLY
-    Version: 2.1.7
---]]
+-- Đặt tên: "PVPSystem" trong ServerScriptService
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
-local BloxFruitsExploit = {
-    Version = "2.1.7",
-    Author = "DarkForge-X",
-    GameID = 2753915549,
-    SecurityLevel = "EXPERIMENTAL"
-}
+-- Khởi tạo hệ thống PVP
+local PVPSystem = {}
+PVPSystem.PVPPlayers = {}
+PVPSystem.BountyRewards = {Kill = 1000, Assist = 500}
 
--- Memory manipulation utilities
-local Memory = {
-    Addresses = {
-        PlayerStats = 0x7FF123456789,
-        Currency = 0x7FF123456790,
-        Level = 0x7FF123456798,
-        FruitInventory = 0x7FF1234567A0
-    },
-    
-    ScanPatterns = {
-        Beli = "B8 ?? ?? ?? ?? 89 87 ?? ?? ?? ?? 8B 87",
-        Fragments = "B9 ?? ?? ?? ?? 89 8F ?? ?? ?? ?? 8B 8F",
-        Level = "BE ?? ?? ?? ?? 89 B7 ?? ?? ?? ?? 8B B7"
-    }
-}
+-- Tạo Remote Events
+local TogglePVPEvent = Instance.new("RemoteEvent")
+TogglePVPEvent.Name = "TogglePVPEvent"
+TogglePVPEvent.Parent = game.ReplicatedStorage
 
--- Network packet manipulation
-local Network = {
-    RemoteEvents = {
-        "MainEvent",
-        "FruitEvent", 
-        "CombatEvent",
-        "ShopEvent",
-        "InventoryEvent"
-    },
-    
-    CustomPackets = {
-        FakePurchase = {
-            Header = 0x1A,
-            Structure = {
-                ItemID = 4,
-                Price = 8,
-                CurrencyType = 1,
-                Timestamp = 8
-            }
-        },
-        
-        FakeLevelUp = {
-            Header = 0x2B,
-            Structure = {
-                NewLevel = 4,
-                Experience = 8,
-                PlayerID = 8
-            }
+local PlayerKilledEvent = Instance.new("RemoteEvent")
+PlayerKilledEvent.Name = "PlayerKilledEvent"
+PlayerKilledEvent.Parent = game.ReplicatedStorage
+
+-- Hàm bật/tắt PVP
+function PVPSystem:TogglePVP(player)
+    if not PVPSystem.PVPPlayers[player] then
+        -- BẬT PVP
+        PVPSystem.PVPPlayers[player] = {
+            PVPEnabled = true,
+            LastCombat = os.time(),
+            Bounty = 0,
+            Kills = 0,
+            Deaths = 0
         }
-    }
-}
+        
+        -- Thêm tag PVP
+        if player.Character then
+            local humanoid = player.Character:FindFirstChild("Humanoid")
+            if humanoid then
+                local pvpTag = Instance.new("BoolValue")
+                pvpTag.Name = "PVPEnabled"
+                pvpTag.Value = true
+                pvpTag.Parent = humanoid
+            end
+        end
+        
+        print("✅ " .. player.Name .. " đã BẬT PVP")
+        return true
+    else
+        -- TẮT PVP
+        PVPSystem.PVPPlayers[player] = nil
+        
+        -- Xóa tag PVP
+        if player.Character then
+            local humanoid = player.Character:FindFirstChild("Humanoid")
+            if humanoid then
+                local pvpTag = humanoid:FindFirstChild("PVPEnabled")
+                if pvpTag then pvpTag:Destroy() end
+            end
+        end
+        
+        print("❌ " .. player.Name .. " đã TẮT PVP")
+        return false
+    end
+end
 
--- Advanced feature set
-local Features = {
-    AutoFarm = {
-        Enabled = false,
-        TargetNPC = "",
-        Range = 50,
-        AttackDelay = 0.1,
-        Priority = "HighestLevel"
-    },
+-- Hàm xử lý khi player chết
+function PVPSystem:HandlePlayerDeath(victim, killer)
+    if not killer or killer == victim then return end
     
-    InventoryManipulation = {
-        DuplicateFruits = false,
-        UnlimitedFruitStorage = false,
-        InstantFruitAwakening = false
-    },
-    
-    EconomyExploitation = {
-        MultiplyBeli = false,
-        MultiplyFragments = false,
-        FreePurchases = false,
-        AutoSellAll = false
-    },
-    
-    CombatEnhancements = {
-        GodMode = false,
-        InfiniteEnergy = false,
-        NoCooldown = false,
-        OneHitKill = false,
-        AutoDodge = false
-    },
-    
-    MovementHacks = {
-        SpeedHack = false,
-        Fly = false,
-        NoClip = false,
-        InfiniteJump = false,
-        Teleport = false
-    }
-}
+    if PVPSystem.PVPPlayers[victim] and PVPSystem.PVPPlayers[killer] then
+        local victimData = PVPSystem.PVPPlayers[victim]
+        local killerData = PVPSystem.PVPPlayers[killer]
+        
+        -- Tính bounty reward
+        local bountyReward = math.floor(victimData.Bounty * 0.1) + PVPSystem.BountyRewards.Kill
+        
+        -- Cập nhật stats
+        killerData.Kills = killerData.Kills + 1
+        killerData.Bounty = killerData.Bounty + bountyReward
+        victimData.Deaths = victimData.Deaths + 1
+        
+        -- Cập nhật Beli cho killer
+        local killerStats = killer:FindFirstChild("leaderstats")
+        if killerStats then
+            local killerBeli = killerStats:FindFirstChild("Beli")
+            if killerBeli then
+                killerBeli.Value = killerBeli.Value + bountyReward
+            end
+        end
+        
+        -- Gửi thông báo kill
+        PlayerKilledEvent:FireAllClients(killer.Name, victim.Name, bountyReward)
+        print("⚔️ " .. killer.Name .. " đã tiêu diệt " .. victim.Name .. " +" .. bountyReward .. " Beli")
+    end
+end
 
--- Memory manipulation core functions
-function Memory:ScanForPattern(pattern)
-    local results = {}
-    
-    -- Advanced pattern scanning algorithm
-    for address = 0x7FF000000000, 0x7FFFFFFFFFFF, 0x1000 do
-        local success, value = pcall(function()
-            return readbytes(address, #pattern)
+-- Kết nối sự kiện
+TogglePVPEvent.OnServerEvent:Connect(function(player)
+    PVPSystem:TogglePVP(player)
+end)
+
+-- Theo dõi player death
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+        humanoid.Died:Connect(function()
+            -- Tìm killer
+            local killer = nil
+            if humanoid:FindFirstChild("creator") then
+                killer = humanoid.creator.Value
+            end
+            PVPSystem:HandlePlayerDeath(player, killer)
         end)
-        
-        if success and self:PatternMatch(value, pattern) then
-            table.insert(results, address)
-        end
-    end
-    
-    return results
-end
-
-function Memory:PatternMatch(data, pattern)
-    -- Advanced pattern matching with wildcard support
-    for i = 1, #pattern do
-        if pattern:sub(i,i) ~= "?" and data:sub(i,i) ~= pattern:sub(i,i) then
-            return false
-        end
-    end
-    return true
-end
-
-function Memory:WriteProtected(address, value, size)
-    -- Bypass memory protection
-    local oldProtection = getprotection(address)
-    setprotection(address, size, 0x40) -- PAGE_EXECUTE_READWRITE
-    writebytes(address, value, size)
-    setprotection(address, size, oldProtection)
-end
-
--- Network packet manipulation
-function Network:InterceptRemote(eventName, callback)
-    -- Hook remote events for analysis and manipulation
-    local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild(eventName)
-    if remoteEvent then
-        local oldFireServer = remoteEvent.FireServer
-        remoteEvent.FireServer = function(self, ...)
-            local args = {...}
-            callback(args) -- Intercept and modify
-            return oldFireServer(self, unpack(args))
-        end
-    end
-end
-
-function Network:CreateFakePacket(packetType, data)
-    -- Generate custom network packets
-    local packet = Network.CustomPackets[packetType]
-    if not packet then return nil end
-    
-    local buffer = string.char(packet.Header)
-    
-    for field, size in pairs(packet.Structure) do
-        local value = data[field] or 0
-        buffer = buffer .. string.pack("<I" .. size, value)
-    end
-    
-    return buffer
-end
-
-function Network:SendFakePacket(packet)
-    -- Advanced packet injection
-    local success, result = pcall(function()
-        game:GetService("NetworkClient"):Send(packet)
     end)
-    
-    if not success then
-        warn("Packet injection failed: " .. result)
-    end
-end
+end)
 
--- Auto-farming system
-function Features.AutoFarm:Start()
-    if not Features.AutoFarm.Enabled then return end
-    
-    spawn(function()
-        while Features.AutoFarm.Enabled and wait(Features.AutoFarm.AttackDelay) do
-            local target = Features.AutoFarm:FindTarget()
-            if target then
-                Features.AutoFarm:AttackTarget(target)
-            end
-        end
-    end)
-end
-
-function Features.AutoFarm:FindTarget()
-    local closestNPC = nil
-    local closestDistance = math.huge
-    
-    for _, npc in pairs(workspace:GetChildren()) do
-        if npc:FindFirstChild("Humanoid") and npc:FindFirstChild("HumanoidRootPart") then
-            local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - 
-                            npc.HumanoidRootPart.Position).Magnitude
-            
-            if distance < Features.AutoFarm.Range and distance < closestDistance then
-                closestNPC = npc
-                closestDistance = distance
-            end
+-- Auto giảm bounty sau 5 phút không combat
+RunService.Heartbeat:Connect(function()
+    for player, data in pairs(PVPSystem.PVPPlayers) do
+        if os.time() - data.LastCombat > 300 then
+            data.Bounty = math.floor(data.Bounty * 0.95)
         end
     end
-    
-    return closestNPC
-end
+end)
+-- Đặt trong Sword tool
+local Tool = script.Parent
+local Handle = Tool:WaitForChild("Handle")
+local Damage = 35
+local Cooldown = 1
+local CanAttack = true
 
-function Features.AutoFarm:AttackTarget(target)
-    -- Advanced combat automation
-    local character = game.Players.LocalPlayer.Character
-    if not character then return end
-    
-    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-    if not humanoidRootPart then return end
-    
-    -- Position optimization
-    humanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
-    
-    -- Execute combat moves
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E, false, nil)
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.R, false, nil)
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.F, false, nil)
-    
-    -- Auto-collect drops
-    Features.AutoFarm:CollectDrops()
-end
+-- Sound effect
+local SlashSound = Instance.new("Sound")
+SlashSound.SoundId = "rbxassetid://131429975"
+SlashSound.Volume = 0.7
+SlashSound.Parent = Handle
 
-function Features.AutoFarm:CollectDrops()
-    -- Auto-loot system
-    for _, item in pairs(workspace:GetChildren()) do
-        if item:IsA("Model") and item:FindFirstChild("Handle") then
-            local distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - 
-                            item.Handle.Position).Magnitude
-            
-            if distance < 20 then
-                firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, item.Handle, 0)
-                firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, item.Handle, 1)
-            end
-        end
+Tool.Activated:Connect(function()
+    if not CanAttack then return end
+    CanAttack = false
+    
+    SlashSound:Play()
+    
+    local attacker = game.Players:GetPlayerFromCharacter(Tool.Parent)
+    if not attacker then 
+        CanAttack = true
+        return 
     end
-end
-
--- Economy manipulation
-function Features.EconomyExploitation:MultiplyCurrency(currencyType, multiplier)
-    local currentValue = 0
     
-    if currencyType == "Beli" then
-        currentValue = game:GetService("Players").LocalPlayer:FindFirstChild("Beli").Value
-        game:GetService("Players").LocalPlayer:FindFirstChild("Beli").Value = currentValue * multiplier
-    elseif currencyType == "Fragments" then
-        currentValue = game:GetService("Players").LocalPlayer:FindFirstChild("Fragments").Value
-        game:GetService("Players").LocalPlayer:FindFirstChild("Fragments").Value = currentValue * multiplier
+    -- Kiểm tra PVP
+    local PVPSystem = game.ServerScriptService:FindFirstChild("PVPSystem")
+    if not PVPSystem then 
+        CanAttack = true
+        return 
     end
-end
-
-function Features.EconomyExploitation:FreePurchase(itemName)
-    -- Bypass purchase validation
-    local args = {
-        [1] = "PurchaseItem",
-        [2] = itemName,
-        [3] = 0, -- Zero cost
-        [4] = "Beli" -- Currency type
-    }
     
-    game:GetService("ReplicatedStorage"):WaitForChild("MainEvent"):FireServer(unpack(args))
-end
-
--- Movement enhancements
-function Features.MovementHacks:ApplySpeedHack(speedMultiplier)
-    local character = game.Players.LocalPlayer.Character
-    if not character then return end
+    local attackerData = PVPSystem.PVPPlayers[attacker]
+    if not attackerData then
+        print("❌ Bật PVP để tấn công người chơi khác!")
+        CanAttack = true
+        return
+    end
     
-    local humanoid = character:FindFirstChild("Humanoid")
-    if not humanoid then return end
+    -- Cập nhật combat time
+    attackerData.LastCombat = os.time()
     
-    humanoid.WalkSpeed = 16 * speedMultiplier
-end
-
-function Features.MovementHacks:ToggleFly()
-    local FLYING = false
-    local flySpeed = 50
+    -- Animation tấn công
+    local originalPos = Tool.GripPos
+    Tool.GripPos = originalPos + Vector3.new(0, 0, -2)
+    wait(0.2)
+    Tool.GripPos = originalPos
     
-    spawn(function()
-        repeat wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        
-        local T = game.Players.LocalPlayer.Character.HumanoidRootPart
-        local CONTROL = {F = 0, B = 0, L = 0, R = 0}
-        local lCONTROL = {F = 0, B = 0, L = 0, R = 0}
-        
-        local function fly()
-            FLYING = true
-            local BG = Instance.new("BodyGyro", T)
-            local BV = Instance.new("BodyVelocity", T)
-            BG.P = 9e4
-            BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-            BG.cframe = T.CFrame
-            BV.velocity = Vector3.new(0, 0, 0)
-            BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
-            
-            spawn(function()
-                repeat wait()
-                    game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
-                    if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 then
-                        BV.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + 
-                                     ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B) * 0.2, 0).p) - 
-                                     game.Workspace.CurrentCamera.CoordinateFrame.p)) * flySpeed
-                    else
-                        BV.velocity = Vector3.new(0, 0, 0)
+    -- Phát hiện damage
+    local character = attacker.Character
+    if character then
+        local attackerHRP = character:FindFirstChild("HumanoidRootPart")
+        if attackerHRP then
+            for _, target in pairs(game.Players:GetPlayers()) do
+                if target ~= attacker and target.Character then
+                    local targetChar = target.Character
+                    local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
+                    local targetHumanoid = targetChar:FindFirstChild("Humanoid")
+                    
+                    if targetHRP and targetHumanoid then
+                        local distance = (attackerHRP.Position - targetHRP.Position).Magnitude
+                        
+                        if distance <= 15 then
+                            local targetData = PVPSystem.PVPPlayers[target]
+                            if targetData then
+                                -- Gây damage
+                                targetHumanoid:TakeDamage(Damage)
+                                
+                                -- Đánh dấu killer
+                                local creator = Instance.new("ObjectValue")
+                                creator.Name = "creator"
+                                creator.Value = attacker
+                                creator.Parent = targetHumanoid
+                                game.Debris:AddItem(creator, 1)
+                                
+                                -- Cập nhật combat time cho target
+                                targetData.LastCombat = os.time()
+                                
+                                print("🗡️ " .. attacker.Name .. " tấn công " .. target.Name .. " -" .. Damage .. " HP")
+                            end
+                        end
                     end
-                    BG.cframe = game.Workspace.CurrentCamera.CoordinateFrame
-                until not FLYING
-                
-                CONTROL = {F = 0, B = 0, L = 0, R = 0}
-                lCONTROL = {F = 0, B = 0, L = 0, R = 0}
-                BG:destroy()
-                BV:destroy()
-                game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
-            end)
-        end
-        
-        -- Input handling for flight controls
-        game:GetService("UserInputService").InputBegan:connect(function(input)
-            if input.KeyCode == Enum.KeyCode.W then
-                CONTROL.F = 1
-            elseif input.KeyCode == Enum.KeyCode.S then
-                CONTROL.B = -1
-            elseif input.KeyCode == Enum.KeyCode.A then
-                CONTROL.L = -1
-            elseif input.KeyCode == Enum.KeyCode.D then
-                CONTROL.R = 1
+                end
             end
-        end)
-        
-        game:GetService("UserInputService").InputEnded:connect(function(input)
-            if input.KeyCode == Enum.KeyCode.W then
-                CONTROL.F = 0
-            elseif input.KeyCode == Enum.KeyCode.S then
-                CONTROL.B = 0
-            elseif input.KeyCode == Enum.KeyCode.A then
-                CONTROL.L = 0
-            elseif input.KeyCode == Enum.KeyCode.D then
-                CONTROL.R = 0
-            end
-        end)
-        
-        fly()
-    end)
-end
-
--- GUI Interface
-function BloxFruitsExploit:CreateGUI()
-    local ScreenGui = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local TabSelector = Instance.new("Frame")
-    local ContentFrame = Instance.new("Frame")
-    
-    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    ScreenGui.Name = "DarkForgeX_Exploit"
-    
-    -- GUI styling and layout
-    MainFrame.Size = UDim2.new(0, 500, 0, 400)
-    MainFrame.Position = UDim2.new(0.5, -250, 0.5, -200)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    MainFrame.Parent = ScreenGui
-    
-    -- Tab system implementation
-    local tabs = {
-        "Auto Farm",
-        "Player", 
-        "Combat",
-        "Teleports",
-        "Misc"
-    }
-    
-    local currentTab = "Auto Farm"
-    
-    -- Create tab buttons
-    for i, tabName in ipairs(tabs) do
-        local TabButton = Instance.new("TextButton")
-        TabButton.Size = UDim2.new(0, 100, 0, 30)
-        TabButton.Position = UDim2.new(0, (i-1)*100, 0, 0)
-        TabButton.Text = tabName
-        TabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        TabButton.Parent = TabSelector
-        
-        TabButton.MouseButton1Click:Connect(function()
-            currentTab = tabName
-            BloxFruitsExploit:UpdateTabContent(tabName, ContentFrame)
-        end)
-    end
-    
-    -- Initial content
-    BloxFruitsExploit:CreateAutoFarmTab(ContentFrame)
-end
-
-function BloxFruitsExploit:CreateAutoFarmTab(parent)
-    -- Clear previous content
-    for _, child in ipairs(parent:GetChildren()) do
-        child:Destroy()
-    end
-    
-    -- Auto Farm controls
-    local EnableFarm = Instance.new("TextButton")
-    EnableFarm.Size = UDim2.new(0, 200, 0, 40)
-    EnableFarm.Position = UDim2.new(0, 20, 0, 20)
-    EnableFarm.Text = "Enable Auto Farm"
-    EnableFarm.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-    EnableFarm.TextColor3 = Color3.fromRGB(255, 255, 255)
-    EnableFarm.Parent = parent
-    
-    EnableFarm.MouseButton1Click:Connect(function()
-        Features.AutoFarm.Enabled = not Features.AutoFarm.Enabled
-        EnableFarm.Text = Features.AutoFarm.Enabled and "Disable Auto Farm" or "Enable Auto Farm"
-        
-        if Features.AutoFarm.Enabled then
-            Features.AutoFarm:Start()
-        end
-    end)
-    
-    -- Additional farm settings...
-end
-
-function BloxFruitsExploit:UpdateTabContent(tabName, parent)
-    -- Dynamic content switching
-    if tabName == "Auto Farm" then
-        self:CreateAutoFarmTab(parent)
-    elseif tabName == "Player" then
-        self:CreatePlayerTab(parent)
-    -- Additional tab implementations...
-    end
-end
-
--- Security bypass mechanisms
-function BloxFruitsExploit:BypassAntiCheat()
-    -- Advanced anti-cheat evasion techniques
-    local antiCheatModules = {
-        "AC_Client",
-        "AntiExploit", 
-        "ScriptScanner",
-        "MemoryMonitor"
-    }
-    
-    for _, moduleName in ipairs(antiCheatModules) do
-        local module = game:GetService("Players").LocalPlayer:FindFirstChild(moduleName)
-        if module then
-            module:Destroy()
         end
     end
     
-    -- Hook detection functions
-    local oldNamecall
-    oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
-        local method = getnamecallmethod()
-        local args = {...}
-        
-        -- Bypass common detection methods
-        if method == "Kick" or method == "kick" then
-            return nil
+    wait(Cooldown)
+    CanAttack = true
+end)
+-- Đặt trong StarterGui > ScreenGui
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+-- Tạo GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "PVPGui"
+ScreenGui.Parent = PlayerGui
+
+-- Nút bật/tắt PVP
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 200, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Text = "PVP: TẮT"
+ToggleButton.TextScaled = true
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Parent = ScreenGui
+
+-- Hiển thị Bounty
+local BountyFrame = Instance.new("Frame")
+BountyFrame.Size = UDim2.new(0, 200, 0, 80)
+BountyFrame.Position = UDim2.new(0, 10, 0, 70)
+BountyFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+BountyFrame.Parent = ScreenGui
+
+local BountyLabel = Instance.new("TextLabel")
+BountyLabel.Size = UDim2.new(1, 0, 0.5, 0)
+BountyLabel.Text = "BOUNTY: 0"
+BountyLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+BountyLabel.BackgroundTransparency = 1
+BountyLabel.TextScaled = true
+BountyLabel.Font = Enum.Font.GothamBold
+BountyLabel.Parent = BountyFrame
+
+local StatsLabel = Instance.new("TextLabel")
+StatsLabel.Size = UDim2.new(1, 0, 0.5, 0)
+StatsLabel.Position = UDim2.new(0, 0, 0.5, 0)
+StatsLabel.Text = "Kills: 0 | Deaths: 0"
+StatsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+StatsLabel.BackgroundTransparency = 1
+StatsLabel.TextScaled = true
+StatsLabel.Parent = BountyFrame
+
+-- Kill Feed
+local KillFeed = Instance.new("Frame")
+KillFeed.Size = UDim2.new(0, 300, 0, 200)
+KillFeed.Position = UDim2.new(1, -310, 0, 10)
+KillFeed.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+KillFeed.Parent = ScreenGui
+
+local KillFeedLabel = Instance.new("TextLabel")
+KillFeedLabel.Size = UDim2.new(1, 0, 1, 0)
+KillFeedLabel.Text = "KILL FEED"
+KillFeedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+KillFeedLabel.BackgroundTransparency = 1
+KillFeedLabel.TextWrapped = true
+KillFeedLabel.TextXAlignment = Enum.TextXAlignment.Left
+KillFeedLabel.TextYAlignment = Enum.TextYAlignment.Top
+KillFeedLabel.Parent = KillFeed
+
+-- Kết nối Events
+local TogglePVPEvent = game.ReplicatedStorage:WaitForChild("TogglePVPEvent")
+local PlayerKilledEvent = game.ReplicatedStorage:WaitForChild("PlayerKilledEvent")
+
+-- Bật/tắt PVP
+ToggleButton.MouseButton1Click:Connect(function()
+    TogglePVPEvent:FireServer()
+end)
+
+-- Nhận thông báo kill
+PlayerKilledEvent.OnClientEvent:Connect(function(killer, victim, bounty)
+    local killText = "⚔️ " .. killer .. " đã tiêu diệt " .. victim .. " +" .. bounty .. " Beli\n"
+    KillFeedLabel.Text = killText .. KillFeedLabel.Text
+end)
+
+-- Cập nhật Bounty
+game:GetService("RunService").Heartbeat:Connect(function()
+    local leaderstats = Player:FindFirstChild("leaderstats")
+    if leaderstats then
+        local bounty = leaderstats:FindFirstChild("Beli")
+        if bounty then
+            BountyLabel.Text = "BOUNTY: " .. formatNumber(bounty.Value)
         end
-        
-        return oldNamecall(self, unpack(args))
-    end)
-end
-
--- Initialization sequence
-function BloxFruitsExploit:Initialize()
-    -- Security bypass
-    self:BypassAntiCheat()
-    
-    -- Memory scanning
-    local beliAddresses = Memory:ScanForPattern(Memory.ScanPatterns.Beli)
-    if #beliAddresses > 0 then
-        Memory.Addresses.Currency = beliAddresses[1]
     end
-    
-    -- GUI creation
-    self:CreateGUI()
-    
-    -- Network interception
-    for _, eventName in ipairs(Network.RemoteEvents) do
-        Network:InterceptRemote(eventName, function(args)
-            -- Log and potentially modify network traffic
-            print("Intercepted " .. eventName .. " with args:", args)
-        end)
+end)
+
+function formatNumber(num)
+    if num >= 1000000 then
+        return string.format("%.1fM", num/1000000)
+    elseif num >= 1000 then
+        return string.format("%.1fK", num/1000)
+    else
+        return tostring(num)
     end
-    
-    print("DarkForge-X Blox Fruits Exploit Loaded | Version " .. self.Version)
 end
-
--- Execute initialization
-BloxFruitsExploit:Initialize()
-
-return BloxFruitsExploit
