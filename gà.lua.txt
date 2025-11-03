@@ -1,5 +1,5 @@
 -- Gà Gaming Hub - Blox Fruits Script
--- Professional UI like Redz Hub
+-- Simple but Professional UI
 -- Created by Gà Gaming
 
 local Players = game:GetService("Players")
@@ -15,326 +15,322 @@ getgenv().GaGaming = {
     AutoFarm = false,
     AutoTeleport = false,
     AutoNewWorld = false,
-    AutoThirdWorld = false,
-    AutoBartilo = false,
     AutoBoss = false,
     AutoSword = false,
-    AutoSaber = false,
-    AutoPole = false,
-    AutoFactory = false,
     AutoBuyFruits = false,
-    AutoStoreFruits = false,
-    AutoRipIndra = false,
-    AutoCakePrince = false,
     AutoFarmBone = false,
-    AutoEctoplasm = false,
-    AutoKillPlayer = false,
-    AutoMuscleBeach = false,
-    AutoSeaBeast = false,
-    AutoTushita = false,
-    AutoYama = false,
-    AutoElite = false,
-    AutoRainbowHaki = false,
-    AutoDarkBeard = false,
-    AutoBuddySword = false
+    AutoCollectDrops = false
 }
 
--- Modern UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RobloxianRoblox/UI-Libraries/main/Stormwind%20UI/Source.lua"))()
+-- Tạo GUI đơn giản
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TabButtons = Instance.new("Frame")
+local ContentFrame = Instance.new("Frame")
 
-local Window = Library:CreateWindow({
-    Name = "🐔 Gà Gaming Hub | Blox Fruits",
-    Theme = "Dark",
-    Size = UDim2.new(0, 500, 0, 450)
-})
+ScreenGui.Name = "GaGamingHub"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Tabs
-local MainTab = Window:CreateTab("🏠 Main")
-local FarmingTab = Window:CreateTab("⚔️ Farming")
-local BossTab = Window:CreateTab("👑 Boss")
-local SwordTab = Window:CreateTab("⚔️ Sword")
-local QuestTab = Window:CreateTab("📜 Quest")
-local PlayerTab = Window:CreateTab("👤 Player")
+-- Main Frame
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+MainFrame.Size = UDim2.new(0, 600, 0, 400)
+MainFrame.Active = true
+MainFrame.Draggable = true
 
--- Main Tab
-local AutoFarmSection = MainTab:CreateSection("Auto Farm")
-AutoFarmSection:AddToggle("Auto Farm", function(Value)
-    getgenv().GaGaming.AutoFarm = Value
-    if Value then
-        StartAutoFarm()
-    end
+-- Header
+local Header = Instance.new("Frame")
+Header.Name = "Header"
+Header.Parent = MainFrame
+Header.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+Header.BorderSizePixel = 0
+Header.Size = UDim2.new(1, 0, 0, 50)
+
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Parent = Header
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1, 0, 1, 0)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "🐔 Gà Gaming Hub v1.0 | Blox Fruits"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 18
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = Header
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+CloseButton.BorderSizePixel = 0
+CloseButton.Position = UDim2.new(0.95, 0, 0.2, 0)
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 14
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
 end)
 
-AutoFarmSection:AddToggle("Auto Teleport", function(Value)
-    getgenv().GaGaming.AutoTeleport = Value
-end)
+-- Tab Buttons
+TabButtons.Name = "TabButtons"
+TabButtons.Parent = MainFrame
+TabButtons.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+TabButtons.BorderSizePixel = 0
+TabButtons.Position = UDim2.new(0, 0, 0.125, 0)
+TabButtons.Size = UDim2.new(0, 150, 0, 350)
 
-AutoFarmSection:AddToggle("Auto Collect Drops", function(Value)
-    getgenv().GaGaming.AutoCollectDrops = Value
-    if Value then
-        StartCollectDrops()
-    end
-end)
+-- Content Frame
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Parent = MainFrame
+ContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.Position = UDim2.new(0.25, 0, 0.125, 0)
+ContentFrame.Size = UDim2.new(0, 450, 0, 350)
 
-local WorldSection = MainTab:CreateSection("World")
-WorldSection:AddToggle("Auto New World", function(Value)
-    getgenv().GaGaming.AutoNewWorld = Value
-    if Value then
-        AutoNewWorld()
-    end
-end)
+-- Tạo các tab
+local Tabs = {
+    Main = {Name = "🏠 Main", Content = {}},
+    Farming = {Name = "⚔️ Farming", Content = {}},
+    Boss = {Name = "👑 Boss", Content = {}},
+    Sword = {Name = "⚔️ Sword", Content = {}},
+    Player = {Name = "👤 Player", Content = {}}
+}
 
-WorldSection:AddToggle("Auto Third World", function(Value)
-    getgenv().GaGaming.AutoThirdWorld = Value
-    if Value then
-        AutoThirdSea()
-    end
-end)
+local currentTab = "Main"
 
--- Farming Tab
-local LevelSection = FarmingTab:CreateSection("Level Farming")
-LevelSection:AddToggle("Auto Bartilo Quest", function(Value)
-    getgenv().GaGaming.AutoBartilo = Value
-    if Value then
-        AutoBartiloQuest()
-    end
-end)
+-- Tạo nút tab
+local function createTabButton(tabName, position)
+    local button = Instance.new("TextButton")
+    button.Name = tabName .. "Tab"
+    button.Parent = TabButtons
+    button.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+    button.BorderSizePixel = 0
+    button.Position = position
+    button.Size = UDim2.new(0.9, 0, 0, 40)
+    button.Font = Enum.Font.Gotham
+    button.Text = Tabs[tabName].Name
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextSize = 14
+    
+    button.MouseButton1Click:Connect(function()
+        currentTab = tabName
+        updateContent()
+    end)
+    
+    return button
+end
 
-LevelSection:AddToggle("Auto Ectoplasm", function(Value)
-    getgenv().GaGaming.AutoEctoplasm = Value
-    if Value then
-        AutoEctoplasm()
-    end
-end)
-
-LevelSection:AddToggle("Auto Bone", function(Value)
-    getgenv().GaGaming.AutoFarmBone = Value
-    if Value then
-        AutoFarmBone()
-    end
-end)
-
-LevelSection:AddToggle("Auto Muscle Beach", function(Value)
-    getgenv().GaGaming.AutoMuscleBeach = Value
-    if Value then
-        AutoMuscleBeach()
-    end
-end)
-
--- Boss Tab
-local BossSection = BossTab:CreateSection("Boss Farming")
-BossSection:AddToggle("Auto Boss", function(Value)
-    getgenv().GaGaming.AutoBoss = Value
-    if Value then
-        AutoBoss()
-    end
-end)
-
-BossSection:AddDropdown("Select Boss", {
-    "Saber Expert",
-    "The Saw",
-    "Greybeard",
-    "Darkbeard",
-    "Cake Prince",
-    "Dough King"
-}, function(Selected)
-    getgenv().SelectedBoss = Selected
-end)
-
-BossSection:AddToggle("Auto Elite Hunter", function(Value)
-    getgenv().GaGaming.AutoElite = Value
-    if Value then
-        AutoEliteHunter()
-    end
-end)
-
-BossSection:AddToggle("Auto Tushita", function(Value)
-    getgenv().GaGaming.AutoTushita = Value
-    if Value then
-        AutoTushita()
-    end
-end)
-
-BossSection:AddToggle("Auto Yama", function(Value)
-    getgenv().GaGaming.AutoYama = Value
-    if Value then
-        AutoYama()
-    end
-end)
-
--- Sword Tab
-local SwordSection = SwordTab:CreateSection("Sword")
-SwordSection:AddToggle("Auto Saber", function(Value)
-    getgenv().GaGaming.AutoSaber = Value
-    if Value then
-        AutoSaber()
-    end
-end)
-
-SwordSection:AddToggle("Auto Buddy Sword", function(Value)
-    getgenv().GaGaming.AutoBuddySword = Value
-    if Value then
-        AutoBuddySword()
-    end
-end)
-
-SwordSection:AddToggle("Auto Rengoku", function(Value)
-    getgenv().GaGaming.AutoRengoku = Value
-    if Value then
-        AutoRengoku()
-    end
-end)
-
-SwordSection:AddToggle("Auto Canvander", function(Value)
-    getgenv().GaGaming.AutoCanvander = Value
-    if Value then
-        AutoCanvander()
-    end
-end)
-
--- Player Tab
-local PlayerSection = PlayerTab:CreateSection("Player")
-PlayerSection:AddSlider("WalkSpeed", 16, 200, 16, function(Value)
-    localPlayer.Character.Humanoid.WalkSpeed = Value
-end)
-
-PlayerSection:AddSlider("JumpPower", 50, 200, 50, function(Value)
-    localPlayer.Character.Humanoid.JumpPower = Value
-end)
-
-PlayerSection:AddButton("Reset Character", function()
-    localPlayer.Character:BreakJoints()
-end)
-
-PlayerSection:AddToggle("Anti AFK", function(Value)
-    if Value then
-        local VirtualUser = game:GetService("VirtualUser")
-        game:GetService("Players").LocalPlayer.Idled:connect(function()
-            VirtualUser:CaptureController()
-            VirtualUser:ClickButton2(Vector2.new())
-        end)
-    end
-end)
-
--- Status Section
-local StatusSection = PlayerTab:CreateSection("Status")
-local LevelLabel = StatusSection:AddLabel("Level: " .. (localPlayer.Data:FindFirstChild("Level") and localPlayer.Data.Level.Value or "N/A"))
-local BeliLabel = StatusSection:AddLabel("Beli: " .. (localPlayer.Data:FindFirstChild("Beli") and localPlayer.Data.Beli.Value or "N/A"))
-local FragmentLabel = StatusSection:AddLabel("Fragments: " .. (localPlayer.Data:FindFirstChild("Fragments") and localPlayer.Data.Fragments.Value or "N/A"))
-
--- Update Status
-spawn(function()
-    while wait(5) do
-        if LevelLabel then
-            LevelLabel:SetText("Level: " .. (localPlayer.Data:FindFirstChild("Level") and localPlayer.Data.Level.Value or "N/A"))
+-- Tạo toggle button
+local function createToggle(text, configName, position, parent)
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Name = text .. "Toggle"
+    toggleFrame.Parent = parent
+    toggleFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
+    toggleFrame.BorderSizePixel = 0
+    toggleFrame.Position = position
+    toggleFrame.Size = UDim2.new(1, -20, 0, 35)
+    
+    local toggleText = Instance.new("TextLabel")
+    toggleText.Name = "Text"
+    toggleText.Parent = toggleFrame
+    toggleText.BackgroundTransparency = 1
+    toggleText.Position = UDim2.new(0.05, 0, 0, 0)
+    toggleText.Size = UDim2.new(0.7, 0, 1, 0)
+    toggleText.Font = Enum.Font.Gotham
+    toggleText.Text = text
+    toggleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleText.TextSize = 14
+    toggleText.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Name = "Toggle"
+    toggleButton.Parent = toggleFrame
+    toggleButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    toggleButton.BorderSizePixel = 0
+    toggleButton.Position = UDim2.new(0.85, 0, 0.2, 0)
+    toggleButton.Size = UDim2.new(0, 40, 0, 20)
+    toggleButton.Font = Enum.Font.GothamBold
+    toggleButton.Text = "OFF"
+    toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleButton.TextSize = 10
+    
+    toggleButton.MouseButton1Click:Connect(function()
+        getgenv().GaGaming[configName] = not getgenv().GaGaming[configName]
+        if getgenv().GaGaming[configName] then
+            toggleButton.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
+            toggleButton.Text = "ON"
+            print("✅ " .. text .. " activated!")
+        else
+            toggleButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            toggleButton.Text = "OFF"
+            print("❌ " .. text .. " deactivated!")
         end
-        if BeliLabel then
-            BeliLabel:SetText("Beli: " .. (localPlayer.Data:FindFirstChild("Beli") and localPlayer.Data.Beli.Value or "N/A"))
-        end
-        if FragmentLabel then
-            FragmentLabel:SetText("Fragments: " .. (localPlayer.Data:FindFirstChild("Fragments") and localPlayer.Data.Fragments.Value or "N/A"))
+    end)
+    
+    return toggleFrame
+end
+
+-- Tạo nội dung cho các tab
+local function createMainTab()
+    local section = Instance.new("Frame")
+    section.Name = "MainSection"
+    section.Parent = ContentFrame
+    section.BackgroundTransparency = 1
+    section.Size = UDim2.new(1, 0, 1, 0)
+    
+    local sectionTitle = Instance.new("TextLabel")
+    sectionTitle.Name = "SectionTitle"
+    sectionTitle.Parent = section
+    sectionTitle.BackgroundTransparency = 1
+    sectionTitle.Position = UDim2.new(0, 10, 0, 10)
+    sectionTitle.Size = UDim2.new(1, -20, 0, 30)
+    sectionTitle.Font = Enum.Font.GothamBold
+    sectionTitle.Text = "🏠 MAIN FEATURES"
+    sectionTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    sectionTitle.TextSize = 16
+    sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Các toggle cho Main tab
+    createToggle("Auto Farm", "AutoFarm", UDim2.new(0, 10, 0, 50), section)
+    createToggle("Auto Teleport", "AutoTeleport", UDim2.new(0, 10, 0, 95), section)
+    createToggle("Auto Collect Drops", "AutoCollectDrops", UDim2.new(0, 10, 0, 140), section)
+    createToggle("Auto Buy Fruits", "AutoBuyFruits", UDim2.new(0, 10, 0, 185), section)
+    createToggle("Auto New World", "AutoNewWorld", UDim2.new(0, 10, 0, 230), section)
+end
+
+local function createFarmingTab()
+    local section = Instance.new("Frame")
+    section.Name = "FarmingSection"
+    section.Parent = ContentFrame
+    section.BackgroundTransparency = 1
+    section.Size = UDim2.new(1, 0, 1, 0)
+    section.Visible = false
+    
+    local sectionTitle = Instance.new("TextLabel")
+    sectionTitle.Name = "SectionTitle"
+    sectionTitle.Parent = section
+    sectionTitle.BackgroundTransparency = 1
+    sectionTitle.Position = UDim2.new(0, 10, 0, 10)
+    sectionTitle.Size = UDim2.new(1, -20, 0, 30)
+    sectionTitle.Font = Enum.Font.GothamBold
+    sectionTitle.Text = "⚔️ FARMING FEATURES"
+    sectionTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    sectionTitle.TextSize = 16
+    sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    createToggle("Auto Farm Bone", "AutoFarmBone", UDim2.new(0, 10, 0, 50), section)
+end
+
+local function createBossTab()
+    local section = Instance.new("Frame")
+    section.Name = "BossSection"
+    section.Parent = ContentFrame
+    section.BackgroundTransparency = 1
+    section.Size = UDim2.new(1, 0, 1, 0)
+    section.Visible = false
+    
+    local sectionTitle = Instance.new("TextLabel")
+    sectionTitle.Name = "SectionTitle"
+    sectionTitle.Parent = section
+    sectionTitle.BackgroundTransparency = 1
+    sectionTitle.Position = UDim2.new(0, 10, 0, 10)
+    sectionTitle.Size = UDim2.new(1, -20, 0, 30)
+    sectionTitle.Font = Enum.Font.GothamBold
+    sectionTitle.Text = "👑 BOSS FEATURES"
+    sectionTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    sectionTitle.TextSize = 16
+    sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    createToggle("Auto Boss", "AutoBoss", UDim2.new(0, 10, 0, 50), section)
+end
+
+local function createSwordTab()
+    local section = Instance.new("Frame")
+    section.Name = "SwordSection"
+    section.Parent = ContentFrame
+    section.BackgroundTransparency = 1
+    section.Size = UDim2.new(1, 0, 1, 0)
+    section.Visible = false
+    
+    local sectionTitle = Instance.new("TextLabel")
+    sectionTitle.Name = "SectionTitle"
+    sectionTitle.Parent = section
+    sectionTitle.BackgroundTransparency = 1
+    sectionTitle.Position = UDim2.new(0, 10, 0, 10)
+    sectionTitle.Size = UDim2.new(1, -20, 0, 30)
+    sectionTitle.Font = Enum.Font.GothamBold
+    sectionTitle.Text = "⚔️ SWORD FEATURES"
+    sectionTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    sectionTitle.TextSize = 16
+    sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    createToggle("Auto Sword", "AutoSword", UDim2.new(0, 10, 0, 50), section)
+end
+
+local function createPlayerTab()
+    local section = Instance.new("Frame")
+    section.Name = "PlayerSection"
+    section.Parent = ContentFrame
+    section.BackgroundTransparency = 1
+    section.Size = UDim2.new(1, 0, 1, 0)
+    section.Visible = false
+    
+    local sectionTitle = Instance.new("TextLabel")
+    sectionTitle.Name = "SectionTitle"
+    sectionTitle.Parent = section
+    sectionTitle.BackgroundTransparency = 1
+    sectionTitle.Position = UDim2.new(0, 10, 0, 10)
+    sectionTitle.Size = UDim2.new(1, -20, 0, 30)
+    sectionTitle.Font = Enum.Font.GothamBold
+    sectionTitle.Text = "👤 PLAYER FEATURES"
+    sectionTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    sectionTitle.TextSize = 16
+    sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+end
+
+-- Cập nhật nội dung tab
+local function updateContent()
+    for tabName, tabData in pairs(Tabs) do
+        if tabData.Content then
+            tabData.Content.Visible = (tabName == currentTab)
         end
     end
-end)
+end
+
+-- Tạo các tab
+local tabPositions = {
+    Main = UDim2.new(0.05, 0, 0.05, 0),
+    Farming = UDim2.new(0.05, 0, 0.15, 0),
+    Boss = UDim2.new(0.05, 0, 0.25, 0),
+    Sword = UDim2.new(0.05, 0, 0.35, 0),
+    Player = UDim2.new(0.05, 0, 0.45, 0)
+}
+
+for tabName, position in pairs(tabPositions) do
+    createTabButton(tabName, position)
+end
+
+-- Tạo nội dung
+Tabs.Main.Content = createMainTab()
+Tabs.Farming.Content = createFarmingTab()
+Tabs.Boss.Content = createBossTab()
+Tabs.Sword.Content = createSwordTab()
+Tabs.Player.Content = createPlayerTab()
+
+-- Hiển thị tab mặc định
+updateContent()
 
 -- Auto Farm Function
-function StartAutoFarm()
-    spawn(function()
-        while wait() do
-            if not getgenv().GaGaming.AutoFarm then break end
-            
-            -- Tìm enemy gần nhất
-            local target = FindNearestEnemy()
-            if target then
-                -- Teleport đến enemy
-                if getgenv().GaGaming.AutoTeleport then
-                    SafeTeleport(target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 8))
-                end
-                
-                -- Tấn công
-                AttackEnemy(target)
-            end
-        end
-    end)
-end
-
--- Tìm enemy gần nhất
-function FindNearestEnemy()
-    local nearest = nil
-    local distance = math.huge
-    
-    for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
-        if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-            local dist = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-            if dist < distance then
-                distance = dist
-                nearest = enemy
-            end
+spawn(function()
+    while wait(1) do
+        if getgenv().GaGaming.AutoFarm then
+            -- Code auto farm ở đây
+            print("🤖 Auto Farm đang chạy...")
         end
     end
-    
-    return nearest
-end
-
--- Teleport an toàn
-function SafeTeleport(cframe)
-    localPlayer.Character.HumanoidRootPart.CFrame = cframe
-end
-
--- Tấn công enemy
-function AttackEnemy(enemy)
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, "X", false, game)
-    wait(0.1)
-    game:GetService("VirtualInputManager"):SendKeyEvent(false, "X", false, game)
-end
-
--- Thu thập item rơi
-function StartCollectDrops()
-    spawn(function()
-        while wait(3) do
-            if not getgenv().GaGaming.AutoCollectDrops then break end
-            
-            for _, drop in pairs(Workspace:GetChildren()) do
-                if drop.Name == "Drop" and drop:FindFirstChild("Handle") then
-                    SafeTeleport(drop.Handle.CFrame)
-                    wait(0.5)
-                end
-            end
-        end
-    end)
-end
-
--- Các hàm auto khác (sẽ implement sau)
-function AutoNewWorld()
-    print("Auto New World started")
-end
-
-function AutoThirdSea()
-    print("Auto Third Sea started")
-end
-
-function AutoBartiloQuest()
-    print("Auto Bartilo Quest started")
-end
-
-function AutoEctoplasm()
-    print("Auto Ectoplasm started")
-end
-
-function AutoFarmBone()
-    print("Auto Farm Bone started")
-end
-
-function AutoBoss()
-    print("Auto Boss started")
-end
-
-function AutoSaber()
-    print("Auto Saber started")
-end
-
--- Init
-Library:Init()
-print("🐔 Gà Gaming Hub loaded successfully!")
-print("🎯 Version: 1.0.0")
-print("🔥 Enjoy the script!")
+end)
