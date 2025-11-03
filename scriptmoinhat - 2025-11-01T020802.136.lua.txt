@@ -10973,3 +10973,257 @@ local rotateTween = TweenService:Create(ImageButton, TweenInfo.new(0.5, Enum.Eas
 ImageButton.MouseButton1Down:Connect(function()
 	game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game);
 end);
+local AutoHop = Tabs.Settings:AddToggle("AutoHop", {
+    Title = "Auto Hop Low Player Server",
+    Description = "Hop when server has few players",
+    Default = false
+})
+AutoHop:OnChanged(function(Value)
+    _G.AutoHopServer = Value
+end)
+
+spawn(function()
+    while wait(30) do -- Check every 30 seconds
+        if _G.AutoHopServer then
+            pcall(function()
+                local playerCount = #game.Players:GetPlayers()
+                if playerCount <= 5 then -- Hop if less than 5 players
+                    Hop()
+                end
+            end)
+        end
+    end
+end)
+local AutoHop = Tabs.Settings:AddToggle("AutoHop", {
+    Title = "Auto Hop Low Player Server",
+    Description = "Hop when server has few players",
+    Default = false
+})
+AutoHop:OnChanged(function(Value)
+    _G.AutoHopServer = Value
+end)
+
+spawn(function()
+    while wait(30) do -- Check every 30 seconds
+        if _G.AutoHopServer then
+            pcall(function()
+                local playerCount = #game.Players:GetPlayers()
+                if playerCount <= 5 then -- Hop if less than 5 players
+                    Hop()
+                end
+            end)
+        end
+    end
+end)
+-- Thêm vào Tabs.Raids
+Tabs.Raids:AddSection("Auto Farm Raid")
+
+local AutoStartRaid = Tabs.Raids:AddToggle("AutoStartRaid", {
+    Title = "Tự động bắt đầu Raid",
+    Description = "Tự động mua và bắt đầu raid",
+    Default = false
+})
+AutoStartRaid:OnChanged(function(Value)
+    _G.AutoStartRaid = Value
+end)
+
+local RaidDropdown = Tabs.Raids:AddDropdown("RaidDropdown", {
+    Title = "Chọn loại Raid",
+    Values = {"Flame", "Ice", "Quake", "Light", "Dark", "String", "Rumble", "Magma", "Human: Buddha", "Sand", "Bird: Phoenix", "Dough"},
+    Multi = false,
+    Default = 1
+})
+RaidDropdown:OnChanged(function(Value)
+    _G.SelectedRaid = Value
+end)
+
+local RaidStatus = Tabs.Raids:AddParagraph({
+    Title = "Trạng thái Raid:",
+    Content = "Chưa bắt đầu"
+})
+
+spawn(function()
+    while wait(Sec) do
+        if _G.AutoStartRaid and _G.SelectedRaid then
+            pcall(function()
+                -- Kiểm tra fragment
+                local fragments = plr.Data.Fragments.Value
+                if fragments >= 1000000 then
+                    -- Mua raid
+                    replicated.Remotes.CommF_:InvokeServer("RaidsNpc", "Select", _G.SelectedRaid)
+                    RaidStatus:SetDesc("Đã mua raid: " .. _G.SelectedRaid)
+                    
+                    -- Bắt đầu raid
+                    replicated.Remotes.CommF_:InvokeServer("StartRaid")
+                    RaidStatus:SetDesc("Đang bắt đầu raid...")
+                    
+                    -- Chờ và tham gia raid
+                    wait(5)
+                    if workspace:FindFirstChild("Raid") then
+                        RaidStatus:SetDesc("Đang tham gia raid...")
+                        -- Farm trong raid
+                        for i, v in pairs(workspace.Raid:GetDescendants()) do
+                            if v:IsA("Model") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                                repeat
+                                    wait()
+                                    Attack.Kill(v, _G.AutoStartRaid)
+                                until not _G.AutoStartRaid or not v.Parent or v.Humanoid.Health <= 0
+                            end
+                        end
+                    end
+                else
+                    RaidStatus:SetDesc("Không đủ fragment! Cần: 1,000,000 - Hiện có: " .. fragments)
+                end
+            end)
+        end
+    end
+end)
+-- Thêm vào Tabs.Main
+Tabs.Main:AddSection("Auto Farm Boss Theo Level")
+
+local AutoFarmBossByLevel = Tabs.Main:AddToggle("AutoFarmBossByLevel", {
+    Title = "Auto Farm Boss Theo Level",
+    Description = "Tự động chọn boss phù hợp với level",
+    Default = false
+})
+AutoFarmBossByLevel:OnChanged(function(Value)
+    _G.AutoFarmBossByLevel = Value
+end)
+
+function GetAppropriateBoss()
+    local level = plr.Data.Level.Value
+    
+    if World1 then
+        if level >= 2200 then return "Greybeard"
+        elseif level >= 2000 then return "Ice Admiral"
+        elseif level >= 1800 then return "Cyborg"
+        elseif level >= 1600 then return "Thunder God"
+        elseif level >= 1400 then return "Wysper"
+        elseif level >= 1200 then return "Fishman Lord"
+        elseif level >= 1000 then return "Magma Admiral"
+        elseif level >= 800 then return "Swan"
+        elseif level >= 600 then return "Chief Warden"
+        elseif level >= 400 then return "Warden"
+        elseif level >= 300 then return "Saber Expert"
+        elseif level >= 250 then return "Vice Admiral"
+        elseif level >= 200 then return "Mob Leader"
+        elseif level >= 150 then return "Yeti"
+        elseif level >= 100 then return "The Saw"
+        elseif level >= 75 then return "Bobby"
+        else return "The Gorilla King" end
+    elseif World2 then
+        if level >= 2500 then return "Order"
+        elseif level >= 2200 then return "Cursed Captain"
+        elseif level >= 2000 then return "Darkbeard"
+        elseif level >= 1800 then return "Tide Keeper"
+        elseif level >= 1600 then return "Awakened Ice Admiral"
+        elseif level >= 1400 then return "Smoke Admiral"
+        elseif level >= 1200 then return "Don Swan"
+        elseif level >= 1000 then return "Fajita"
+        elseif level >= 800 then return "Jeremy"
+        else return "Diamond" end
+    elseif World3 then
+        if level >= 3000 then return "Soul Reaper"
+        elseif level >= 2800 then return "Longma"
+        elseif level >= 2600 then return "Cake Queen"
+        elseif level >= 2400 then return "Beautiful Pirate"
+        elseif level >= 2200 then return "Captain Elephant"
+        elseif level >= 2000 then return "Kilo Admiral"
+        elseif level >= 1800 then return "Hydra Leader"
+        else return "Stone" end
+    end
+end
+
+spawn(function()
+    while wait(Sec) do
+        if _G.AutoFarmBossByLevel then
+            pcall(function()
+                local appropriateBoss = GetAppropriateBoss()
+                _G.FindBoss = appropriateBoss
+                QuestB()
+                
+                local boss = GetConnectionEnemies(appropriateBoss)
+                if boss then
+                    repeat
+                        wait()
+                        Attack.Kill(boss, _G.AutoFarmBossByLevel)
+                    until not _G.AutoFarmBossByLevel or not boss.Parent or boss.Humanoid.Health <= 0
+                else
+                    if PosB then
+                        _tp(PosB)
+                    end
+                end
+            end)
+        end
+    end
+end)
+-- Thêm vào Tabs.Combat
+Tabs.Combat:AddSection("Aim Bot Settings")
+
+local AimBotToggle = Tabs.Combat:AddToggle("AimBotToggle", {
+    Title = "Kích Hoạt Aim Bot",
+    Description = "Tự động ngắm bắn mục tiêu",
+    Default = false
+})
+AimBotToggle:OnChanged(function(Value)
+    _G.AimBotEnabled = Value
+end)
+
+local AimBotMethod = Tabs.Combat:AddDropdown("AimBotMethod", {
+    Title = "Phương Pháp Aim Bot",
+    Values = {"Mouse Pos", "CFrame", "Aim Part", "Prediction"},
+    Multi = false,
+    Default = 1
+})
+AimBotMethod:OnChanged(function(Value)
+    _G.AimBotMethod = Value
+end)
+
+local AimPartDropdown = Tabs.Combat:AddDropdown("AimPartDropdown", {
+    Title = "Bộ Phận Ngắm",
+    Values = {"HumanoidRootPart", "Head", "Torso"},
+    Multi = false,
+    Default = 1
+})
+AimPartDropdown:OnChanged(function(Value)
+    _G.AimPart = Value
+end)
+
+local AimBotKey = Tabs.Combat:AddDropdown("AimBotKey", {
+    Title = "Phím Kích Hoạt",
+    Values = {"LeftControl", "LeftAlt", "CapsLock", "X", "Z", "None"},
+    Multi = false,
+    Default = 1
+})
+AimBotKey:OnChanged(function(Value)
+    _G.AimBotKey = Value
+end)
+
+local AimBotFOV = Tabs.Combat:AddSlider("AimBotFOV", {
+    Title = "Tầm Ngắm (FOV)",
+    Description = "Độ lớn của vùng ngắm",
+    Default = 100,
+    Min = 10,
+    Max = 500,
+    Rounding = 1,
+    Callback = function(Value)
+        _G.AimBotFOV = Value
+    end
+})
+
+local AimBotSmoothness = Tabs.Combat:AddSlider("AimBotSmoothness", {
+    Title = "Độ Mượt",
+    Description = "Độ mượt khi ngắm",
+    Default = 30,
+    Min = 1,
+    Max = 100,
+    Rounding = 1,
+    Callback = function(Value)
+        _G.AimBotSmoothness = Value
+    end
+})
+
+local AimBotStatus = Tabs.Combat:AddParagraph({
+    Title = "🎯 Trạng thái Aim Bot:",
+    Content = "Tắt"
+})
