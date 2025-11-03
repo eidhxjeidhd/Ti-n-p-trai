@@ -1,5 +1,5 @@
--- TIẾN HUB ULTRA PREMIUM - Short Version
--- All Premium Features - Compact Code
+-- TIẾN HUB ULTRA PREMIUM - Realistic Combat
+-- Normal Attack + Smart Features
 -- Created by Tiến
 
 if not game:IsLoaded() then wait(game.Loaded) end
@@ -9,10 +9,10 @@ local Character = Player.Character or Player.CharacterAdded:Wait()
 
 -- Ultra Config
 getgenv().Config = {
-    SuperPunch = {Enabled = false, Range = 2000, Damage = 10000, Cooldown = 0.2},
-    AutoFarm = {Enabled = false, Range = 1500, StandStill = true},
+    AutoFarm = {Enabled = false, Range = 25, Mode = "Normal"},
+    AutoClick = {Enabled = false, Speed = 0.1},
     Player = {WalkSpeed = 16, JumpPower = 50, NoClip = false},
-    Abilities = {AutoBuso = false, AutoKen = false}
+    Abilities = {AutoBuso = false}
 }
 
 -- Ultra GUI
@@ -30,84 +30,92 @@ ToggleBtn.Image = "rbxassetid://105896068771440"
 ToggleBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 ToggleBtn.MouseButton1Click:Connect(function() Library:ToggleUI() end)
 
--- 💥 COMBAT TAB
-local CombatTab = Window:NewTab("💥 Combat")
-local CombatSection = CombatTab:NewSection("Ultra Combat System")
-
-CombatSection:NewToggle("🚀 Ultra Super Punch", "Đấm siêu xa 2000 studs", function(state)
-    getgenv().Config.SuperPunch.Enabled = state
-    if state then spawn(function()
-        while getgenv().Config.SuperPunch.Enabled do wait(0.2)
-            pcall(function()
-                for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                        local dist = (Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-                        if dist <= getgenv().Config.SuperPunch.Range then
-                            enemy.Humanoid.Health -= getgenv().Config.SuperPunch.Damage
-                            enemy.HumanoidRootPart.Velocity = (enemy.HumanoidRootPart.Position - Character.HumanoidRootPart.Position).Unit * 200
-                        end
-                    end
-                end
-                for i = 1, 3 do game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click") end
-            end)
-        end
-    end) end
-end)
-
-CombatSection:NewToggle("👊 One Punch Mode", "1 đấm chết tất cả", function(state)
-    getgenv().OnePunchMode = state
-    if state then spawn(function()
-        while getgenv().OnePunchMode do wait(0.5)
-            pcall(function()
-                for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-                    if enemy:FindFirstChild("Humanoid") then enemy.Humanoid.Health = 0 end
-                end
-            end)
-        end
-    end) end
-end)
-
 -- 🌿 AUTO FARM TAB
 local FarmTab = Window:NewTab("🌿 Auto Farm")
 local FarmSection = FarmTab:NewSection("Smart Auto Farm")
 
-FarmSection:NewToggle("🤖 Auto Farm Stand Still", "Đứng yên farm level", function(state)
+-- Auto Click
+FarmSection:NewToggle("⚡ Auto Click", "Tự động click đánh", function(state)
+    getgenv().Config.AutoClick.Enabled = state
+    if state then spawn(function()
+        while getgenv().Config.AutoClick.Enabled do 
+            wait(getgenv().Config.AutoClick.Speed)
+            pcall(function()
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
+            end)
+        end
+    end) end
+end)
+
+-- Auto Farm với di chuyển thông minh
+FarmSection:NewToggle("🤖 Auto Farm Level", "Tự động farm level", function(state)
     getgenv().Config.AutoFarm.Enabled = state
     if state then spawn(function()
-        while getgenv().Config.AutoFarm.Enabled do wait(0.1)
+        while getgenv().Config.AutoFarm.Enabled do wait(0.2)
             pcall(function()
-                local enemyCount = 0
+                local target = nil
+                local closestDist = math.huge
+                
+                -- Tìm quái gần nhất
                 for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
+                    if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 and enemy:FindFirstChild("HumanoidRootPart") then
                         local dist = (Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-                        if dist <= getgenv().Config.AutoFarm.Range then
-                            enemyCount += 1
-                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
+                        if dist < closestDist then
+                            closestDist = dist
+                            target = enemy
                         end
                     end
                 end
-                if getgenv().Config.AutoFarm.StandStill then
-                    Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                
+                if target then
+                    -- Di chuyển đến quái
+                    Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, getgenv().Config.AutoFarm.Range)
+                    
+                    -- Tự động đánh
+                    if getgenv().Config.AutoClick.Enabled then
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Click")
+                    end
                 end
             end)
         end
     end) end
 end)
 
+FarmSection:NewSlider("🎯 Farm Distance", "Khoảng cách farm", 50, 10, function(value)
+    getgenv().Config.AutoFarm.Range = value
+end)
+
+FarmSection:NewSlider("⚡ Click Speed", "Tốc độ click", 20, 1, function(value)
+    getgenv().Config.AutoClick.Speed = value / 10
+end)
+
+-- Auto Farm Boss
 FarmSection:NewToggle("👑 Auto Farm Boss", "Tự động farm boss", function(state)
     getgenv().AutoFarmBoss = state
+    if state then spawn(function()
+        while getgenv().AutoFarmBoss do wait(1)
+            pcall(function()
+                -- Có thể thêm boss cụ thể ở đây
+                for _, enemy in pairs(workspace.Enemies:GetChildren()) do
+                    if string.find(enemy.Name:lower(), "boss") and enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
+                        Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame * CFrame.new(0, 0, 20)
+                    end
+                end
+            end)
+        end
+    end) end
 end)
 
 -- 🎮 PLAYER TAB
 local PlayerTab = Window:NewTab("🎮 Player")
 local PlayerSection = PlayerTab:NewSection("Player Enhancements")
 
-PlayerSection:NewSlider("💨 WalkSpeed", "Tốc độ chạy", 500, 16, function(value)
+PlayerSection:NewSlider("💨 WalkSpeed", "Tốc độ chạy", 200, 16, function(value)
     Character.Humanoid.WalkSpeed = value
     getgenv().Config.Player.WalkSpeed = value
 end)
 
-PlayerSection:NewSlider("🦘 JumpPower", "Lực nhảy", 500, 50, function(value)
+PlayerSection:NewSlider("🦘 JumpPower", "Lực nhảy", 200, 50, function(value)
     Character.Humanoid.JumpPower = value
     getgenv().Config.Player.JumpPower = value
 end)
@@ -125,11 +133,6 @@ PlayerSection:NewToggle("👻 No Clip", "Đi xuyên tường", function(state)
     end) end
 end)
 
-PlayerSection:NewToggle("🕊️ Fly", "Bay lượn", function(state)
-    getgenv().FlyEnabled = state
-    if state then loadstring(game:HttpGet("https://raw.githubusercontent.com/Xi0Nx/Fly/main/Fly.lua"))() end
-end)
-
 -- ✨ ABILITIES TAB
 local AbilityTab = Window:NewTab("✨ Abilities")
 local AbilitySection = AbilityTab:NewSection("Auto Abilities")
@@ -137,18 +140,21 @@ local AbilitySection = AbilityTab:NewSection("Auto Abilities")
 AbilitySection:NewToggle("🛡️ Auto Buso Haki", "Tự động bật Buso", function(state)
     getgenv().Config.Abilities.AutoBuso = state
     if state then spawn(function()
-        while getgenv().Config.Abilities.AutoBuso do wait(8)
+        while getgenv().Config.Abilities.AutoBuso do wait(10)
             pcall(function() game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso") end)
         end
     end) end
 end)
 
 AbilitySection:NewToggle("🌀 Auto Ken Haki", "Tự động bật Ken", function(state)
-    getgenv().Config.Abilities.AutoKen = state
-end)
-
-AbilitySection:NewToggle("🌟 Auto Race", "Tự động nâng cấp Race", function(state)
-    getgenv().AutoRace = state
+    getgenv().AutoKen = state
+    if state then spawn(function()
+        while getgenv().AutoKen do wait(1)
+            pcall(function()
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, "Z", false, game)
+            end)
+        end
+    end) end
 end)
 
 -- 🌍 TELEPORT TAB
@@ -175,17 +181,52 @@ local MiscTab = Window:NewTab("🔧 Misc")
 local MiscSection = MiscTab:NewSection("Miscellaneous")
 
 MiscSection:NewToggle("🎁 Auto Redeem Codes", "Tự động nhập code", function(state)
-    if state then for _, code in pairs({"KITT_RESET", "SUB2GAMERROBOT_EXP1", "StrawHatMaine"}) do
-        pcall(function() game:GetService("ReplicatedStorage").Remotes.Redeem:InvokeServer(code) end)
-    end end
+    if state then 
+        local Codes = {"KITT_RESET", "SUB2GAMERROBOT_EXP1", "StrawHatMaine", "Sub2OfficialNoobie"}
+        for _, code in pairs(Codes) do
+            pcall(function() 
+                game:GetService("ReplicatedStorage").Remotes.Redeem:InvokeServer(code) 
+            end)
+            wait(1)
+        end
+    end
 end)
 
-MiscSection:NewButton("🔄 Rejoin Server", "Rejoin server", function()
+MiscSection:NewButton("🔄 Rejoin Server", "Rejoin server hiện tại", function()
     game:GetService("TeleportService"):Teleport(game.PlaceId)
 end)
 
-MiscSection:NewButton("🚀 Server Hop", "Đổi server", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/FilteringEnabled/FE-Scripts/main/AutoServerHop"))()
+-- Server Hop ít người
+MiscSection:NewButton("🚀 Hop Low Player Server", "Đổi sang server ít người", function()
+    local HttpService = game:GetService("HttpService")
+    local TeleportService = game:GetService("TeleportService")
+    
+    local function getServers()
+        local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+        local response = HttpService:JSONDecode(game:HttpGet(url))
+        return response.data
+    end
+    
+    local servers = getServers()
+    local bestServer = nil
+    local lowestPlayers = math.huge
+    
+    for _, server in pairs(servers) do
+        if server.playing < lowestPlayers and server.playing > 0 and server.id ~= game.JobId then
+            lowestPlayers = server.playing
+            bestServer = server
+        end
+    end
+    
+    if bestServer then
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, bestServer.id)
+    else
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "TIẾN HUB",
+            Text = "Không tìm thấy server ít người",
+            Duration = 3
+        })
+    end
 end)
 
 MiscSection:NewKeybind("🔑 Toggle GUI", "Ẩn/hiện GUI", Enum.KeyCode.RightControl, function()
@@ -195,8 +236,8 @@ end)
 -- FINAL NOTIFICATION
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "🌟 TIẾN HUB ULTRA PREMIUM",
-    Text = "Bản ngắn gọn đã sẵn sàng!",
+    Text = "Phiên bản thực tế đã sẵn sàng!",
     Duration = 5
 })
 
-print("🌟 TIẾN HUB ULTRA PREMIUM - Short Version Loaded!")
+print("🌟 TIẾN HUB ULTRA PREMIUM - Realistic Version Loaded!")
