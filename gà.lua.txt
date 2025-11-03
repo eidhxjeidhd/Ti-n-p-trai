@@ -1,335 +1,342 @@
--- Gà Gaming Hub - FULL FEATURES SCRIPT
--- Created by Gà Gaming
+-- Gà Gaming Hub - WITH LOGO & TOGGLE MENU
+-- Logo từ ID của em + Ẩn/hiện menu bằng logo
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local VirtualInput = game:GetService("VirtualInputManager")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local localPlayer = Players.LocalPlayer
+local Remotes = ReplicatedStorage.Remotes
 
--- CONFIG ĐẦY ĐỦ TÍNH NĂNG
+-- ID LOGO CỦA EM
+local LOGO_ID = "84957548476668"
+
+-- CONFIG TẤT CẢ TÍNH NĂNG
 local Config = {
-    -- Auto Farm
-    AutoFarmLevel = false,
-    AutoFarmBone = false,
-    AutoFarmDoughKing = false,
-    AutoFarmPirate = false,
-    
-    -- Combat
-    AutoClickMelee = false,
-    AutoClickSword = false,
-    LongRangeAttack = false,
-    AutoAim = false,
-    AutoSkills = false,
-    
-    -- Movement
-    SuperSpeed = false,
-    UnderwaterWalk = false,
-    V4Transformation = false,
-    
-    -- Miscellaneous
-    AutoFishing = false,
-    AutoCollectFruits = false,
-    SelectedFightingStyle = "Melee"
+    AutoFarm = false,
+    FastPunch = false,
+    LongRange = false,
+    HighPosition = false,
+    BestLocation = false,
+    PlayerTeleport = false,
+    FruitFinder = false,
+    FruitShop = false,
+    IslandTeleport = false,
+    AllFeatures = false,
+    MenuVisible = true
 }
 
--- TẠO GUI ĐẦY ĐỦ
+-- TẠO GUI VỚI LOGO
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Name = "GaGamingHubWithLogo"
+ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
+-- 🖼️ LOGO CÓ THỂ BẤM ĐỂ ẨN/HIỆN MENU
+local LogoButton = Instance.new("ImageButton")
+LogoButton.Name = "LogoToggle"
+LogoButton.Size = UDim2.new(0, 80, 0, 80)
+LogoButton.Position = UDim2.new(0, 10, 0, 10)
+LogoButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+LogoButton.BackgroundTransparency = 1
+LogoButton.Image = "rbxassetid://" .. LOGO_ID
+LogoButton.ScaleType = Enum.ScaleType.Crop
+LogoButton.Parent = ScreenGui
+
+-- Thêm hiệu ứng cho logo
+local LogoCorner = Instance.new("UICorner")
+LogoCorner.CornerRadius = UDim.new(0.2, 0)
+LogoCorner.Parent = LogoButton
+
+local LogoStroke = Instance.new("UIStroke")
+LogoStroke.Color = Color3.fromRGB(255, 215, 0)
+LogoStroke.Thickness = 3
+LogoStroke.Parent = LogoButton
+
+-- MAIN MENU FRAME
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 500, 0, 600)
-MainFrame.Position = UDim2.new(0.25, 0, 0.1, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+MainFrame.Name = "MainMenu"
+MainFrame.Size = UDim2.new(0, 350, 0, 500)
+MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
 MainFrame.Active = true
 MainFrame.Draggable = true
 
--- HEADER VỚI LOGO
+-- HEADER VỚI TÊN EM
 local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1, 0, 0, 60)
-Header.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+Header.Size = UDim2.new(1, 0, 0, 50)
+Header.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+Header.BorderSizePixel = 0
 Header.Parent = MainFrame
 
-local Logo = Instance.new("TextLabel")
-Logo.Size = UDim2.new(1, 0, 1, 0)
-Logo.BackgroundTransparency = 1
-Logo.Text = "🐔 GÀ GAMING HUB - FULL FEATURES"
-Logo.TextColor3 = Color3.fromRGB(255, 215, 0)
-Logo.Font = Enum.Font.GothamBlack
-Logo.TextSize = 20
-Logo.Parent = Header
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0.6, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "🐔 GÀ GAMING HUB"
+Title.TextColor3 = Color3.fromRGB(255, 215, 0)
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 18
+Title.Parent = Header
 
--- TẠO TAB SYSTEM
-local Tabs = {"🏠 Auto Farm", "⚔️ Combat", "🚀 Movement", "🎣 Miscellaneous"}
-local CurrentTab = "🏠 Auto Farm"
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Size = UDim2.new(1, 0, 0.4, 0)
+SubTitle.Position = UDim2.new(0, 0, 0.6, 0)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "Logo: " .. game.Players.LocalPlayer.Name
+SubTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextSize = 11
+SubTitle.Parent = Header
 
-local TabButtons = Instance.new("Frame")
-TabButtons.Size = UDim2.new(1, 0, 0, 40)
-TabButtons.Position = UDim2.new(0, 0, 0.1, 0)
-TabButtons.BackgroundTransparency = 1
-TabButtons.Parent = MainFrame
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(0.92, 0, 0.1, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 14
+CloseButton.Parent = Header
 
-local ContentFrame = Instance.new("Frame")
-ContentFrame.Size = UDim2.new(1, 0, 0, 500)
-ContentFrame.Position = UDim2.new(0, 0, 0.2, 0)
-ContentFrame.BackgroundTransparency = 1
-ContentFrame.Parent = MainFrame
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
 
--- TẠO NÚT TAB
-for i, tabName in pairs(Tabs) do
-    local tabButton = Instance.new("TextButton")
-    tabButton.Size = UDim2.new(0.24, 0, 1, 0)
-    tabButton.Position = UDim2.new(0.25 * (i-1), 0, 0, 0)
-    tabButton.Text = tabName
-    tabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tabButton.Font = Enum.Font.GothamBold
-    tabButton.TextSize = 12
-    tabButton.Parent = TabButtons
+-- TẠO NÚT CHO TẤT CẢ TÍNH NĂNG
+local function CreateFeatureButton(text, configKey, yPos)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.9, 0, 0, 35)
+    button.Position = UDim2.new(0.05, 0, yPos, 0)
+    button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    button.Text = "❌ " .. text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 12
+    button.Parent = MainFrame
     
-    tabButton.MouseButton1Click:Connect(function()
-        CurrentTab = tabName
-        UpdateContent()
-    end)
-end
-
--- HÀM TẠO TOGGLE
-function CreateToggle(text, configKey, parent, position)
-    local toggleFrame = Instance.new("Frame")
-    toggleFrame.Size = UDim2.new(1, -20, 0, 35)
-    toggleFrame.Position = position
-    toggleFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
-    toggleFrame.Parent = parent
+    -- Thêm hiệu ứng cho nút
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 5)
+    buttonCorner.Parent = button
     
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0.7, 0, 1, 0)
-    label.Position = UDim2.new(0.05, 0, 0, 0)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    label.Font = Enum.Font.Gotham
-    label.TextSize = 12
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.Parent = toggleFrame
+    local buttonStroke = Instance.new("UIStroke")
+    buttonStroke.Color = Color3.fromRGB(255, 255, 255)
+    buttonStroke.Thickness = 1
+    buttonStroke.Parent = button
     
-    local toggleBtn = Instance.new("TextButton")
-    toggleBtn.Size = UDim2.new(0.2, 0, 0.6, 0)
-    toggleBtn.Position = UDim2.new(0.75, 0, 0.2, 0)
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    toggleBtn.Text = "OFF"
-    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    toggleBtn.Font = Enum.Font.GothamBold
-    toggleBtn.TextSize = 10
-    toggleBtn.Parent = toggleFrame
-    
-    toggleBtn.MouseButton1Click:Connect(function()
+    button.MouseButton1Click:Connect(function()
         Config[configKey] = not Config[configKey]
+        
         if Config[configKey] then
-            toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
-            toggleBtn.Text = "ON"
-            print("✅ BẬT: " .. text)
+            button.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
+            button.Text = "✅ " .. text
+            print("🎯 BẬT: " .. text)
         else
-            toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-            toggleBtn.Text = "OFF"
-            print("❌ TẮT: " .. text)
+            button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            button.Text = "❌ " .. text
+            print("🛑 TẮT: " .. text)
         end
     end)
     
-    return toggleFrame
+    return button
 end
 
--- 🏠 TAB AUTO FARM
-local AutoFarmContent = Instance.new("Frame")
-AutoFarmContent.Size = UDim2.new(1, 0, 1, 0)
-AutoFarmContent.BackgroundTransparency = 1
-AutoFarmContent.Parent = ContentFrame
-AutoFarmContent.Visible = true
+-- TẠO TẤT CẢ NÚT TÍNH NĂNG
+CreateFeatureButton("AUTO FARM", "AutoFarm", 0.12)
+CreateFeatureButton("ĐẤM NHANH 10 PHÁT", "FastPunch", 0.20)
+CreateFeatureButton("ĐẤM XA 10M", "LongRange", 0.28)
+CreateFeatureButton("BAY CAO FARM", "HighPosition", 0.36)
+CreateFeatureButton("FARM VỊ TRÍ TỐT", "BestLocation", 0.44)
+CreateFeatureButton("ĐỊNH VỊ NGƯỜI CHƠI", "PlayerTeleport", 0.52)
+CreateFeatureButton("ĐỊNH VỊ TRÁI ÁC QUỶ", "FruitFinder", 0.60)
+CreateFeatureButton("XEM CỬA HÀNG TRÁI", "FruitShop", 0.68)
+CreateFeatureButton("DỊCH CHUYỂN ĐẢO", "IslandTeleport", 0.76)
+CreateFeatureButton("BẬT TẤT CẢ", "AllFeatures", 0.84)
 
-CreateToggle("Auto Farm Level", "AutoFarmLevel", AutoFarmContent, UDim2.new(0, 10, 0, 10))
-CreateToggle("Auto Farm Xương", "AutoFarmBone", AutoFarmContent, UDim2.new(0, 10, 0, 55))
-CreateToggle("Auto Farm Dough King", "AutoFarmDoughKing", AutoFarmContent, UDim2.new(0, 10, 0, 100))
-CreateToggle("Auto Đánh Hải Tặc", "AutoFarmPirate", AutoFarmContent, UDim2.new(0, 10, 0, 145))
-CreateToggle("Auto Nhặt Trái Ác Quỷ", "AutoCollectFruits", AutoFarmContent, UDim2.new(0, 10, 0, 190))
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size = UDim2.new(1, 0, 0, 30)
+StatusLabel.Position = UDim2.new(0, 0, 0.94, 0)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "🔴 Chưa bật tính năng nào"
+StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.TextSize = 12
+StatusLabel.Parent = MainFrame
 
--- ⚔️ TAB COMBAT
-local CombatContent = Instance.new("Frame")
-CombatContent.Size = UDim2.new(1, 0, 1, 0)
-CombatContent.BackgroundTransparency = 1
-CombatContent.Parent = ContentFrame
-CombatContent.Visible = false
+-- 🖱️ CHỨC NĂNG ẨN/HIỆN MENU BẰNG LOGO
+LogoButton.MouseButton1Click:Connect(function()
+    Config.MenuVisible = not Config.MenuVisible
+    MainFrame.Visible = Config.MenuVisible
+    
+    if Config.MenuVisible then
+        -- Hiệu ứng khi hiện menu
+        LogoButton.ImageColor3 = Color3.fromRGB(255, 255, 255)
+        print("📱 HIỆN MENU")
+    else
+        -- Hiệu ứng khi ẩn menu
+        LogoButton.ImageColor3 = Color3.fromRGB(150, 150, 150)
+        print("📱 ẨN MENU")
+    end
+end)
 
-CreateToggle("Auto Click Võ", "AutoClickMelee", CombatContent, UDim2.new(0, 10, 0, 10))
-CreateToggle("Auto Click Kiếm", "AutoClickSword", CombatContent, UDim2.new(0, 10, 0, 55))
-CreateToggle("Đánh Xa", "LongRangeAttack", CombatContent, UDim2.new(0, 10, 0, 100))
-CreateToggle("Auto Aim", "AutoAim", CombatContent, UDim2.new(0, 10, 0, 145))
-CreateToggle("Auto Chiêu", "AutoSkills", CombatContent, UDim2.new(0, 10, 0, 190))
-
--- 🚀 TAB MOVEMENT
-local MovementContent = Instance.new("Frame")
-MovementContent.Size = UDim2.new(1, 0, 1, 0)
-MovementContent.BackgroundTransparency = 1
-MovementContent.Parent = ContentFrame
-MovementContent.Visible = false
-
-CreateToggle("Chạy Nhanh 300%", "SuperSpeed", MovementContent, UDim2.new(0, 10, 0, 10))
-CreateToggle("Đi Dưới Biển", "UnderwaterWalk", MovementContent, UDim2.new(0, 10, 0, 55))
-CreateToggle("Biến Hình V4", "V4Transformation", MovementContent, UDim2.new(0, 10, 0, 100))
-
--- 🎣 TAB MISC
-local MiscContent = Instance.new("Frame")
-MiscContent.Size = UDim2.new(1, 0, 1, 0)
-MiscContent.BackgroundTransparency = 1
-MiscContent.Parent = ContentFrame
-MiscContent.Visible = false
-
-CreateToggle("Auto Câu Cá", "AutoFishing", MiscContent, UDim2.new(0, 10, 0, 10))
-
--- HÀM CẬP NHẬT CONTENT
-function UpdateContent()
-    AutoFarmContent.Visible = (CurrentTab == "🏠 Auto Farm")
-    CombatContent.Visible = (CurrentTab == "⚔️ Combat")
-    MovementContent.Visible = (CurrentTab == "🚀 Movement")
-    MiscContent.Visible = (CurrentTab == "🎣 Miscellaneous")
-end
-
--- 🚀 CÁC TÍNH NĂNG AUTO FARM
-function StartAutoFarmLevel()
+-- 🚀 AUTO FARM CAO CẤP
+function AdvancedAutoFarm()
     spawn(function()
-        while wait(0.5) do
-            if not Config.AutoFarmLevel then break end
+        while wait(0.3) do
+            if not Config.AutoFarm then break end
             
-            -- Tìm quái gần nhất
             local target = FindNearestEnemy()
             if target then
-                -- Auto click combat
-                if Config.AutoClickMelee then
+                StatusLabel.Text = "🎯 Đang farm: " .. target.Name
+                
+                -- BAY LÊN CAO
+                if Config.HighPosition then
+                    localPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 15, 0)
+                end
+                
+                -- ĐẤM XA 10M
+                if Config.LongRange then
+                    localPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 10)
+                end
+                
+                -- ĐẤM NHANH 10 PHÁT/5 GIÂY
+                if Config.FastPunch then
+                    for i = 1, 10 do
+                        VirtualInput:SendKeyEvent(true, "X", false, game)
+                        wait(0.05)
+                        VirtualInput:SendKeyEvent(false, "X", false, game)
+                        wait(0.45)
+                    end
+                else
                     VirtualInput:SendKeyEvent(true, "X", false, game)
-                    wait(0.05)
+                    wait(0.1)
                     VirtualInput:SendKeyEvent(false, "X", false, game)
                 end
                 
-                if Config.AutoClickSword then
-                    VirtualInput:SendKeyEvent(true, "Z", false, game)
-                    wait(0.05)
-                    VirtualInput:SendKeyEvent(false, "Z", false, game)
-                end
-                
-                -- Auto skills
-                if Config.AutoSkills then
-                    VirtualInput:SendKeyEvent(true, "C", false, game)
-                    wait(0.1)
-                    VirtualInput:SendKeyEvent(false, "C", false, game)
-                    
-                    VirtualInput:SendKeyEvent(true, "V", false, game)
-                    wait(0.1)
-                    VirtualInput:SendKeyEvent(false, "V", false, game)
-                end
+            else
+                StatusLabel.Text = "🔍 Đang tìm quái..."
             end
         end
     end)
 end
 
--- 💀 AUTO FARM BONE
-function StartAutoFarmBone()
-    spawn(function()
-        while wait(1) do
-            if not Config.AutoFarmBone then break end
-            
-            for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
-                if string.find(enemy.Name:lower(), "skeleton") then
-                    if enemy:FindFirstChild("HumanoidRootPart") and enemy.Humanoid.Health > 0 then
-                        SafeTeleport(enemy.HumanoidRootPart.CFrame)
-                        break
-                    end
-                end
-            end
-        end
-    end)
-end
-
--- 👑 AUTO FARM DOUGH KING
-function StartAutoFarmDoughKing()
-    spawn(function()
-        while wait(2) do
-            if not Config.AutoFarmDoughKing then break end
-            
-            for _, boss in pairs(Workspace.Enemies:GetChildren()) do
-                if string.find(boss.Name, "Dough") then
-                    if boss:FindFirstChild("HumanoidRootPart") and boss.Humanoid.Health > 0 then
-                        SafeTeleport(boss.HumanoidRootPart.CFrame * CFrame.new(0, 0, 10))
-                        break
-                    end
-                end
-            end
-        end
-    end)
-end
-
--- 🏴‍☠️ AUTO ĐÁNH HẢI TẶC
-function StartAutoFarmPirate()
-    spawn(function()
-        while wait(1) do
-            if not Config.AutoFarmPirate then break end
-            
-            for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
-                if string.find(enemy.Name:lower(), "pirate") then
-                    if enemy:FindFirstChild("HumanoidRootPart") and enemy.Humanoid.Health > 0 then
-                        SafeTeleport(enemy.HumanoidRootPart.CFrame)
-                        break
-                    end
-                end
-            end
-        end
-    end)
-end
-
--- 🍎 AUTO NHẶT TRÁI ÁC QUỶ
-function StartAutoCollectFruits()
-    spawn(function()
-        while wait(3) do
-            if not Config.AutoCollectFruits then break end
-            
-            for _, item in pairs(Workspace:GetChildren()) do
-                if item.Name == "Fruit" or item.Name == "Drop" then
-                    if item:FindFirstChild("Handle") then
-                        SafeTeleport(item.Handle.CFrame)
-                        wait(0.5)
-                    end
-                end
-            end
-        end
-    end)
-end
-
--- 🎣 AUTO CÂU CÁ
-function StartAutoFishing()
+-- 🎯 FARM VỊ TRÍ TỐT NHẤT
+function FarmBestLocation()
     spawn(function()
         while wait(5) do
-            if not Config.AutoFishing then break end
+            if not Config.BestLocation then break end
             
-            -- Giả lập auto câu cá
-            VirtualInput:SendKeyEvent(true, "F", false, game)
-            wait(0.5)
-            VirtualInput:SendKeyEvent(false, "F", false, game)
+            local bestSpots = {
+                CFrame.new(-1000, 50, 1000),
+                CFrame.new(1500, 50, -800),  
+                CFrame.new(-500, 50, -1500),
+                CFrame.new(2000, 50, 500)
+            }
+            
+            local randomSpot = bestSpots[math.random(1, #bestSpots)]
+            localPlayer.Character.HumanoidRootPart.CFrame = randomSpot
+            StatusLabel.Text = "📍 Đến vị trí farm tốt!"
         end
     end)
 end
 
--- 🚀 SUPER SPEED
-function ApplySuperSpeed()
-    if Config.SuperSpeed then
-        localPlayer.Character.Humanoid.WalkSpeed = 120
-    else
-        localPlayer.Character.Humanoid.WalkSpeed = 16
-    end
+-- 👤 ĐỊNH VỊ NGƯỜI CHƠI
+function TeleportToPlayer()
+    spawn(function()
+        while wait(3) do
+            if not Config.PlayerTeleport then break end
+            
+            local players = Players:GetPlayers()
+            for _, player in pairs(players) do
+                if player ~= localPlayer and player.Character then
+                    localPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
+                    StatusLabel.Text = "👤 Dịch đến: " .. player.Name
+                    break
+                end
+            end
+        end
+    end)
 end
 
--- 🌊 ĐI DƯỚI BIỂN
-function ApplyUnderwaterWalk()
-    if Config.UnderwaterWalk then
-        localPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-        localPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+-- 🍎 ĐỊNH VỊ TRÁI ÁC QUỶ
+function FindFruits()
+    spawn(function()
+        while wait(2) do
+            if not Config.FruitFinder then break end
+            
+            for _, item in pairs(Workspace:GetChildren()) do
+                if item:IsA("Tool") or item.Name == "Fruit" then
+                    if item:FindFirstChild("Handle") then
+                        localPlayer.Character.HumanoidRootPart.CFrame = item.Handle.CFrame
+                        StatusLabel.Text = "🍎 Tìm thấy trái ác quỷ!"
+                        break
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- 🛒 XEM CỬA HÀNG TRÁI ÁC QUỶ
+function OpenFruitShop()
+    spawn(function()
+        while wait(10) do
+            if not Config.FruitShop then break end
+            
+            local fruitShop = Workspace:FindFirstChild("FruitShop")
+            if fruitShop then
+                localPlayer.Character.HumanoidRootPart.CFrame = fruitShop:FindFirstChildOfClass("Part").CFrame
+                StatusLabel.Text = "🛒 Đến cửa hàng trái!"
+            end
+        end
+    end)
+end
+
+-- 🏝️ DỊCH CHUYỂN ĐẢO
+function TeleportIslands()
+    spawn(function()
+        while wait(5) do
+            if not Config.IslandTeleport then break end
+            
+            local islands = {
+                ["Jungle"] = CFrame.new(-1500, 70, 100),
+                ["Desert"] = CFrame.new(1000, 70, -1200),
+                ["Pirate Village"] = CFrame.new(-1200, 70, 3800),
+                ["Frozen Village"] = CFrame.new(1200, 70, -3800),
+                ["Marine Fortress"] = CFrame.new(-4500, 70, 2000),
+                ["Sky Island 1"] = CFrame.new(0, 1500, 0)
+            }
+            
+            local islandNames = {}
+            for name, _ in pairs(islands) do
+                table.insert(islandNames, name)
+            end
+            
+            local randomIsland = islandNames[math.random(1, #islandNames)]
+            localPlayer.Character.HumanoidRootPart.CFrame = islands[randomIsland]
+            StatusLabel.Text = "🏝️ Đến đảo: " .. randomIsland
+        end
+    end)
+end
+
+-- 🎯 BẬT TẤT CẢ TÍNH NĂNG
+function EnableAllFeatures()
+    if Config.AllFeatures then
+        Config.AutoFarm = true
+        Config.FastPunch = true
+        Config.LongRange = true
+        Config.HighPosition = true
+        Config.BestLocation = true
+        Config.PlayerTeleport = true
+        Config.FruitFinder = true
+        Config.FruitShop = true
+        Config.IslandTeleport = true
+        
+        StatusLabel.Text = "🚀 ĐÃ BẬT TẤT CẢ TÍNH NĂNG!"
+        print("🎯 ĐÃ KÍCH HOẠT TẤT CẢ TÍNH NĂNG!")
     end
 end
 
@@ -355,25 +362,16 @@ function FindNearestEnemy()
     return nearest
 end
 
--- TELEPORT AN TOÀN
-function SafeTeleport(cframe)
-    pcall(function()
-        localPlayer.Character.HumanoidRootPart.CFrame = cframe
-    end)
-end
-
--- KHỞI CHẠY CÁC TÍNH NĂNG
+-- 🔄 CHẠY TẤT CẢ TÍNH NĂNG
 spawn(function()
     while wait(1) do
-        if Config.AutoFarmLevel then StartAutoFarmLevel() end
-        if Config.AutoFarmBone then StartAutoFarmBone() end
-        if Config.AutoFarmDoughKing then StartAutoFarmDoughKing() end
-        if Config.AutoFarmPirate then StartAutoFarmPirate() end
-        if Config.AutoCollectFruits then StartAutoCollectFruits() end
-        if Config.AutoFishing then StartAutoFishing() end
-        
-        ApplySuperSpeed()
-        ApplyUnderwaterWalk()
+        if Config.AutoFarm then AdvancedAutoFarm() end
+        if Config.BestLocation then FarmBestLocation() end
+        if Config.PlayerTeleport then TeleportToPlayer() end
+        if Config.FruitFinder then FindFruits() end
+        if Config.FruitShop then OpenFruitShop() end
+        if Config.IslandTeleport then TeleportIslands() end
+        if Config.AllFeatures then EnableAllFeatures() end
     end
 end)
 
