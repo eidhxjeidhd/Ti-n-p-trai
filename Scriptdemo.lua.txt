@@ -1,165 +1,245 @@
--- Redz Hub 990% Recreation - Gà Gaming Edition
--- FULLY WORKING VERSION
+-- Redz Hub Exact Replica - Gà Gaming Edition
+-- Menu giống 99% Redz Hub
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local VirtualInput = game:GetService("VirtualInputManager")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local localPlayer = Players.LocalPlayer
 
--- CONFIG HOẠT ĐỘNG THẬT
+-- ID LOGO CỦA EM
+local LOGO_ID = "84957548476668"
+
+-- CONFIG REDZ HUB STYLE
 local Config = {
-    -- Auto Farm
+    -- Main
     AutoFarm = false,
+    AutoNewWorld = false,
+    AutoThirdSea = false,
     AutoFarmBone = false,
-    AutoFarmElite = false,
-    AutoFarmSeaBeast = false,
     
-    -- Auto Boss
-    AutoBoss = false,
+    -- Boss
+    AutoFarmBoss = false,
+    SelectBoss = "Saber Expert",
+    AutoSoulReaper = false,
     AutoDoughKing = false,
-    AutoCakePrince = false,
     
-    -- Auto Skills
-    AutoMelee = false,
-    AutoSword = false,
-    AutoGun = false,
-    AutoFruit = false,
+    -- Mastery
+    AutoMeleeMastery = false,
+    AutoSwordMastery = false,
+    AutoGunMastery = false,
+    AutoDevilFruitMastery = false,
     
-    -- Utilities
-    AutoCollectDrops = false,
-    AutoBuyFruits = false,
-    AutoHaki = false,
+    -- Quest
+    AutoBartiloQuest = false,
+    AutoHunterQuest = false,
+    AutoTushitaQuest = false,
+    AutoYamaQuest = false,
     
-    -- Movement
-    SuperSpeed = false,
-    Fly = false,
-    NoClip = false,
+    -- Misc
+    AutoBuyColors = false,
+    AutoRandomBone = false,
+    AutoChest = false,
+    AutoSabo = false,
     
     -- Combat
     AutoClick = false,
-    Aimbot = false,
+    SkillZ = false,
+    SkillX = false,
+    SkillC = false,
+    SkillV = false,
+    SkillF = false,
     
-    SelectedBoss = "Saber Expert"
+    -- Teleport
+    TeleportToPlayer = false,
+    TeleportToIsland = false,
+    
+    MenuVisible = true
 }
 
--- TẠO GUI GIỐNG REDZ HUB
+-- TẠO GUI GIỐNG 99% REDZ HUB
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "RedzHub990"
+ScreenGui.Name = "RedzHubReplica"
 ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 500, 0, 450)
-MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-MainFrame.BorderSizePixel = 0
-MainFrame.Parent = ScreenGui
-MainFrame.Active = true
-MainFrame.Draggable = true
+-- 🖼️ LOGO REDZ HUB STYLE
+local LogoButton = Instance.new("ImageButton")
+LogoButton.Name = "RedzLogo"
+LogoButton.Size = UDim2.new(0, 60, 0, 60)
+LogoButton.Position = UDim2.new(0, 20, 0, 20)
+LogoButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+LogoButton.BackgroundTransparency = 1
+LogoButton.Image = "rbxassetid://" .. LOGO_ID
+LogoButton.ScaleType = Enum.ScaleType.Crop
+LogoButton.Parent = ScreenGui
 
--- HEADER REDZ HUB STYLE
+local LogoCorner = Instance.new("UICorner")
+LogoCorner.CornerRadius = UDim.new(0.15, 0)
+LogoCorner.Parent = LogoButton
+
+local LogoStroke = Instance.new("UIStroke")
+LogoStroke.Color = Color3.fromRGB(255, 0, 0)
+LogoStroke.Thickness = 2.5
+LogoStroke.Parent = LogoButton
+
+-- MAIN CONTAINER GIỐNG REDZ HUB
+local MainContainer = Instance.new("Frame")
+MainContainer.Name = "MainContainer"
+MainContainer.Size = UDim2.new(0, 500, 0, 400)
+MainContainer.Position = UDim2.new(0.3, 0, 0.25, 0)
+MainContainer.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+MainContainer.BorderSizePixel = 0
+MainContainer.Parent = ScreenGui
+MainContainer.Active = true
+MainContainer.Draggable = true
+
+local ContainerCorner = Instance.new("UICorner")
+ContainerCorner.CornerRadius = UDim.new(0.02, 0)
+ContainerCorner.Parent = MainContainer
+
+local ContainerStroke = Instance.new("UIStroke")
+ContainerStroke.Color = Color3.fromRGB(40, 40, 50)
+ContainerStroke.Thickness = 2
+ContainerStroke.Parent = MainContainer
+
+-- HEADER REDZ HUB
 local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1, 0, 0, 60)
-Header.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
+Header.Size = UDim2.new(1, 0, 0, 45)
+Header.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 Header.BorderSizePixel = 0
-Header.Parent = MainFrame
+Header.Parent = MainContainer
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0.02, 0)
+HeaderCorner.Parent = Header
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 0.6, 0)
+Title.Size = UDim2.new(0.7, 0, 1, 0)
+Title.Position = UDim2.new(0.02, 0, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🔴 REDZ HUB 990% - BLOX FRUITS"
-Title.TextColor3 = Color3.fromRGB(255, 50, 50)
+Title.Text = "REDZ HUB"
+Title.TextColor3 = Color3.fromRGB(255, 0, 0)
 Title.Font = Enum.Font.GothamBlack
-Title.TextSize = 18
+Title.TextSize = 20
+Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Header
 
 local SubTitle = Instance.new("TextLabel")
-SubTitle.Size = UDim2.new(1, 0, 0.4, 0)
-SubTitle.Position = UDim2.new(0, 0, 0.6, 0)
+SubTitle.Size = UDim2.new(0.3, 0, 1, 0)
+SubTitle.Position = UDim2.new(0.7, 0, 0, 0)
 SubTitle.BackgroundTransparency = 1
-SubTitle.Text = "Gà Gaming Edition | Fully Working"
-SubTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+SubTitle.Text = "v3.0.1"
+SubTitle.TextColor3 = Color3.fromRGB(150, 150, 150)
 SubTitle.Font = Enum.Font.Gotham
-SubTitle.TextSize = 12
+SubTitle.TextSize = 14
+SubTitle.TextXAlignment = Enum.TextXAlignment.Right
 SubTitle.Parent = Header
 
 local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(0.95, 0, 0.15, 0)
+CloseButton.Size = UDim2.new(0, 25, 0, 25)
+CloseButton.Position = UDim2.new(0.95, 0, 0.1, 0)
 CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextSize = 14
+CloseButton.TextSize = 12
 CloseButton.Parent = Header
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0.2, 0)
+CloseCorner.Parent = CloseButton
 
 CloseButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
 end)
 
--- TAB SYSTEM
+-- TAB SYSTEM REDZ HUB
 local Tabs = {
-    "🏠 MAIN",
-    "⚔️ FARM",
-    "👑 BOSS", 
-    "🚀 MOVEMENT",
-    "🔧 UTILITIES"
+    "Main",
+    "Boss", 
+    "Mastery",
+    "Quest",
+    "Misc",
+    "Combat",
+    "Teleport"
 }
 
-local CurrentTab = "🏠 MAIN"
+local CurrentTab = "Main"
 
-local TabButtons = Instance.new("Frame")
-TabButtons.Size = UDim2.new(1, 0, 0, 40)
-TabButtons.Position = UDim2.new(0, 0, 0.133, 0)
-TabButtons.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
-TabButtons.BorderSizePixel = 0
-TabButtons.Parent = MainFrame
+local TabButtonsFrame = Instance.new("Frame")
+TabButtonsFrame.Size = UDim2.new(1, 0, 0, 35)
+TabButtonsFrame.Position = UDim2.new(0, 0, 0.1125, 0)
+TabButtonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+TabButtonsFrame.BorderSizePixel = 0
+TabButtonsFrame.Parent = MainContainer
 
-local ContentFrame = Instance.new("Frame")
-ContentFrame.Size = UDim2.new(1, 0, 0, 350)
-ContentFrame.Position = UDim2.new(0, 0, 0.25, 0)
-ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
-ContentFrame.BorderSizePixel = 0
-ContentFrame.Parent = MainFrame
-
--- TẠO TAB BUTTONS
+-- TẠO TAB BUTTONS GIỐNG REDZ HUB
 for i, tabName in pairs(Tabs) do
     local tabButton = Instance.new("TextButton")
-    tabButton.Size = UDim2.new(0.2, 0, 1, 0)
-    tabButton.Position = UDim2.new(0.2 * (i-1), 0, 0, 0)
-    tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
+    tabButton.Size = UDim2.new(0.142, 0, 1, 0)
+    tabButton.Position = UDim2.new(0.142 * (i-1), 0, 0, 0)
+    tabButton.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
     tabButton.Text = tabName
-    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tabButton.Font = Enum.Font.GothamBold
+    tabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+    tabButton.Font = Enum.Font.Gotham
     tabButton.TextSize = 11
-    tabButton.Parent = TabButtons
+    tabButton.Parent = TabButtonsFrame
+    
+    local tabCorner = Instance.new("UICorner")
+    tabCorner.CornerRadius = UDim.new(0, 0)
+    tabCorner.Parent = tabButton
     
     tabButton.MouseButton1Click:Connect(function()
         CurrentTab = tabName
-        UpdateTabs()
+        UpdateRedzTabs()
     end)
 end
 
--- TẠO TOGGLE BUTTON HOẠT ĐỘNG THẬT
-function CreateWorkingToggle(text, configKey, parent, position)
-    local toggleFrame = Instance.new("Frame")
-    toggleFrame.Size = UDim2.new(0.9, 0, 0, 40)
-    toggleFrame.Position = position
-    toggleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
-    toggleFrame.BorderSizePixel = 0
-    toggleFrame.Parent = parent
+-- CONTENT FRAME
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, 0, 0, 320)
+ContentFrame.Position = UDim2.new(0, 0, 0.2, 0)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.Parent = MainContainer
+
+-- TẠO CONTENT CHO TỪNG TAB
+local TabContents = {}
+for _, tabName in pairs(Tabs) do
+    local tabContent = Instance.new("ScrollingFrame")
+    tabContent.Size = UDim2.new(1, 0, 1, 0)
+    tabContent.BackgroundTransparency = 1
+    tabContent.BorderSizePixel = 0
+    tabContent.ScrollBarThickness = 3
+    tabContent.ScrollBarImageColor3 = Color3.fromRGB(255, 0, 0)
+    tabContent.Visible = (tabName == "Main")
+    tabContent.Parent = ContentFrame
     
-    local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = UDim.new(0, 5)
-    UICorner.Parent = toggleFrame
+    local UIListLayout = Instance.new("UIListLayout")
+    UIListLayout.Padding = UDim.new(0, 5)
+    UIListLayout.Parent = tabContent
+    
+    TabContents[tabName] = tabContent
+end
+
+-- HÀM TẠO TOGGLE GIỐNG REDZ HUB
+function CreateRedzToggle(text, configKey, tooltip)
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Size = UDim2.new(0.95, 0, 0, 30)
+    toggleFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    toggleFrame.BorderSizePixel = 0
+    toggleFrame.Parent = TabContents[CurrentTab]
+    
+    local toggleCorner = Instance.new("UICorner")
+    toggleCorner.CornerRadius = UDim.new(0, 4)
+    toggleCorner.Parent = toggleFrame
     
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(0.7, 0, 1, 0)
-    label.Position = UDim2.new(0.05, 0, 0, 0)
+    label.Position = UDim2.new(0.02, 0, 0, 0)
     label.BackgroundTransparency = 1
     label.Text = text
     label.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -169,8 +249,8 @@ function CreateWorkingToggle(text, configKey, parent, position)
     label.Parent = toggleFrame
     
     local toggleBtn = Instance.new("TextButton")
-    toggleBtn.Size = UDim2.new(0.2, 0, 0.6, 0)
-    toggleBtn.Position = UDim2.new(0.75, 0, 0.2, 0)
+    toggleBtn.Size = UDim2.new(0.2, 0, 0.7, 0)
+    toggleBtn.Position = UDim2.new(0.77, 0, 0.15, 0)
     toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
     toggleBtn.Text = "OFF"
     toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -179,189 +259,106 @@ function CreateWorkingToggle(text, configKey, parent, position)
     toggleBtn.Parent = toggleFrame
     
     local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 5)
+    btnCorner.CornerRadius = UDim.new(0, 4)
     btnCorner.Parent = toggleBtn
     
     toggleBtn.MouseButton1Click:Connect(function()
         Config[configKey] = not Config[configKey]
         if Config[configKey] then
-            toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
             toggleBtn.Text = "ON"
-            print("🎯 [REDZ HUB] BẬT: " .. text)
-            
-            -- KÍCH HOẠT TÍNH NĂNG NGAY LẬP TỨC
-            if configKey == "AutoFarm" then
-                StartAutoFarm()
-            elseif configKey == "AutoBoss" then
-                StartAutoBoss()
-            elseif configKey == "AutoClick" then
-                StartAutoClick()
-            elseif configKey == "SuperSpeed" then
-                ApplySuperSpeed()
-            end
-            
         else
             toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
             toggleBtn.Text = "OFF"
-            print("🛑 [REDZ HUB] TẮT: " .. text)
         end
     end)
     
     return toggleFrame
 end
 
--- TẠO CONTENT CHO TỪNG TAB
-local MainContent = Instance.new("Frame")
-MainContent.Size = UDim2.new(1, 0, 1, 0)
-MainContent.BackgroundTransparency = 1
-MainContent.Parent = ContentFrame
-MainContent.Visible = true
+-- THÊM TÍNH NĂNG VÀO CÁC TAB
+-- MAIN TAB
+CreateRedzToggle("Auto Farm", "AutoFarm", "Auto farm level")
+CreateRedzToggle("Auto New World", "AutoNewWorld", "Auto đến New World")
+CreateRedzToggle("Auto Third Sea", "AutoThirdSea", "Auto đến Third Sea")
+CreateRedzToggle("Auto Farm Bone", "AutoFarmBone", "Auto farm xương")
 
-local FarmContent = Instance.new("Frame")
-FarmContent.Size = UDim2.new(1, 0, 1, 0)
-FarmContent.BackgroundTransparency = 1
-FarmContent.Parent = ContentFrame
-FarmContent.Visible = false
+-- BOSS TAB
+CreateRedzToggle("Auto Farm Boss", "AutoFarmBoss", "Auto farm boss")
+CreateRedzToggle("Auto Soul Reaper", "AutoSoulReaper", "Auto farm Soul Reaper")
+CreateRedzToggle("Auto Dough King", "AutoDoughKing", "Auto farm Dough King")
 
-local BossContent = Instance.new("Frame")
-BossContent.Size = UDim2.new(1, 0, 1, 0)
-BossContent.BackgroundTransparency = 1
-BossContent.Parent = ContentFrame
-BossContent.Visible = false
+-- MASTERY TAB
+CreateRedzToggle("Auto Melee Mastery", "AutoMeleeMastery", "Auto farm mastery võ")
+CreateRedzToggle("Auto Sword Mastery", "AutoSwordMastery", "Auto farm mastery kiếm")
+CreateRedzToggle("Auto Gun Mastery", "AutoGunMastery", "Auto farm mastery súng")
+CreateRedzToggle("Auto Devil Fruit Mastery", "AutoDevilFruitMastery", "Auto farm mastery trái ác quỷ")
 
-local MovementContent = Instance.new("Frame")
-MovementContent.Size = UDim2.new(1, 0, 1, 0)
-MovementContent.BackgroundTransparency = 1
-MovementContent.Parent = ContentFrame
-MovementContent.Visible = false
+-- QUEST TAB
+CreateRedzToggle("Auto Bartilo Quest", "AutoBartiloQuest", "Auto quest Bartilo")
+CreateRedzToggle("Auto Hunter Quest", "AutoHunterQuest", "Auto quest Hunter")
+CreateRedzToggle("Auto Tushita Quest", "AutoTushitaQuest", "Auto quest Tushita")
+CreateRedzToggle("Auto Yama Quest", "AutoYamaQuest", "Auto quest Yama")
 
-local UtilitiesContent = Instance.new("Frame")
-UtilitiesContent.Size = UDim2.new(1, 0, 1, 0)
-UtilitiesContent.BackgroundTransparency = 1
-UtilitiesContent.Parent = ContentFrame
-UtilitiesContent.Visible = false
+-- MISC TAB
+CreateRedzToggle("Auto Buy Colors", "AutoBuyColors", "Auto mua màu")
+CreateRedzToggle("Auto Random Bone", "AutoRandomBone", "Auto random xương")
+CreateRedzToggle("Auto Chest", "AutoChest", "Auto mở rương")
+CreateRedzToggle("Auto Sabo", "AutoSabo", "Auto Sabo")
 
--- THÊM CÁC TOGGLE VÀO TAB MAIN
-CreateWorkingToggle("🎯 AUTO FARM LEVEL", "AutoFarm", MainContent, UDim2.new(0.05, 0, 0.05, 0))
-CreateWorkingToggle("💀 AUTO FARM BONE", "AutoFarmBone", MainContent, UDim2.new(0.05, 0, 0.15, 0))
-CreateWorkingToggle("⚡ AUTO CLICK", "AutoClick", MainContent, UDim2.new(0.05, 0, 0.25, 0))
-CreateWorkingToggle("🎯 AIMBOT", "Aimbot", MainContent, UDim2.new(0.05, 0, 0.35, 0))
+-- COMBAT TAB
+CreateRedzToggle("Auto Click", "AutoClick", "Auto click tấn công")
+CreateRedzToggle("Skill Z", "SkillZ", "Auto dùng skill Z")
+CreateRedzToggle("Skill X", "SkillX", "Auto dùng skill X")
+CreateRedzToggle("Skill C", "SkillC", "Auto dùng skill C")
+CreateRedzToggle("Skill V", "SkillV", "Auto dùng skill V")
+CreateRedzToggle("Skill F", "SkillF", "Auto dùng skill F")
 
--- THÊM CÁC TOGGLE VÀO TAB FARM
-CreateWorkingToggle("👑 AUTO FARM ELITE", "AutoFarmElite", FarmContent, UDim2.new(0.05, 0, 0.05, 0))
-CreateWorkingToggle("🐋 AUTO FARM SEA BEAST", "AutoFarmSeaBeast", FarmContent, UDim2.new(0.05, 0, 0.15, 0))
-CreateWorkingToggle("📦 AUTO COLLECT DROPS", "AutoCollectDrops", FarmContent, UDim2.new(0.05, 0, 0.25, 0))
-
--- THÊM CÁC TOGGLE VÀO TAB BOSS
-CreateWorkingToggle("👑 AUTO BOSS", "AutoBoss", BossContent, UDim2.new(0.05, 0, 0.05, 0))
-CreateWorkingToggle("🍩 AUTO DOUGH KING", "AutoDoughKing", BossContent, UDim2.new(0.05, 0, 0.15, 0))
-CreateWorkingToggle("🎂 AUTO CAKE PRINCE", "AutoCakePrince", BossContent, UDim2.new(0.05, 0, 0.25, 0))
-
--- THÊM CÁC TOGGLE VÀO TAB MOVEMENT
-CreateWorkingToggle("🚀 SUPER SPEED", "SuperSpeed", MovementContent, UDim2.new(0.05, 0, 0.05, 0))
-CreateWorkingToggle("🕊️ FLY", "Fly", MovementContent, UDim2.new(0.05, 0, 0.15, 0))
-CreateWorkingToggle("👻 NO CLIP", "NoClip", MovementContent, UDim2.new(0.05, 0, 0.25, 0))
-
--- THÊM CÁC TOGGLE VÀO TAB UTILITIES
-CreateWorkingToggle("🍎 AUTO BUY FRUITS", "AutoBuyFruits", UtilitiesContent, UDim2.new(0.05, 0, 0.05, 0))
-CreateWorkingToggle("🔴 AUTO HAKI", "AutoHaki", UtilitiesContent, UDim2.new(0.05, 0, 0.15, 0))
+-- TELEPORT TAB
+CreateRedzToggle("Teleport To Player", "TeleportToPlayer", "Dịch đến người chơi")
+CreateRedzToggle("Teleport To Island", "TeleportToIsland", "Dịch đến đảo")
 
 -- HÀM CẬP NHẬT TAB
-function UpdateTabs()
-    MainContent.Visible = (CurrentTab == "🏠 MAIN")
-    FarmContent.Visible = (CurrentTab == "⚔️ FARM")
-    BossContent.Visible = (CurrentTab == "👑 BOSS")
-    MovementContent.Visible = (CurrentTab == "🚀 MOVEMENT")
-    UtilitiesContent.Visible = (CurrentTab == "🔧 UTILITIES")
+function UpdateRedzTabs()
+    for tabName, content in pairs(TabContents) do
+        content.Visible = (tabName == CurrentTab)
+    end
 end
 
--- 🚀 CÁC HÀM HOẠT ĐỘNG THẬT SỰ
+-- 🖱️ CHỨC NĂNG ẨN/HIỆN MENU BẰNG LOGO
+LogoButton.MouseButton1Click:Connect(function()
+    Config.MenuVisible = not Config.MenuVisible
+    MainContainer.Visible = Config.MenuVisible
+    
+    if Config.MenuVisible then
+        LogoButton.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    else
+        LogoButton.ImageColor3 = Color3.fromRGB(100, 100, 100)
+    end
+end)
 
--- AUTO FARM LEVEL
+-- 🚀 CÁC HÀM CHỨC NĂNG THỰC TẾ
 function StartAutoFarm()
     spawn(function()
         while wait(0.5) do
-            if not Config.AutoFarm then 
-                print("🛑 Auto Farm đã dừng")
-                break 
-            end
+            if not Config.AutoFarm then break end
             
             local target = FindNearestEnemy()
             if target then
-                -- TELEPORT ĐẾN QUÁI
+                -- Teleport đến quái
                 localPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
                 
-                -- AUTO CLICK TẤN CÔNG
+                -- Auto click
                 if Config.AutoClick then
                     VirtualInput:SendKeyEvent(true, "X", false, game)
                     wait(0.1)
                     VirtualInput:SendKeyEvent(false, "X", false, game)
-                    
-                    VirtualInput:SendKeyEvent(true, "Z", false, game)
-                    wait(0.1)
-                    VirtualInput:SendKeyEvent(false, "Z", false, game)
-                end
-                
-                -- AIMBOT
-                if Config.Aimbot then
-                    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.lookAt(
-                        localPlayer.Character.HumanoidRootPart.Position,
-                        target.HumanoidRootPart.Position
-                    )
-                end
-                
-                print("🎯 Đang farm: " .. target.Name)
-            end
-        end
-    end)
-end
-
--- AUTO BOSS
-function StartAutoBoss()
-    spawn(function()
-        while wait(2) do
-            if not Config.AutoBoss then break end
-            
-            for _, boss in pairs(Workspace.Enemies:GetChildren()) do
-                if string.find(boss.Name, "Boss") or string.find(boss.Name, "Saber") then
-                    if boss:FindFirstChild("HumanoidRootPart") and boss.Humanoid.Health > 0 then
-                        localPlayer.Character.HumanoidRootPart.CFrame = boss.HumanoidRootPart.CFrame * CFrame.new(0, 0, 8)
-                        print("👑 Đang đánh boss: " .. boss.Name)
-                        break
-                    end
                 end
             end
         end
     end)
 end
 
--- AUTO CLICK
-function StartAutoClick()
-    spawn(function()
-        while wait(0.2) do
-            if not Config.AutoClick then break end
-            
-            VirtualInput:SendKeyEvent(true, "X", false, game)
-            wait(0.05)
-            VirtualInput:SendKeyEvent(false, "X", false, game)
-            
-            VirtualInput:SendKeyEvent(true, "Z", false, game)
-            wait(0.05)
-            VirtualInput:SendKeyEvent(false, "Z", false, game)
-        end
-    end)
-end
-
--- SUPER SPEED
-function ApplySuperSpeed()
-    if Config.SuperSpeed then
-        localPlayer.Character.Humanoid.WalkSpeed = 120
-    else
-        localPlayer.Character.Humanoid.WalkSpeed = 16
-    end
-end
-
--- TÌM QUÁI GẦN NHẤT
 function FindNearestEnemy()
     local nearest = nil
     local distance = math.huge
@@ -383,20 +380,16 @@ function FindNearestEnemy()
     return nearest
 end
 
+-- 🔄 CHẠY TẤT CẢ TÍNH NĂNG
+spawn(function()
+    while wait(1) do
+        if Config.AutoFarm then StartAutoFarm() end
+    end
+end)
+
 -- CHỐNG AFK
 local VirtualUser = game:GetService("VirtualUser")
 game:GetService("Players").LocalPlayer.Idled:connect(function()
     VirtualUser:CaptureController()
     VirtualUser:ClickButton2(Vector2.new())
 end)
-
--- STATUS
-local StatusLabel = Instance.new("TextLabel")
-StatusLabel.Size = UDim2.new(1, 0, 0, 30)
-StatusLabel.Position = UDim2.new(0, 0, 0.95, 0)
-StatusLabel.BackgroundTransparency = 1
-StatusLabel.Text = "🔴 REDZ HUB 990% | Ready to use!"
-StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-StatusLabel.Font = Enum.Font.GothamBold
-StatusLabel.TextSize = 12
-StatusLabel.Parent = MainFrame
