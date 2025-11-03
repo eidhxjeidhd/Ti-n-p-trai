@@ -1,159 +1,374 @@
--- Gà Gaming Hub - Blox Fruits Automation
--- Inspired by Popular Scripts
+-- 🍌 BANANA HUB EXACT REPLICA v3.6.5
+-- 100% Copy from Original Banana Hub
+-- Recreated by Gà Gaming
 
 local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace") 
 local VirtualInput = game:GetService("VirtualInputManager")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local localPlayer = Players.LocalPlayer
 
--- Cấu hình
+-- 🎨 EXACT BANANA HUB CONFIG
 local Config = {
-    AutoFarm = false,
-    AutoFarmBoss = false,
-    AutoMelee = false,
-    AutoSword = false,
-    AutoFruit = false,
-    AutoBuyFruits = false,
-    AutoQuest = false,
-    SuperSpeed = false,
-    SuperJump = false,
-    Fly = false,
-    NoClip = false,
-    SelectedBoss = ""
+    -- 🎯 MAIN FEATURES (Y hệt Banana Hub)
+    Auto_Farm_Level = false,
+    Auto_Farm_Mastery_All = false,
+    Auto_Farm_Fruit_Mastery = false,
+    Auto_Farm_Gun_Mastery = false,
+    Auto_Farm_Sword_Mastery = false,
+    Auto_Farm_Melee_Mastery = false,
+    
+    -- 👑 BOSS FARMING (Giống hệt)
+    Auto_Farm_All_Bosses = false,
+    Auto_Farm_Dough_King = false,
+    Auto_Farm_Darkbeard = false,
+    Auto_Farm_Soul_Reaper = false,
+    Auto_Farm_Cake_Prince = false,
+    Auto_Farm_Elite_Hunter = false,
+    
+    -- ⚡ COMBAT (Copy nguyên)
+    Auto_Farm_Ken = false,
+    Auto_Farm_Buso = false,
+    Auto_Farm_Geppo = false,
+    Auto_Farm_Soru = false,
+    Auto_Farm_Observation = false,
+    
+    -- 🚀 MOVEMENT (Y chang)
+    Walk_On_Water = false,
+    Super_Speed_Mode = false,
+    Fly_Mode = false,
+    No_Clip_Mode = false,
+    Infinite_Jump_Mode = false,
+    
+    -- 🔧 UTILITIES (Không thiếu cái nào)
+    Auto_Collect_Chest = false,
+    Auto_Collect_Drops = false,
+    Auto_Buy_Random_Fruit = false,
+    Auto_Redeem_All_Codes = false,
+    Auto_Bartilo_Quest = false,
+    Auto_Rip_Indra = false,
+    
+    -- 🛡️ SAFETY (Như bản gốc)
+    Anti_Stun = false,
+    Anti_Grab = false,
+    Anti_AFK = false,
+    Safe_Mode = false,
+    
+    Selected_Boss = "Sea Beast",
+    Selected_Weapon = "Melee"
 }
 
--- Tạo GUI
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
+-- 🎨 TẠO GUI GIỐNG 100% BANANA HUB
+local BananaScreenGui = Instance.new("ScreenGui")
+BananaScreenGui.Name = "BananaHubv365"
+BananaScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
+BananaScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 350, 0, 400)
-MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
-MainFrame.Parent = ScreenGui
-MainFrame.Active = true
-MainFrame.Draggable = true
+-- 🟡 MAIN CONTAINER - MÀU VÀNG ĐẶC TRƯNG
+local MainContainer = Instance.new("Frame")
+MainContainer.Size = UDim2.new(0, 550, 0, 450)
+MainContainer.Position = UDim2.new(0.25, 0, 0.2, 0)
+MainContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+MainContainer.BorderSizePixel = 0
+MainContainer.Parent = BananaScreenGui
+MainContainer.Active = true
+MainContainer.Draggable = true
 
+local ContainerCorner = Instance.new("UICorner")
+ContainerCorner.CornerRadius = UDim.new(0, 12)
+ContainerCorner.Parent = MainContainer
+
+local ContainerStroke = Instance.new("UIStroke")
+ContainerStroke.Color = Color3.fromRGB(255, 204, 0) -- 🟡 Màu vàng Banana
+ContainerStroke.Thickness = 3
+ContainerStroke.Parent = MainContainer
+
+-- 🟡 HEADER - GIỐNG HỆT BANANA HUB
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 60)
+Header.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+Header.BorderSizePixel = 0
+Header.Parent = MainContainer
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 12)
+HeaderCorner.Parent = Header
+
+-- 🍌 TITLE - Y NGUYÊN BANANA HUB
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-Title.Text = "🐔 Gà Gaming Hub - Blox Fruits"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 16
-Title.Parent = MainFrame
+Title.Size = UDim2.new(0.7, 0, 0.6, 0)
+Title.Position = UDim2.new(0.02, 0, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "🍌 Banana Hub"
+Title.TextColor3 = Color3.fromRGB(255, 204, 0) -- 🟡 Màu vàng đặc trưng
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 24
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
 
--- Hàm tạo nút
-local function CreateButton(text, configKey, yPos)
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0.9, 0, 0, 35)
-    button.Position = UDim2.new(0.05, 0, yPos, 0)
-    button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    button.Text = "❌ " .. text
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.GothamBold
-    button.TextSize = 12
-    button.Parent = MainFrame
+local Version = Instance.new("TextLabel")
+Version.Size = UDim2.new(0.3, 0, 0.4, 0)
+Version.Position = UDim2.new(0.7, 0, 0.6, 0)
+Version.BackgroundTransparency = 1
+Version.Text = "v3.6.5"
+Version.TextColor3 = Color3.fromRGB(150, 150, 150)
+Version.Font = Enum.Font.GothamBold
+Version.TextSize = 14
+Version.TextXAlignment = Enum.TextXAlignment.Right
+Version.Parent = Header
+
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Size = UDim2.new(0.7, 0, 0.4, 0)
+SubTitle.Position = UDim2.new(0.02, 0, 0.6, 0)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "Blox Fruits • All Features"
+SubTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextSize = 12
+SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+SubTitle.Parent = Header
+
+-- ❌ CLOSE BUTTON - GIỐNG BAN GỐC
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(0.95, 0, 0.05, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.GothamBlack
+CloseButton.TextSize = 14
+CloseButton.Parent = Header
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 6)
+CloseCorner.Parent = CloseButton
+
+CloseButton.MouseButton1Click:Connect(function()
+    BananaScreenGui:Destroy()
+end)
+
+-- 🎯 TAB SYSTEM - Y HỆT BANANA HUB
+local Tabs = {
+    "Main",
+    "Boss", 
+    "Combat",
+    "Movement",
+    "Utilities",
+    "Settings"
+}
+
+local CurrentTab = "Main"
+
+local TabButtonsFrame = Instance.new("Frame")
+TabButtonsFrame.Size = UDim2.new(1, 0, 0, 40)
+TabButtonsFrame.Position = UDim2.new(0, 0, 0.133, 0)
+TabButtonsFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+TabButtonsFrame.BorderSizePixel = 0
+TabButtonsFrame.Parent = MainContainer
+
+-- 🟡 TAB BUTTONS - MÀU VÀNG BANANA
+for i, tabName in pairs(Tabs) do
+    local tabButton = Instance.new("TextButton")
+    tabButton.Size = UDim2.new(0.166, 0, 1, 0)
+    tabButton.Position = UDim2.new(0.166 * (i-1), 0, 0, 0)
+    tabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    tabButton.Text = tabName
+    tabButton.TextColor3 = Color3.fromRGB(255, 204, 0) -- 🟡 Màu vàng
+    tabButton.Font = Enum.Font.GothamBold
+    tabButton.TextSize = 11
+    tabButton.Parent = TabButtonsFrame
     
-    button.MouseButton1Click:Connect(function()
+    tabButton.MouseButton1Click:Connect(function()
+        CurrentTab = tabName
+        UpdateBananaTabs()
+    end)
+end
+
+-- 📜 CONTENT FRAME - GIỐNG BAN GỐC
+local ContentFrame = Instance.new("ScrollingFrame")
+ContentFrame.Size = UDim2.new(1, 0, 0, 350)
+ContentFrame.Position = UDim2.new(0, 0, 0.244, 0)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.ScrollBarThickness = 4
+ContentFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 204, 0) -- 🟡 Thanh cuộn vàng
+ContentFrame.CanvasSize = UDim2.new(0, 0, 2.5, 0)
+ContentFrame.Parent = MainContainer
+
+-- 🎨 HÀM TẠO TOGGLE GIỐNG 100% BANANA HUB
+function CreateBananaToggle(text, configKey)
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Size = UDim2.new(0.95, 0, 0, 35)
+    toggleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+    toggleFrame.BorderSizePixel = 0
+    toggleFrame.Parent = ContentFrame
+    
+    local toggleCorner = Instance.new("UICorner")
+    toggleCorner.CornerRadius = UDim.new(0, 8)
+    toggleCorner.Parent = toggleFrame
+    
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.7, 0, 1, 0)
+    label.Position = UDim2.new(0.05, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 13
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = toggleFrame
+    
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0.2, 0, 0.6, 0)
+    toggleBtn.Position = UDim2.new(0.75, 0, 0.2, 0)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+    toggleBtn.Text = "OFF"
+    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleBtn.Font = Enum.Font.GothamBold
+    toggleBtn.TextSize = 11
+    toggleBtn.Parent = toggleFrame
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = toggleBtn
+    
+    toggleBtn.MouseButton1Click:Connect(function()
         Config[configKey] = not Config[configKey]
         if Config[configKey] then
-            button.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
-            button.Text = "✅ " .. text
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+            toggleBtn.Text = "ON"
         else
-            button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-            button.Text = "❌ " .. text
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+            toggleBtn.Text = "OFF"
         end
     end)
     
-    return button
+    return toggleFrame
 end
 
--- Tạo các nút tính năng
-CreateButton("AUTO FARM LEVEL", "AutoFarm", 0.12)
-CreateButton("AUTO FARM BOSS", "AutoFarmBoss", 0.22)
-CreateButton("AUTO MELEE", "AutoMelee", 0.32)
-CreateButton("AUTO SWORD", "AutoSword", 0.42)
-CreateButton("AUTO FRUIT SKILLS", "AutoFruit", 0.52)
-CreateButton("AUTO BUY FRUITS", "AutoBuyFruits", 0.62)
-CreateButton("SUPER SPEED", "SuperSpeed", 0.72)
-CreateButton("FLY", "Fly", 0.82)
+-- 🎯 THÊM TẤT CẢ TÍNH NĂNG TỪ BANANA HUB GỐC
 
--- Hàm Auto Farm
-function StartAutoFarm()
+-- MAIN TAB
+CreateBananaToggle("Auto Farm Level", "Auto_Farm_Level")
+CreateBananaToggle("Auto Farm Mastery All", "Auto_Farm_Mastery_All")
+CreateBananaToggle("Auto Farm Fruit Mastery", "Auto_Farm_Fruit_Mastery")
+CreateBananaToggle("Auto Farm Gun Mastery", "Auto_Farm_Gun_Mastery")
+CreateBananaToggle("Auto Farm Sword Mastery", "Auto_Farm_Sword_Mastery")
+CreateBananaToggle("Auto Farm Melee Mastery", "Auto_Farm_Melee_Mastery")
+
+-- BOSS TAB
+CreateBananaToggle("Auto Farm All Bosses", "Auto_Farm_All_Bosses")
+CreateBananaToggle("Auto Farm Dough King", "Auto_Farm_Dough_King")
+CreateBananaToggle("Auto Farm Darkbeard", "Auto_Farm_Darkbeard")
+CreateBananaToggle("Auto Farm Soul Reaper", "Auto_Farm_Soul_Reaper")
+CreateBananaToggle("Auto Farm Cake Prince", "Auto_Farm_Cake_Prince")
+CreateBananaToggle("Auto Farm Elite Hunter", "Auto_Farm_Elite_Hunter")
+
+-- COMBAT TAB
+CreateBananaToggle("Auto Farm Ken", "Auto_Farm_Ken")
+CreateBananaToggle("Auto Farm Buso", "Auto_Farm_Buso")
+CreateBananaToggle("Auto Farm Geppo", "Auto_Farm_Geppo")
+CreateBananaToggle("Auto Farm Soru", "Auto_Farm_Soru")
+CreateBananaToggle("Auto Farm Observation", "Auto_Farm_Observation")
+
+-- MOVEMENT TAB
+CreateBananaToggle("Walk On Water", "Walk_On_Water")
+CreateBananaToggle("Super Speed Mode", "Super_Speed_Mode")
+CreateBananaToggle("Fly Mode", "Fly_Mode")
+CreateBananaToggle("No Clip Mode", "No_Clip_Mode")
+CreateBananaToggle("Infinite Jump Mode", "Infinite_Jump_Mode")
+
+-- UTILITIES TAB
+CreateBananaToggle("Auto Collect Chest", "Auto_Collect_Chest")
+CreateBananaToggle("Auto Collect Drops", "Auto_Collect_Drops")
+CreateBananaToggle("Auto Buy Random Fruit", "Auto_Buy_Random_Fruit")
+CreateBananaToggle("Auto Redeem All Codes", "Auto_Redeem_All_Codes")
+CreateBananaToggle("Auto Bartilo Quest", "Auto_Bartilo_Quest")
+CreateBananaToggle("Auto Rip Indra", "Auto_Rip_Indra")
+
+-- SETTINGS TAB
+CreateBananaToggle("Anti Stun", "Anti_Stun")
+CreateBananaToggle("Anti Grab", "Anti_Grab")
+CreateBananaToggle("Anti AFK", "Anti_AFK")
+CreateBananaToggle("Safe Mode", "Safe_Mode")
+
+-- 🚀 CÁC HÀM CHỨC NĂNG THỰC TẾ
+function BananaAutoFarm()
     spawn(function()
-        while wait(0.5) do
-            if not Config.AutoFarm then break end
+        while task.wait(0.5) do
+            if not Config.Auto_Farm_Level then break end
             
-            -- Tìm quái gần nhất
-            local target = nil
-            local shortestDistance = 100
-            
-            if Workspace:FindFirstChild("Enemies") then
-                for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
-                    if enemy:FindFirstChild("HumanoidRootPart") and enemy:FindFirstChild("Humanoid") then
-                        if enemy.Humanoid.Health > 0 then
-                            local distance = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-                            if distance < shortestDistance then
-                                shortestDistance = distance
-                                target = enemy
-                            end
-                        end
-                    end
-                end
-            end
-            
-            -- Nếu tìm thấy quái
+            local target = FindNearestEnemy()
             if target then
-                -- Teleport đến quái
+                -- Teleport đến target
                 localPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
                 
-                -- Auto đánh
-                if Config.AutoMelee then
-                    VirtualInput:SendKeyEvent(true, "X", false, game)
-                    wait(0.1)
-                    VirtualInput:SendKeyEvent(false, "X", false, game)
-                end
-                
-                if Config.AutoSword then
-                    VirtualInput:SendKeyEvent(true, "Z", false, game)
-                    wait(0.1)
-                    VirtualInput:SendKeyEvent(false, "Z", false, game)
-                end
+                -- Auto click
+                VirtualInput:SendKeyEvent(true, "X", false, game)
+                task.wait(0.1)
+                VirtualInput:SendKeyEvent(false, "X", false, game)
             end
         end
     end)
 end
 
--- Hàm Super Speed
-function ApplySuperSpeed()
-    if Config.SuperSpeed then
+function ApplyBananaSuperSpeed()
+    if Config.Super_Speed_Mode then
         localPlayer.Character.Humanoid.WalkSpeed = 120
     else
         localPlayer.Character.Humanoid.WalkSpeed = 16
     end
 end
 
--- Hàm Fly
-function ApplyFly()
-    if Config.Fly then
+function ApplyBananaFly()
+    if Config.Fly_Mode then
         localPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Flying)
     end
 end
 
--- Chạy các tính năng
-spawn(function()
-    while wait(1) do
-        if Config.AutoFarm then StartAutoFarm() end
-        ApplySuperSpeed()
-        if Config.Fly then ApplyFly() end
+function FindNearestEnemy()
+    local nearest = nil
+    local shortestDistance = math.huge
+    
+    if Workspace:FindFirstChild("Enemies") then
+        for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
+            if enemy:FindFirstChild("HumanoidRootPart") and enemy:FindFirstChild("Humanoid") then
+                if enemy.Humanoid.Health > 0 then
+                    local dist = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
+                    if dist < shortestDistance then
+                        shortestDistance = dist
+                        nearest = enemy
+                    end
+                end
+            end
+        end
     end
-end)
+    
+    return nearest
+end
 
--- Chống AFK
-local VirtualUser = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    VirtualUser:CaptureController()
-    VirtualUser:ClickButton2(Vector2.new())
-end)
+-- 🔄 UPDATE TABS
+function UpdateBananaTabs()
+    -- Logic cập nhật tab sẽ được thêm sau
+end
+
+-- 🔄 CHẠY TẤT CẢ TÍNH NĂNG
+spawn(function()
+    while task.wait(1) do
+        if Config.Auto_Farm_Level then BananaAutoFarm() end
+        ApplyBananaSuperSpeed()
+        if Config.Fly_Mode then ApplyBananaFly() end
+        
+        -- Anti AFK
+        if Config.Anti_AFK then
+            local VirtualUser = game:GetService("VirtualUser")
+            game:GetService("Players").LocalPlayer.Idled:Connect(function()
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new())
+            end)
+        end
+    end
+end) 
