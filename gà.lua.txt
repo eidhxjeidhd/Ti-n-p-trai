@@ -238,10 +238,3 @@ local function updateContent()
         end
     end
 end
-
-print("🐔 GÀ GAMING HUB ĐÃ LOAD THÀNH CÔNG!")
-print("🖼️ Ảnh menu đã được tích hợp!")
-print("🎯 Bật các tính năng để bắt đầu auto farm!")
-
--- [PHẦN AUTO FARM FUNCTIONS GIỮ NGUYÊN]
--- ... (Các hàm auto farm từ script trước) ...
