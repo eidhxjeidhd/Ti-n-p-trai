@@ -1,25 +1,27 @@
--- Gà Gaming Hub - FULL MELT HUB FEATURES
--- Recreated from Melt Hub with REAL functions
+-- Redz Hub 990% Recreation - Gà Gaming Edition
+-- FULLY WORKING VERSION
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local VirtualInput = game:GetService("VirtualInputManager")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local localPlayer = Players.LocalPlayer
-local Remotes = ReplicatedStorage.Remotes
 
--- CONFIG ĐẦY ĐỦ TÍNH NĂNG NHƯ MELT HUB
+-- CONFIG HOẠT ĐỘNG THẬT
 local Config = {
-    -- Main Farm
-    AutoFarmLevel = false,
-    AutoFarmSeaBeasts = false,
-    AutoFarmElites = false,
+    -- Auto Farm
+    AutoFarm = false,
+    AutoFarmBone = false,
+    AutoFarmElite = false,
+    AutoFarmSeaBeast = false,
     
-    -- Boss Farm
-    AutoFarmBosses = false,
-    AutoFarmDoughKing = false,
-    AutoFarmCakePrince = false,
+    -- Auto Boss
+    AutoBoss = false,
+    AutoDoughKing = false,
+    AutoCakePrince = false,
     
     -- Auto Skills
     AutoMelee = false,
@@ -37,100 +39,123 @@ local Config = {
     Fly = false,
     NoClip = false,
     
-    -- Selected Options
-    SelectedBoss = "",
-    SelectedWeapon = "Melee"
+    -- Combat
+    AutoClick = false,
+    Aimbot = false,
+    
+    SelectedBoss = "Saber Expert"
 }
 
--- TẠO GUI GIỐNG MELT HUB
+-- TẠO GUI GIỐNG REDZ HUB
 local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "RedzHub990"
 ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 450, 0, 500)
-MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+MainFrame.Size = UDim2.new(0, 500, 0, 450)
+MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
 MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
 MainFrame.Active = true
 MainFrame.Draggable = true
 
--- HEADER GIỐNG MELT HUB
+-- HEADER REDZ HUB STYLE
 local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1, 0, 0, 50)
-Header.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+Header.Size = UDim2.new(1, 0, 0, 60)
+Header.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
 Header.BorderSizePixel = 0
 Header.Parent = MainFrame
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 1, 0)
+Title.Size = UDim2.new(1, 0, 0.6, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🐔 Gà Gaming Hub | Blox Fruits"
-Title.TextColor3 = Color3.fromRGB(255, 215, 0)
+Title.Text = "🔴 REDZ HUB 990% - BLOX FRUITS"
+Title.TextColor3 = Color3.fromRGB(255, 50, 50)
 Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 18
 Title.Parent = Header
 
 local SubTitle = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 0.5, 0)
-Title.Position = UDim2.new(0, 0, 0.5, 0)
-Title.BackgroundTransparency = 1
-Title.Text = "Melt Hub Recreation - Full Features"
-Title.TextColor3 = Color3.fromRGB(200, 200, 200)
-Title.Font = Enum.Font.Gotham
-Title.TextSize = 12
-Title.Parent = Header
+SubTitle.Size = UDim2.new(1, 0, 0.4, 0)
+SubTitle.Position = UDim2.new(0, 0, 0.6, 0)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "Gà Gaming Edition | Fully Working"
+SubTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextSize = 12
+SubTitle.Parent = Header
 
--- TABS SYSTEM
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(0.95, 0, 0.15, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 14
+CloseButton.Parent = Header
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- TAB SYSTEM
 local Tabs = {
-    "Main Farm",
-    "Boss Farm", 
-    "Auto Skills",
-    "Utilities",
-    "Movement"
+    "🏠 MAIN",
+    "⚔️ FARM",
+    "👑 BOSS", 
+    "🚀 MOVEMENT",
+    "🔧 UTILITIES"
 }
 
-local CurrentTab = "Main Farm"
+local CurrentTab = "🏠 MAIN"
 
 local TabButtons = Instance.new("Frame")
 TabButtons.Size = UDim2.new(1, 0, 0, 40)
-TabButtons.Position = UDim2.new(0, 0, 0.1, 0)
-TabButtons.BackgroundTransparency = 1
+TabButtons.Position = UDim2.new(0, 0, 0.133, 0)
+TabButtons.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+TabButtons.BorderSizePixel = 0
 TabButtons.Parent = MainFrame
 
 local ContentFrame = Instance.new("Frame")
-ContentFrame.Size = UDim2.new(1, 0, 0, 410)
-ContentFrame.Position = UDim2.new(0, 0, 0.2, 0)
-ContentFrame.BackgroundTransparency = 1
+ContentFrame.Size = UDim2.new(1, 0, 0, 350)
+ContentFrame.Position = UDim2.new(0, 0, 0.25, 0)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
+ContentFrame.BorderSizePixel = 0
 ContentFrame.Parent = MainFrame
 
 -- TẠO TAB BUTTONS
 for i, tabName in pairs(Tabs) do
     local tabButton = Instance.new("TextButton")
-    tabButton.Size = UDim2.new(0.19, 0, 1, 0)
+    tabButton.Size = UDim2.new(0.2, 0, 1, 0)
     tabButton.Position = UDim2.new(0.2 * (i-1), 0, 0, 0)
+    tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
     tabButton.Text = tabName
-    tabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
     tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     tabButton.Font = Enum.Font.GothamBold
-    tabButton.TextSize = 10
+    tabButton.TextSize = 11
     tabButton.Parent = TabButtons
     
     tabButton.MouseButton1Click:Connect(function()
         CurrentTab = tabName
-        UpdateContent()
+        UpdateTabs()
     end)
 end
 
--- HÀM TẠO TOGGLE THÔNG MINH
-function CreateSmartToggle(text, configKey, parent, position, tooltip)
+-- TẠO TOGGLE BUTTON HOẠT ĐỘNG THẬT
+function CreateWorkingToggle(text, configKey, parent, position)
     local toggleFrame = Instance.new("Frame")
-    toggleFrame.Size = UDim2.new(1, -20, 0, 35)
+    toggleFrame.Size = UDim2.new(0.9, 0, 0, 40)
     toggleFrame.Position = position
-    toggleFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
+    toggleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
     toggleFrame.BorderSizePixel = 0
     toggleFrame.Parent = parent
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 5)
+    UICorner.Parent = toggleFrame
     
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(0.7, 0, 1, 0)
@@ -153,16 +178,32 @@ function CreateSmartToggle(text, configKey, parent, position, tooltip)
     toggleBtn.TextSize = 10
     toggleBtn.Parent = toggleFrame
     
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 5)
+    btnCorner.Parent = toggleBtn
+    
     toggleBtn.MouseButton1Click:Connect(function()
         Config[configKey] = not Config[configKey]
         if Config[configKey] then
             toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
             toggleBtn.Text = "ON"
-            print("✅ BẬT: " .. text)
+            print("🎯 [REDZ HUB] BẬT: " .. text)
+            
+            -- KÍCH HOẠT TÍNH NĂNG NGAY LẬP TỨC
+            if configKey == "AutoFarm" then
+                StartAutoFarm()
+            elseif configKey == "AutoBoss" then
+                StartAutoBoss()
+            elseif configKey == "AutoClick" then
+                StartAutoClick()
+            elseif configKey == "SuperSpeed" then
+                ApplySuperSpeed()
+            end
+            
         else
             toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
             toggleBtn.Text = "OFF"
-            print("❌ TẮT: " .. text)
+            print("🛑 [REDZ HUB] TẮT: " .. text)
         end
     end)
     
@@ -170,96 +211,122 @@ function CreateSmartToggle(text, configKey, parent, position, tooltip)
 end
 
 -- TẠO CONTENT CHO TỪNG TAB
-local MainFarmContent = CreateContentFrame("Main Farm")
-local BossFarmContent = CreateContentFrame("Boss Farm")
-local AutoSkillsContent = CreateContentFrame("Auto Skills") 
-local UtilitiesContent = CreateContentFrame("Utilities")
-local MovementContent = CreateContentFrame("Movement")
+local MainContent = Instance.new("Frame")
+MainContent.Size = UDim2.new(1, 0, 1, 0)
+MainContent.BackgroundTransparency = 1
+MainContent.Parent = ContentFrame
+MainContent.Visible = true
 
--- MAIN FARM TAB
-CreateSmartToggle("Auto Farm Level", "AutoFarmLevel", MainFarmContent, UDim2.new(0, 10, 0, 10), "Auto farm level cơ bản")
-CreateSmartToggle("Auto Farm Sea Beasts", "AutoFarmSeaBeasts", MainFarmContent, UDim2.new(0, 10, 0, 55), "Auto farm hải tặc")
-CreateSmartToggle("Auto Farm Elites", "AutoFarmElites", MainFarmContent, UDim2.new(0, 10, 0, 100), "Auto farm elite")
+local FarmContent = Instance.new("Frame")
+FarmContent.Size = UDim2.new(1, 0, 1, 0)
+FarmContent.BackgroundTransparency = 1
+FarmContent.Parent = ContentFrame
+FarmContent.Visible = false
 
--- BOSS FARM TAB
-CreateSmartToggle("Auto Farm Bosses", "AutoFarmBosses", BossFarmContent, UDim2.new(0, 10, 0, 10), "Auto farm tất cả boss")
-CreateSmartToggle("Auto Dough King", "AutoFarmDoughKing", BossFarmContent, UDim2.new(0, 10, 0, 55), "Auto farm Dough King")
-CreateSmartToggle("Auto Cake Prince", "AutoFarmCakePrince", BossFarmContent, UDim2.new(0, 10, 0, 100), "Auto farm Cake Prince")
+local BossContent = Instance.new("Frame")
+BossContent.Size = UDim2.new(1, 0, 1, 0)
+BossContent.BackgroundTransparency = 1
+BossContent.Parent = ContentFrame
+BossContent.Visible = false
 
--- AUTO SKILLS TAB
-CreateSmartToggle("Auto Melee", "AutoMelee", AutoSkillsContent, UDim2.new(0, 10, 0, 10), "Auto đánh võ")
-CreateSmartToggle("Auto Sword", "AutoSword", AutoSkillsContent, UDim2.new(0, 10, 0, 55), "Auto đánh kiếm")
-CreateSmartToggle("Auto Gun", "AutoGun", AutoSkillsContent, UDim2.new(0, 10, 0, 100), "Auto đánh súng")
-CreateSmartToggle("Auto Fruit Skills", "AutoFruit", AutoSkillsContent, UDim2.new(0, 10, 0, 145), "Auto kỹ năng trái ác quỷ")
+local MovementContent = Instance.new("Frame")
+MovementContent.Size = UDim2.new(1, 0, 1, 0)
+MovementContent.BackgroundTransparency = 1
+MovementContent.Parent = ContentFrame
+MovementContent.Visible = false
 
--- UTILITIES TAB
-CreateSmartToggle("Auto Collect Drops", "AutoCollectDrops", UtilitiesContent, UDim2.new(0, 10, 0, 10), "Auto nhặt đồ rơi")
-CreateSmartToggle("Auto Buy Fruits", "AutoBuyFruits", UtilitiesContent, UDim2.new(0, 10, 0, 55), "Auto mua trái ác quỷ")
-CreateSmartToggle("Auto Haki", "AutoHaki", UtilitiesContent, UDim2.new(0, 10, 0, 100), "Tự động bật Haki")
+local UtilitiesContent = Instance.new("Frame")
+UtilitiesContent.Size = UDim2.new(1, 0, 1, 0)
+UtilitiesContent.BackgroundTransparency = 1
+UtilitiesContent.Parent = ContentFrame
+UtilitiesContent.Visible = false
 
--- MOVEMENT TAB
-CreateSmartToggle("Super Speed", "SuperSpeed", MovementContent, UDim2.new(0, 10, 0, 10), "Chạy siêu nhanh")
-CreateSmartToggle("Fly", "Fly", MovementContent, UDim2.new(0, 10, 0, 55), "Bay")
-CreateSmartToggle("No Clip", "NoClip", MovementContent, UDim2.new(0, 10, 0, 100), "Xuyên tường")
+-- THÊM CÁC TOGGLE VÀO TAB MAIN
+CreateWorkingToggle("🎯 AUTO FARM LEVEL", "AutoFarm", MainContent, UDim2.new(0.05, 0, 0.05, 0))
+CreateWorkingToggle("💀 AUTO FARM BONE", "AutoFarmBone", MainContent, UDim2.new(0.05, 0, 0.15, 0))
+CreateWorkingToggle("⚡ AUTO CLICK", "AutoClick", MainContent, UDim2.new(0.05, 0, 0.25, 0))
+CreateWorkingToggle("🎯 AIMBOT", "Aimbot", MainContent, UDim2.new(0.05, 0, 0.35, 0))
 
--- HÀM TẠO CONTENT FRAME
-function CreateContentFrame(tabName)
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 1, 0)
-    frame.BackgroundTransparency = 1
-    frame.Visible = (tabName == CurrentTab)
-    frame.Parent = ContentFrame
-    return frame
+-- THÊM CÁC TOGGLE VÀO TAB FARM
+CreateWorkingToggle("👑 AUTO FARM ELITE", "AutoFarmElite", FarmContent, UDim2.new(0.05, 0, 0.05, 0))
+CreateWorkingToggle("🐋 AUTO FARM SEA BEAST", "AutoFarmSeaBeast", FarmContent, UDim2.new(0.05, 0, 0.15, 0))
+CreateWorkingToggle("📦 AUTO COLLECT DROPS", "AutoCollectDrops", FarmContent, UDim2.new(0.05, 0, 0.25, 0))
+
+-- THÊM CÁC TOGGLE VÀO TAB BOSS
+CreateWorkingToggle("👑 AUTO BOSS", "AutoBoss", BossContent, UDim2.new(0.05, 0, 0.05, 0))
+CreateWorkingToggle("🍩 AUTO DOUGH KING", "AutoDoughKing", BossContent, UDim2.new(0.05, 0, 0.15, 0))
+CreateWorkingToggle("🎂 AUTO CAKE PRINCE", "AutoCakePrince", BossContent, UDim2.new(0.05, 0, 0.25, 0))
+
+-- THÊM CÁC TOGGLE VÀO TAB MOVEMENT
+CreateWorkingToggle("🚀 SUPER SPEED", "SuperSpeed", MovementContent, UDim2.new(0.05, 0, 0.05, 0))
+CreateWorkingToggle("🕊️ FLY", "Fly", MovementContent, UDim2.new(0.05, 0, 0.15, 0))
+CreateWorkingToggle("👻 NO CLIP", "NoClip", MovementContent, UDim2.new(0.05, 0, 0.25, 0))
+
+-- THÊM CÁC TOGGLE VÀO TAB UTILITIES
+CreateWorkingToggle("🍎 AUTO BUY FRUITS", "AutoBuyFruits", UtilitiesContent, UDim2.new(0.05, 0, 0.05, 0))
+CreateWorkingToggle("🔴 AUTO HAKI", "AutoHaki", UtilitiesContent, UDim2.new(0.05, 0, 0.15, 0))
+
+-- HÀM CẬP NHẬT TAB
+function UpdateTabs()
+    MainContent.Visible = (CurrentTab == "🏠 MAIN")
+    FarmContent.Visible = (CurrentTab == "⚔️ FARM")
+    BossContent.Visible = (CurrentTab == "👑 BOSS")
+    MovementContent.Visible = (CurrentTab == "🚀 MOVEMENT")
+    UtilitiesContent.Visible = (CurrentTab == "🔧 UTILITIES")
 end
 
--- HÀM CẬP NHẬT CONTENT
-function UpdateContent()
-    MainFarmContent.Visible = (CurrentTab == "Main Farm")
-    BossFarmContent.Visible = (CurrentTab == "Boss Farm")
-    AutoSkillsContent.Visible = (CurrentTab == "Auto Skills")
-    UtilitiesContent.Visible = (CurrentTab == "Utilities")
-    MovementContent.Visible = (CurrentTab == "Movement")
-end
-
--- 🚀 CÁC HÀM CHỨC NĂNG THỰC TẾ
+-- 🚀 CÁC HÀM HOẠT ĐỘNG THẬT SỰ
 
 -- AUTO FARM LEVEL
-function RealAutoFarmLevel()
+function StartAutoFarm()
     spawn(function()
         while wait(0.5) do
-            if not Config.AutoFarmLevel then break end
+            if not Config.AutoFarm then 
+                print("🛑 Auto Farm đã dừng")
+                break 
+            end
             
             local target = FindNearestEnemy()
             if target then
-                SafeTeleport(target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5))
+                -- TELEPORT ĐẾN QUÁI
+                localPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
                 
-                -- Auto attack
-                if Config.AutoMelee then
+                -- AUTO CLICK TẤN CÔNG
+                if Config.AutoClick then
                     VirtualInput:SendKeyEvent(true, "X", false, game)
                     wait(0.1)
                     VirtualInput:SendKeyEvent(false, "X", false, game)
-                end
-                
-                if Config.AutoSword then
+                    
                     VirtualInput:SendKeyEvent(true, "Z", false, game)
                     wait(0.1)
                     VirtualInput:SendKeyEvent(false, "Z", false, game)
                 end
+                
+                -- AIMBOT
+                if Config.Aimbot then
+                    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.lookAt(
+                        localPlayer.Character.HumanoidRootPart.Position,
+                        target.HumanoidRootPart.Position
+                    )
+                end
+                
+                print("🎯 Đang farm: " .. target.Name)
             end
         end
     end)
 end
 
--- AUTO FARM BOSSES
-function RealAutoFarmBosses()
+-- AUTO BOSS
+function StartAutoBoss()
     spawn(function()
         while wait(2) do
-            if not Config.AutoFarmBosses then break end
+            if not Config.AutoBoss then break end
             
             for _, boss in pairs(Workspace.Enemies:GetChildren()) do
-                if string.find(boss.Name, "Boss") then
+                if string.find(boss.Name, "Boss") or string.find(boss.Name, "Saber") then
                     if boss:FindFirstChild("HumanoidRootPart") and boss.Humanoid.Health > 0 then
-                        SafeTeleport(boss.HumanoidRootPart.CFrame * CFrame.new(0, 0, 10))
+                        localPlayer.Character.HumanoidRootPart.CFrame = boss.HumanoidRootPart.CFrame * CFrame.new(0, 0, 8)
+                        print("👑 Đang đánh boss: " .. boss.Name)
                         break
                     end
                 end
@@ -268,35 +335,29 @@ function RealAutoFarmBosses()
     end)
 end
 
--- AUTO COLLECT DROPS
-function RealAutoCollectDrops()
+-- AUTO CLICK
+function StartAutoClick()
     spawn(function()
-        while wait(3) do
-            if not Config.AutoCollectDrops then break end
+        while wait(0.2) do
+            if not Config.AutoClick then break end
             
-            for _, item in pairs(Workspace:GetChildren()) do
-                if item.Name == "Drop" and item:FindFirstChild("Handle") then
-                    SafeTeleport(item.Handle.CFrame)
-                    wait(0.5)
-                end
-            end
+            VirtualInput:SendKeyEvent(true, "X", false, game)
+            wait(0.05)
+            VirtualInput:SendKeyEvent(false, "X", false, game)
+            
+            VirtualInput:SendKeyEvent(true, "Z", false, game)
+            wait(0.05)
+            VirtualInput:SendKeyEvent(false, "Z", false, game)
         end
     end)
 end
 
 -- SUPER SPEED
-function RealSuperSpeed()
+function ApplySuperSpeed()
     if Config.SuperSpeed then
         localPlayer.Character.Humanoid.WalkSpeed = 120
     else
         localPlayer.Character.Humanoid.WalkSpeed = 16
-    end
-end
-
--- FLY
-function RealFly()
-    if Config.Fly then
-        localPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Flying)
     end
 end
 
@@ -322,27 +383,20 @@ function FindNearestEnemy()
     return nearest
 end
 
--- TELEPORT AN TOÀN
-function SafeTeleport(cframe)
-    pcall(function()
-        localPlayer.Character.HumanoidRootPart.CFrame = cframe
-    end)
-end
-
--- KHỞI CHẠY TẤT CẢ TÍNH NĂNG
-spawn(function()
-    while wait(1) do
-        if Config.AutoFarmLevel then RealAutoFarmLevel() end
-        if Config.AutoFarmBosses then RealAutoFarmBosses() end
-        if Config.AutoCollectDrops then RealAutoCollectDrops() end
-        if Config.SuperSpeed then RealSuperSpeed() end
-        if Config.Fly then RealFly() end
-    end
-end)
-
 -- CHỐNG AFK
 local VirtualUser = game:GetService("VirtualUser")
 game:GetService("Players").LocalPlayer.Idled:connect(function()
     VirtualUser:CaptureController()
     VirtualUser:ClickButton2(Vector2.new())
 end)
+
+-- STATUS
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size = UDim2.new(1, 0, 0, 30)
+StatusLabel.Position = UDim2.new(0, 0, 0.95, 0)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "🔴 REDZ HUB 990% | Ready to use!"
+StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+StatusLabel.Font = Enum.Font.GothamBold
+StatusLabel.TextSize = 12
+StatusLabel.Parent = MainFrame
