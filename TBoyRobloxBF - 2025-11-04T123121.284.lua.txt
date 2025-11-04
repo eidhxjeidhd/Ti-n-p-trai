@@ -318,7 +318,7 @@ local v15 = v14:CreateWindow({
     TabWidth = 160,
     Theme = "Dark",
     Acrylic = false,
-    Size = UDim2.fromOffset(500, 10),
+    Size = UDim2.fromOffset(20, 320),
     MinimizeKey = Enum.KeyCode.End
 });
 local v16 = {
