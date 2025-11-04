@@ -1,7 +1,7 @@
 -- discord.gg/tboyroblox
 
 
-shared.LoaderTitle = "Đăng Ký Kênh TBoy Roblox";
+shared.LoaderTitle = "Đăng Ký Kênh gà gaming Roblox";
 shared.LoaderKeyFrames = {
     [1] = {
         1,
@@ -311,7 +311,7 @@ v5:Destroy();
 --         pcall(v422);
 --     end
 -- end);
-local v14 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))();
+local v14 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local v15 = v14:CreateWindow({
     Title = "gà gaming Hub",
     SubTitle = "Blox Fruit",
@@ -320,17 +320,18 @@ local v15 = v14:CreateWindow({
     Acrylic = false,
     Size = UDim2.fromOffset(500, 320),
     MinimizeKey = Enum.KeyCode.End
-});
+})
+
+-- THÊM DÒNG NÀY VÀO ĐÂY --
+local v17 = v14:GetOptions()
+
+-- Tiếp tục phần code cũ của bạn --
 local v16 = {
-    Home = v15:AddTab({
-        Title = "Thông Tin"
-    }),
-    Main = v15:AddTab({
-        Title = "Cày"
-    }),
-    Sea = v15:AddTab({
-        Title = "Sự Kiện"
-    }),
+    Home = v15:AddTab({Title = "Thông Tin"}),
+    Main = v15:AddTab({Title = "Cày"}),
+    Sea = v15:AddTab({Title = "Sự Kiện"}),
+    -- ... các tab khác
+}
     ITM = v15:AddTab({
         Title = "Vật Phẩm"
     }),
