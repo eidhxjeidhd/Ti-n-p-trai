@@ -1,157 +1,383 @@
--- Blox Fruits Ultimate Hub
--- Tổng hợp tính năng từ Redz Hub, Banana Hub, Maru Hub
--- Script chỉ dành cho mục đích giáo dục
+-- discord.gg/tboyroblox
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Blox Fruits Ultimate Hub", "DarkTheme")
-
--- MAIN TAB
-local Main = Window:NewTab("Main")
-local MainSection = Main:NewSection("Main Features")
-
-MainSection:NewButton("Auto Farm Level", "Tự động farm level", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/DonateMe/main/ScriptLoader"))()
-end)
-
-MainSection:NewButton("Auto Farm Boss", "Tự động farm boss", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua"))()
-end)
-
-MainSection:NewButton("Auto Sea Events", "Tự động sự kiện biển", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-end)
-
--- TELEPORT TAB
-local Teleport = Window:NewTab("Teleport")
-local TeleportSection = Teleport:NewSection("Dịch chuyển")
-
-TeleportSection:NewButton("Teleport đến Island", "Dịch chuyển đến đảo", function()
-    local plr = game.Players.LocalPlayer
-    plr.Character.HumanoidRootPart.CFrame = CFrame.new(0, 50, 0) -- Thay đổi tọa độ
-end)
-
-TeleportSection:NewDropdown("Chọn đảo", "Danh sách các đảo", 
-    {"Starter Island", "Jungle", "Pirate Village", "Desert", "Snow Mountain", "Marine Fortress"}, 
-    function(currentOption)
-    -- Code teleport đến đảo được chọn
-end)
-
--- FRUITS TAB
-local Fruits = Window:NewTab("Fruits")
-local FruitsSection = Fruits:NewSection("Trái ác quỷ")
-
-FruitsSection:NewButton("Mua trái ngẫu nhiên", "Mua trái ác quỷ ngẫu nhiên", function()
-    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
-end)
-
-FruitsSection:NewToggle("Auto Store Fruits", "Tự động lưu trữ trái", function(state)
-    getgenv().AutoStoreFruits = state
-    while getgenv().AutoStoreFruits do
-        wait(1)
-        -- Code auto store fruits
-    end
-end)
-
-FruitsSection:NewButton("Tìm trái trên đất", "Hiển thị trái ác quỷ trên mặt đất", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/DonateMe/main/ScriptLoader"))()
-end)
-
--- RAID TAB
-local Raid = Window:NewTab("Raid")
-local RaidSection = Raid:NewSection("Raid Features")
-
-RaidSection:NewButton("Tự động Raid", "Tự động tham gia raid", function()
-    getgenv().AutoRaid = true
-    while getgenv().AutoRaid do
-        wait(1)
-        -- Code auto raid
-    end
-end)
-
-RaidSection:NewDropdown("Chọn loại Raid", "Chọn loại raid muốn tham gia", 
-    {"Flame", "Ice", "Quake", "Light", "Dark", "String", "Rumble", "Magma", "Human: Buddha", "Sand", "Bird: Phoenix"}, 
-    function(currentOption)
-    getgenv().SelectedRaid = currentOption
-end)
-
--- ESP TAB
-local ESP = Window:NewTab("ESP")
-local ESPSection = ESP:NewSection("ESP Features")
-
-ESPSection:NewToggle("ESP Trái ác quỷ", "Hiển thị trái ác quỷ", function(state)
-    getgenv().FruitESP = state
-    -- Code ESP trái ác quỷ
-end)
-
-ESPSection:NewToggle("ESP Chest", "Hiển thị rương", function(state)
-    getgenv().ChestESP = state
-    -- Code ESP rương
-end)
-
-ESPSection:NewToggle("ESP Boss", "Hiển thị boss", function(state)
-    getgenv().BossESP = state
-    -- Code ESP boss
-end)
-
--- PLAYER TAB
-local Player = Window:NewTab("Player")
-local PlayerSection = Player:NewSection("Player Modifications")
-
-PlayerSection:NewSlider("WalkSpeed", "Tốc độ di chuyển", 500, 16, function(s)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-
-PlayerSection:NewSlider("JumpPower", "Sức nhảy", 350, 50, function(s)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = s
-end)
-
-PlayerSection:NewButton("Bay (X)", "Bật/tắt bay (Nhấn X)", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGui/main/FlyGui.lua"))()
-end)
-
--- MISC TAB
-local Misc = Window:NewTab("Misc")
-local MiscSection = Misc:NewSection("Miscellaneous")
-
-MiscSection:NewButton("Auto Điều khiển tàu", "Tự động điều khiển tàu", function()
-    getgenv().AutoSail = true
-    while getgenv().AutoSail do
-        wait(1)
-        -- Code auto sail
-    end
-end)
-
-MiscSection:NewButton("Auto Nhặt tiền", "Tự động nhặt tiền Beli", function()
-    getgenv().AutoCollectBeli = true
-    while getgenv().AutoCollectBeli do
-        wait(1)
-        -- Code auto collect beli
-    end
-end)
-
-MiscSection:NewButton("Mở tất cả cửa", "Mở tất cả cửa trên bản đồ", function()
-    for i,v in pairs(workspace:GetDescendants()) do
-        if v.Name == "Door" then
-            v:Destroy()
+shared.LoaderTitle = "Đăng Ký Kênh gà gaming Roblox";
+shared.LoaderKeyFrames = {
+    [1] = {
+        1,
+        10
+    },
+    [2] = {
+        2,
+        30
+    },
+    [3] = {
+        3,
+        60
+    },
+    [4] = {
+        2,
+        100
+    }
+};
+local v2 = {
+    LoaderData = {
+        Name = shared.LoaderTitle or "A Loader",
+        Colors = shared.LoaderColors or {
+            Main = Color3.fromRGB(0, 0, 0),
+            Topic = Color3.fromRGB(200, 200, 200),
+            Title = Color3.fromRGB(255, 255, 255),
+            LoaderBackground = Color3.fromRGB(40, 40, 40),
+            LoaderSplash = Color3.fromRGB(3, 252, 3)
+        }
+    },
+    Keyframes = shared.LoaderKeyFrames or {
+        [1] = {
+            1,
+            10
+        },
+        [2] = {
+            2,
+            30
+        },
+        [3] = {
+            3,
+            60
+        },
+        [4] = {
+            2,
+            100
+        }
+    }
+};
+local v3 = {
+    [1] = "",
+    [2] = "",
+    [3] = "",
+    [4] = ""
+};
+function TweenObject(v178, v179, v180)
+    game.TweenService:Create(v178, TweenInfo.new(v179, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), v180):Play();
+end
+function CreateObject(v181, v182)
+    local v183 = Instance.new(v181);
+    local v184;
+    for v416, v417 in pairs(v182) do
+        if (v416 ~= "Parent") then
+            v183[v416] = v417;
+        else
+            v184 = v417;
         end
     end
-end)
+    v183.Parent = v184;
+    return v183;
+end
+local function v4(v186, v187)
+    local v188 = Instance.new("UICorner");
+    v188.CornerRadius = UDim.new(0, v186);
+    v188.Parent = v187;
+end
+local v5 = CreateObject("ScreenGui", {
+    Name = "Core",
+    Parent = game.CoreGui
+});
+local v6 = CreateObject("Frame", {
+    Name = "Main",
+    Parent = v5,
+    BackgroundColor3 = v2.LoaderData.Colors.Main,
+    BorderSizePixel = 0,
+    ClipsDescendants = true,
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    Size = UDim2.new(0, 0, 0, 0)
+});
+v4(12, v6);
+local v7 = CreateObject("ImageLabel", {
+    Name = "UserImage",
+    Parent = v6,
+    BackgroundTransparency = 1,
+    Image = "rbxassetid://77817527501053",
+    Position = UDim2.new(0, 15, 0, 10),
+    Size = UDim2.new(0, 50, 0, 50)
+});
+v4(25, v7);
+local v8 = CreateObject("TextLabel", {
+    Name = "UserName",
+    Parent = v6,
+    BackgroundTransparency = 1,
+    Text = "Youtube: Gà gaming",
+    Position = UDim2.new(0, 75, 0, 10),
+    Size = UDim2.new(0, 200, 0, 50),
+    Font = Enum.Font.GothamBold,
+    TextColor3 = v2.LoaderData.Colors.Title,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Left
+});
+local v9 = CreateObject("TextLabel", {
+    Name = "Top",
+    TextTransparency = 1,
+    Parent = v6,
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0, 30, 0, 70),
+    Size = UDim2.new(0, 301, 0, 20),
+    Font = Enum.Font.Gotham,
+    Text = "Loader",
+    TextColor3 = v2.LoaderData.Colors.Topic,
+    TextSize = 10,
+    TextXAlignment = Enum.TextXAlignment.Left
+});
+local v10 = CreateObject("TextLabel", {
+    Name = "Title",
+    Parent = v6,
+    TextTransparency = 1,
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0, 30, 0, 90),
+    Size = UDim2.new(0, 301, 0, 46),
+    Font = Enum.Font.Gotham,
+    RichText = true,
+    Text = "<b>" .. v2.LoaderData.Name .. "</b>",
+    TextColor3 = v2.LoaderData.Colors.Title,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Left
+});
+local v11 = CreateObject("Frame", {
+    Name = "BG",
+    Parent = v6,
+    AnchorPoint = Vector2.new(0.5, 0),
+    BackgroundTransparency = 1,
+    BackgroundColor3 = v2.LoaderData.Colors.LoaderBackground,
+    BorderSizePixel = 0,
+    Position = UDim2.new(0.5, 0, 0, 70),
+    Size = UDim2.new(0.8500000238418579, 0, 0, 24)
+});
+v4(8, v11);
+local v12 = CreateObject("Frame", {
+    Name = "Progress",
+    Parent = v11,
+    BackgroundColor3 = v2.LoaderData.Colors.LoaderSplash,
+    BackgroundTransparency = 1,
+    BorderSizePixel = 0,
+    Size = UDim2.new(0, 0, 0, 24)
+});
+v4(8, v12);
+local v13 = CreateObject("TextLabel", {
+    Name = "StepLabel",
+    Parent = v6,
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0.5, 0, 1, - 25),
+    Size = UDim2.new(1, - 20, 0, 20),
+    Font = Enum.Font.Gotham,
+    Text = "",
+    TextColor3 = v2.LoaderData.Colors.Topic,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Center,
+    AnchorPoint = Vector2.new(0.5, 0.5)
+});
+function UpdateStepText(v191)
+    v13.Text = v3[v191] or "" ;
+end
+function UpdatePercentage(v193, v194)
+    TweenObject(v12, 0.5, {
+        Size = UDim2.new(v193 / 100, 0, 0, 24)
+    });
+    UpdateStepText(v194);
+end
+TweenObject(v6, 0.25, {
+    Size = UDim2.new(0, 346, 0, 121)
+});
+wait();
+TweenObject(v9, 0.5, {
+    TextTransparency = 0
+});
+TweenObject(v10, 0.5, {
+    TextTransparency = 0
+});
+TweenObject(v11, 0.5, {
+    BackgroundTransparency = 0
+});
+TweenObject(v12, 0.5, {
+    BackgroundTransparency = 0
+});
+for v195, v196 in pairs(v2.Keyframes) do
+    wait(v196[1]);
+    UpdatePercentage(v196[2], v195);
+end
+UpdatePercentage(100, 4);
+TweenObject(v9, 0.5, {
+    TextTransparency = 1
+});
+TweenObject(v10, 0.5, {
+    TextTransparency = 1
+});
+TweenObject(v11, 0.5, {
+    BackgroundTransparency = 1
+});
+TweenObject(v12, 0.5, {
+    BackgroundTransparency = 1
+});
+wait(0.5);
+TweenObject(v6, 0.25, {
+    Size = UDim2.new(0, 0, 0, 0)
+});
+wait(0.25);
+v5:Destroy();
 
--- SETTINGS TAB
-local Settings = Window:NewTab("Settings")
-local SettingsSection = Settings:NewSection("Cài đặt")
+local v14 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))();
+local v15 = v14:CreateWindow({
+    Title = "gà gaming Hub",
+    SubTitle = "Blox Fruit",
+    TabWidth = 160,
+    Theme = "Dark",
+    Acrylic = false,
+    Size = UDim2.fromOffset(500, 320),
+    MinimizeKey = Enum.KeyCode.End
+});
 
-SettingsSection:NewKeybind("Ẩn/Hiện GUI", "Phím tắt ẩn/hiện GUI", Enum.KeyCode.RightControl, function()
-	Library:ToggleUI()
-end)
+-- Thêm biến để theo dõi trạng thái menu
+local MenuVisible = true
 
-SettingsSection:NewButton("Destroy GUI", "Xóa GUI", function()
-    Library:Destroy()
-end)
+local v16 = {
+    Home = v15:AddTab({
+        Title = "Thông Tin"
+    }),
+    Main = v15:AddTab({
+        Title = "Cày"
+    }),
+    Sea = v15:AddTab({
+        Title = "Sự Kiện"
+    }),
+    ITM = v15:AddTab({
+        Title = "Vật Phẩm"
+    }),
+    Setting = v15:AddTab({
+        Title = "Cài Đặt"
+    }),
+    Status = v15:AddTab({
+        Title = "Máy Chủ"
+    }),
+    Stats = v15:AddTab({
+        Title = "Chỉ Số"
+    }),
+    Player = v15:AddTab({
+        Title = "Người Chơi"
+    }),
+    Teleport = v15:AddTab({
+        Title = "Dịch Chuyển"
+    }),
+    Visual = v15:AddTab({
+        Title = "Giả"
+    }),
+    Fruit = v15:AddTab({
+        Title = "Trái"
+    }),
+    Raid = v15:AddTab({
+        Title = "Tập Kích"
+    }),
+    Race = v15:AddTab({
+        Title = "Tộc"
+    }),
+    Shop = v15:AddTab({
+        Title = "Cửa Hàng"
+    }),
+    Misc = v15:AddTab({
+        Title = "Khác"
+    })
+};
+local v17 = v14.Options;
 
--- Thông báo khi load xong
-game:GetService("StarterGui"):SetCore("SendNotification",{
-    Title = "Blox Fruits Ultimate Hub",
-    Text = "Đã load thành công!",
-    Duration = 5
+-- Tạo icon để bật/tắt menu
+local ToggleGui = Instance.new("ScreenGui")
+ToggleGui.Name = "ToggleGui"
+ToggleGui.Parent = game.CoreGui
+ToggleGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local ToggleButton = Instance.new("ImageButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = ToggleGui
+ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Position = UDim2.new(0.120833337 - 0.1, 0, 0.0952890813 + 0.01, 0)
+ToggleButton.Size = UDim2.new(0, 50, 0, 50)
+ToggleButton.Draggable = true
+ToggleButton.Image = "rbxassetid://77817527501053"
+
+local UICorner = Instance.new("UICorner")
+UICorner.Parent = ToggleButton
+UICorner.CornerRadius = UDim.new(0, 12)
+
+local ParticleEmitter = Instance.new("ParticleEmitter")
+ParticleEmitter.Parent = ToggleButton
+ParticleEmitter.LightEmission = 1
+ParticleEmitter.Size = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 0.1),
+    NumberSequenceKeypoint.new(1, 0)
 })
+ParticleEmitter.Lifetime = NumberRange.new(0.5, 1)
+ParticleEmitter.Rate = 0
+ParticleEmitter.Speed = NumberRange.new(5, 10)
+ParticleEmitter.Color = ColorSequence.new(Color3.fromRGB(255, 85, 255), Color3.fromRGB(85, 255, 255))
+
+local TweenService = game:GetService("TweenService")
+local RotateTween = TweenService:Create(ToggleButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    Rotation = 360
+})
+
+-- Hàm bật/tắt menu
+local function ToggleMenu()
+    if MenuVisible then
+        v15:Hide()
+        MenuVisible = false
+    else
+        v15:Show()
+        MenuVisible = true
+    end
+end
+
+-- Kết nối sự kiện click cho nút
+ToggleButton.MouseButton1Down:Connect(function()
+    ParticleEmitter.Rate = 100
+    task.delay(1, function()
+        ParticleEmitter.Rate = 0
+    end)
+    RotateTween:Play()
+    RotateTween.Completed:Connect(function()
+        ToggleButton.Rotation = 0
+    end)
+    
+    local SizeTween = TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
+        Size = UDim2.new(0, 60, 0, 60)
+    })
+    SizeTween:Play()
+    SizeTween.Completed:Connect(function()
+        local ReturnSizeTween = TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 50, 0, 50)
+        })
+        ReturnSizeTween:Play()
+    end)
+    
+    ToggleMenu()
+end)
+
+-- Phần còn lại của code giữ nguyên...
+local v18 = game.PlaceId;
+if (v18 == 2753915549) then
+    Sea1 = true;
+elseif (v18 == 4442272183) then
+    Sea2 = true;
+elseif (v18 == 7449423635) then
+    Sea3 = true;
+else
+    game:Shutdown();
+end
+
+-- ... (phần còn lại của code giữ nguyên)
+
+-- Thêm nút Discord vào tab Home
+v16.Home:AddButton({
+    Title = "Discord",
+    Description = "Giao Lưu",
+    Callback = function()
+        setclipboard("https://discord.gg/tboyroblox");
+    end
+});
