@@ -322,7 +322,6 @@ local v15 = v14:CreateWindow({
     MinimizeKey = Enum.KeyCode.End
 })
 
--- THÊM DÒNG NÀY VÀO ĐÂY --
 local v17 = v14:GetOptions()
 
 -- Tiếp tục phần code cũ của bạn --
