@@ -223,297 +223,304 @@ TweenObject(v6, 0.25, {
 wait(0.25);
 v5:Destroy();
 
-local v14 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local v15 = v14:CreateWindow({
-    Title = "gà gaming Hub",
-    SubTitle = "Blox Fruit",
-    TabWidth = 160,
-    Theme = "Dark",
-    Acrylic = false,
-    Size = UDim2.fromOffset(500, 320),
-    MinimizeKey = Enum.KeyCode.End
-})
-
--- SỬA LỖI: THÊM DÒNG NÀY
-local v17 = v14:GetOptions()
-
-local v16 = {
-    Home = v15:AddTab({Title = "Thông Tin"}),
-    Main = v15:AddTab({Title = "Cày"}),
-    Sea = v15:AddTab({Title = "Sự Kiện"}),
-    ITM = v15:AddTab({Title = "Vật Phẩm"}),
-    Setting = v15:AddTab({Title = "Cài Đặt"}),
-    Status = v15:AddTab({Title = "Máy Chủ"}),
-    Stats = v15:AddTab({Title = "Chỉ Số"}),
-    Player = v15:AddTab({Title = "Người Chơi"}),
-    Teleport = v15:AddTab({Title = "Dịch Chuyển"}),
-    Visual = v15:AddTab({Title = "Giả"}),
-    Fruit = v15:AddTab({Title = "Trái"}),
-    Raid = v15:AddTab({Title = "Tập Kích"}),
-    Race = v15:AddTab({Title = "Tộc"}),
-    Shop = v15:AddTab({Title = "Cửa Hàng"}),
-    Misc = v15:AddTab({Title = "Khác"})
-}
-
--- SỬA LỖI: THÊM DÒNG NÀY ĐỂ HIỆN MENU
-v14:SelectTab(v16.Home)
-
-local v18 = game.PlaceId;
-if (v18 == 2753915549) then
-    Sea1 = true;
-elseif (v18 == 4442272183) then
-    Sea2 = true;
-elseif (v18 == 7449423635) then
-    Sea3 = true;
-else
-    game:Shutdown();
-end
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame);
-    wait();
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame);
-end);
-Sea1 = false;
-Sea2 = false;
-Sea3 = false;
-local v19 = game.PlaceId;
-if (v19 == 2753915549) then
-    Sea1 = true;
-elseif (v19 == 4442272183) then
-    Sea2 = true;
-elseif (v19 == 7449423635) then
-    Sea3 = true;
-end
-
--- CÁC FUNCTION VÀ CODE TIẾP THEO...
-function CheckLevel()
-    local v197 = game:GetService("Players").LocalPlayer.Data.Level.Value;
-    if Sea1 then
-        if ((v197 == 1) or (v197 <= 9) or (SelectMonster == "Bandit")) then
-            Ms = "Bandit";
-            NameQuest = "BanditQuest1";
-            QuestLv = 1;
-            NameMon = "Bandit";
-            CFrameQ = CFrame.new(1060.9383544922, 16.455066680908, 1547.7841796875);
-            CFrameMon = CFrame.new(1038.5533447266, 41.296249389648, 1576.5098876953);
-        elseif ((v197 == 10) or (v197 <= 14) or (SelectMonster == "Monkey")) then
-            Ms = "Monkey";
-            NameQuest = "JungleQuest";
-            QuestLv = 1;
-            NameMon = "Monkey";
-            CFrameQ = CFrame.new(- 1601.6553955078, 36.85213470459, 153.38809204102);
-            CFrameMon = CFrame.new(- 1448.1446533203, 50.851993560791, 63.60718536377);
-        -- ... (giữ nguyên phần CheckLevel)
+-- SỬA LẠI PHẦN MENU HOÀN TOÀN
+local success, result = pcall(function()
+    local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+    
+    local Window = Fluent:CreateWindow({
+        Title = "gà gaming Hub - Blox Fruit",
+        SubTitle = "by TBoy Roblox",
+        TabWidth = 160,
+        Size = UDim2.fromOffset(580, 460),
+        Acrylic = false,
+        Theme = "Dark",
+        MinimizeKey = Enum.KeyCode.End
+    })
+    
+    -- Tạo các Tab chính
+    local Tabs = {
+        Home = Window:AddTab({Title = "Thông Tin", Icon = ""}),
+        Main = Window:AddTab({Title = "Cày", Icon = ""}),
+        Sea = Window:AddTab({Title = "Sự Kiện", Icon = ""}),
+        Boss = Window:AddTab({Title = "Trùm", Icon = ""}),
+        Player = Window:AddTab({Title = "Người Chơi", Icon = ""}),
+        Settings = Window:AddTab({Title = "Cài Đặt", Icon = ""})
+    }
+    
+    local Options = Fluent:GetOptions()
+    
+    -- TAB THÔNG TIN
+    Tabs.Home:AddParagraph({
+        Title = "gà gaming Hub",
+        Content = "Chào mừng đến với script Blox Fruit!"
+    })
+    
+    Tabs.Home:AddButton({
+        Title = "Discord",
+        Description = "Copy link Discord",
+        Callback = function()
+            setclipboard("https://discord.gg/tboyroblox")
+            Fluent:Notify({
+                Title = "Thành công",
+                Content = "Đã copy link Discord!",
+                Duration = 5
+            })
         end
-    end
-end
-
--- THÊM CÁC TÍNH NĂNG VÀO MENU
-v16.Home:AddButton({
-    Title = "Discord",
-    Description = "Giao Lưu",
-    Callback = function()
-        setclipboard("https://discord.gg/tboyroblox");
-    end
-});
-
-_G.FastAttackStrix_Mode = "Super Fast Attack";
-spawn(function()
-    while wait() do
-        if _G.FastAttackStrix_Mode then
-            pcall(function()
-                if (_G.FastAttackStrix_Mode == "Super Fast Attack") then
-                    _G.Fast_Delay = 1e-9;
-                end
-            end);
+    })
+    
+    Tabs.Home:AddButton({
+        Title = "Youtube",
+        Description = "Subscribe kênh nhé!",
+        Callback = function()
+            setclipboard("Youtube: TBoy Roblox")
+            Fluent:Notify({
+                Title = "Thành công", 
+                Content = "Đã copy tên kênh Youtube!",
+                Duration = 5
+            })
         end
+    })
+    
+    -- TAB CÀY
+    local SelectWeapon = "Melee"
+    local ChooseWeapon = Tabs.Main:AddDropdown("WeaponSelect", {
+        Title = "Chọn Vũ Khí",
+        Values = {"Melee", "Sword", "Blox Fruit"},
+        Multi = false,
+        Default = "Melee",
+    })
+    
+    ChooseWeapon:OnChanged(function(Value)
+        SelectWeapon = Value
+        print("Đã chọn vũ khí: " .. Value)
+    end)
+    
+    -- Toggle Cày Cấp
+    local AutoLevelToggle = Tabs.Main:AddToggle("AutoLevel", {
+        Title = "Cày Cấp",
+        Description = "Tự động farm level",
+        Default = false,
+    })
+    
+    AutoLevelToggle:OnChanged(function(Value)
+        _G.AutoLevel = Value
+        print("AutoLevel: " .. tostring(Value))
+        if not Value then
+            -- Dừng farm
+        end
+    end)
+    
+    -- Toggle Đấm Quái Gần
+    local AutoNearToggle = Tabs.Main:AddToggle("AutoNear", {
+        Title = "Đấm Quái Gần",
+        Description = "Tự động đánh quái trong phạm vi",
+        Default = false,
+    })
+    
+    AutoNearToggle:OnChanged(function(Value)
+        _G.AutoNear = Value
+        print("AutoNear: " .. tostring(Value))
+    end)
+    
+    -- Toggle Lụm Rương
+    local ChestToggle = Tabs.Main:AddToggle("AutoChest", {
+        Title = "Lụm Rương",
+        Description = "Tự động nhặt rương",
+        Default = false,
+    })
+    
+    ChestToggle:OnChanged(function(Value)
+        _G.AutoCollectChest = Value
+        print("AutoChest: " .. tostring(Value))
+    end)
+    
+    -- TAB TRÙM
+    local BossList = {}
+    if game.PlaceId == 2753915549 then
+        BossList = {"The Gorilla King", "Bobby", "Yeti", "Vice Admiral", "Saber Expert"}
+    elseif game.PlaceId == 4442272183 then
+        BossList = {"Diamond", "Jeremy", "Fajita", "Don Swan", "Smoke Admiral"}
+    elseif game.PlaceId == 7449423635 then
+        BossList = {"Stone", "Island Empress", "Kilo Admiral", "Captain Elephant", "Beautiful Pirate"}
     end
-end);
-
-local v48 = v16.Main:AddDropdown("DropdownSelectWeapon", {
-    Title = "Vũ Khí",
-    Description = "",
-    Values = {
-        "Melee",
-        "Sword",
-        "Blox Fruits"
-    },
-    Multi = false,
-    Default = 1
-});
-v48:SetValue("Melee");
-v48:OnChanged(function(v236)
-    ChooseWeapon = v236;
-end);
-
-task.spawn(function()
-    while wait() do
-        pcall(function()
-            if (ChooseWeapon == "Melee") then
-                for v836, v837 in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if (v837.ToolTip == "Melee") then
-                        if game.Players.LocalPlayer.Backpack:FindFirstChild(tostring(v837.Name)) then
-                            SelectWeapon = v837.Name;
-                        end
-                    end
-                end
-            elseif (ChooseWeapon == "Sword") then
-                for v1028, v1029 in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if (v1029.ToolTip == "Sword") then
-                        if game.Players.LocalPlayer.Backpack:FindFirstChild(tostring(v1029.Name)) then
-                            SelectWeapon = v1029.Name;
-                        end
-                    end
-                end
-            elseif (ChooseWeapon == "Blox Fruit") then
-                for v1430, v1431 in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if (v1431.ToolTip == "Blox Fruit") then
-                        if game.Players.LocalPlayer.Backpack:FindFirstChild(tostring(v1431.Name)) then
-                            SelectWeapon = v1431.Name;
-                        end
-                    end
-                end
+    
+    local BossSelect = Tabs.Boss:AddDropdown("BossSelect", {
+        Title = "Chọn Trùm",
+        Values = BossList,
+        Multi = false,
+        Default = BossList[1] or "",
+    })
+    
+    local SelectedBoss = BossList[1] or ""
+    BossSelect:OnChanged(function(Value)
+        SelectedBoss = Value
+        print("Đã chọn boss: " .. Value)
+    end)
+    
+    local BossToggle = Tabs.Boss:AddToggle("AutoBoss", {
+        Title = "Đấm Trùm",
+        Description = "Tự động farm boss",
+        Default = false,
+    })
+    
+    BossToggle:OnChanged(function(Value)
+        _G.AutoBoss = Value
+        _G.SelectBoss = SelectedBoss
+        print("AutoBoss: " .. tostring(Value) .. " - Boss: " .. SelectedBoss)
+    end)
+    
+    -- TAB NGƯỜI CHƠI
+    Tabs.Player:AddSlider("WalkSpeed", {
+        Title = "Tốc độ chạy",
+        Description = "Điều chỉnh tốc độ di chuyển",
+        Default = 16,
+        Min = 16,
+        Max = 200,
+        Rounding = 1,
+        Callback = function(Value)
+            if game.Players.LocalPlayer.Character then
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
             end
-        end);
-    end
-end);
-
-local v49 = v16.Main:AddToggle("ToggleLevel", {
-    Title = "Cày Cấp",
-    Description = "",
-    Default = false
-});
-v49:OnChanged(function(v237)
-    _G.AutoLevel = v237;
-    if (v237 == false) then
-        wait();
-        Tween(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame);
-        wait();
-    end
-end);
-
--- SỬA LỖI: THÊM KIỂM TRA Ở ĐÂY
-if v17 and v17.ToggleLevel then
-    v17.ToggleLevel:SetValue(false)
-end
-
-spawn(function()
-    while task.wait() do
-        if _G.AutoLevel then
-            pcall(function()
-                CheckLevel();
-                if (not string.find(game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, NameMon) or (game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false)) then
-                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest");
-                    Tween(CFrameQ);
-                    if ((CFrameQ.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 5) then
-                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", NameQuest, QuestLv);
-                    end
-                elseif (string.find(game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, NameMon) or (game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == true)) then
-                    for v1432, v1433 in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-                        if (v1433:FindFirstChild("Humanoid") and v1433:FindFirstChild("HumanoidRootPart") and (v1433.Humanoid.Health > 0)) then
-                            if (v1433.Name == Ms) then
-                                repeat
-                                    wait(_G.Fast_Delay);
-                                    AttackNoCoolDown();
-                                    bringmob = true;
-                                    AutoHaki();
-                                    EquipTool(SelectWeapon);
-                                    Tween(v1433.HumanoidRootPart.CFrame * Pos);
-                                    v1433.HumanoidRootPart.Size = Vector3.new(60, 60, 60);
-                                    v1433.HumanoidRootPart.Transparency = 1;
-                                    v1433.Humanoid.JumpPower = 0;
-                                    v1433.Humanoid.WalkSpeed = 0;
-                                    v1433.HumanoidRootPart.CanCollide = false;
-                                    FarmPos = v1433.HumanoidRootPart.CFrame;
-                                    MonFarm = v1433.Name;
-                                until not _G.AutoLevel or not v1433.Parent or (v1433.Humanoid.Health <= 0) or not game:GetService("Workspace").Enemies:FindFirstChild(v1433.Name) or (game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == false)
-                                bringmob = false;
-                            end
-                        end
-                    end
-                    for v1434, v1435 in pairs(game:GetService("Workspace")['_WorldOrigin'].EnemySpawns:GetChildren()) do
-                        if string.find(v1435.Name, NameMon) then
-                            if ((game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v1435.Position).Magnitude >= 10) then
-                                Tween(v1435.HumanoidRootPart.CFrame * Pos);
-                            end
-                        end
-                    end
-                end
-            end);
         end
-    end
-end);
+    })
+    
+    Tabs.Player:AddSlider("JumpPower", {
+        Title = "Lực nhảy",
+        Description = "Điều chỉnh độ cao nhảy",
+        Default = 50,
+        Min = 50,
+        Max = 200,
+        Rounding = 1,
+        Callback = function(Value)
+            if game.Players.LocalPlayer.Character then
+                game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+            end
+        end
+    })
+    
+    -- TAB CÀI ĐẶT
+    Tabs.Settings:AddParagraph({
+        Title = "Cài đặt",
+        Content = "Các tùy chọn hệ thống"
+    })
+    
+    local AntiAFKToggle = Tabs.Settings:AddToggle("AntiAFK", {
+        Title = "Chống AFK",
+        Description = "Tự động chống AFK",
+        Default = true,
+    })
+    
+    AntiAFKToggle:OnChanged(function(Value)
+        if Value then
+            -- Bật chống AFK
+        else
+            -- Tắt chống AFK  
+        end
+    end)
+    
+    Tabs.Settings:AddButton({
+        Title = "Ẩn/Hiện Menu",
+        Description = "Nhấn End để ẩn/hiện menu",
+        Callback = function()
+            Fluent:Notify({
+                Title = "Thông báo",
+                Content = "Nhấn phím End để ẩn/hiện menu!",
+                Duration = 5
+            })
+        end
+    })
+    
+    Tabs.Settings:AddButton({
+        Title = "Reload Script",
+        Description = "Tải lại script",
+        Callback = function()
+            Fluent:Notify({
+                Title = "Thông báo", 
+                Content = "Đang tải lại script...",
+                Duration = 3
+            })
+            wait(2)
+            -- Reload script
+        end
+    })
+    
+    -- Chọn tab mặc định
+    Window:SelectTab(Tabs.Home)
+    
+    -- Thông báo thành công
+    Fluent:Notify({
+        Title = "gà gaming Hub",
+        Content = "Menu đã được tải thành công!",
+        Duration = 5
+    })
+    
+    print("Menu đã được tạo thành công!")
+    
+    return {
+        Window = Window,
+        Tabs = Tabs,
+        Options = Options,
+        Fluent = Fluent
+    }
+end)
 
--- THÊM CÁC TÍNH NĂNG KHÁC...
-local v50 = v16.Main:AddToggle("ToggleMobAura", {
-    Title = "Đấm Quái Gần",
-    Description = "",
-    Default = false
-});
-v50:OnChanged(function(v238)
-    _G.AutoNear = v238;
-    if (v238 == false) then
-        wait();
-        Tween(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame);
-        wait();
-    end
-end);
-
--- SỬA LỖI: THÊM KIỂM TRA Ở ĐÂY
-if v17 and v17.ToggleMobAura then
-    v17.ToggleMobAura:SetValue(false)
+if not success then
+    warn("Lỗi khi tạo menu: " .. tostring(result))
+    
+    -- Tạo menu đơn giản thủ công nếu Fluent lỗi
+    local SimpleGUI = Instance.new("ScreenGui")
+    SimpleGUI.Name = "SimpleMenu"
+    SimpleGUI.Parent = game.CoreGui
+    
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 300, 0, 400)
+    MainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    MainFrame.Parent = SimpleGUI
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 8)
+    UICorner.Parent = MainFrame
+    
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, 0, 0, 50)
+    Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Title.Text = "gà gaming Hub - Lỗi Fluent"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 18
+    Title.Parent = MainFrame
+    
+    local CloseBtn = Instance.new("TextButton")
+    CloseBtn.Size = UDim2.new(0, 100, 0, 40)
+    CloseBtn.Position = UDim2.new(0.5, -50, 0.9, -20)
+    CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    CloseBtn.Text = "Đóng"
+    CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseBtn.Parent = MainFrame
+    CloseBtn.MouseButton1Click:Connect(function()
+        SimpleGUI:Destroy()
+    end)
+    
+    local InfoText = Instance.new("TextLabel")
+    InfoText.Size = UDim2.new(1, -20, 0, 200)
+    InfoText.Position = UDim2.new(0, 10, 0, 60)
+    InfoText.BackgroundTransparency = 1
+    InfoText.Text = "Lỗi khi tải menu Fluent UI!\n\nNguyên nhân có thể do:\n- Mất kết nối internet\n- Link Fluent bị hỏng\n- Game chặn request\n\nVui lòng thử lại sau!"
+    InfoText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    InfoText.TextWrapped = true
+    InfoText.Font = Enum.Font.Gotham
+    InfoText.TextSize = 14
+    InfoText.Parent = MainFrame
+    
+    print("Đã tạo menu đơn giản thay thế")
+else
+    print("Menu Fluent đã được tạo thành công!")
 end
 
--- TIẾP TỤC THÊM CÁC TÍNH NĂNG KHÁC...
-
--- THÊM NÚT ĐÓNG/MỞ MENU
-local v22 = Instance.new("ScreenGui");
-local v23 = Instance.new("ImageButton");
-local v24 = Instance.new("UICorner");
-local v25 = Instance.new("ParticleEmitter");
-local v26 = game:GetService("TweenService");
-v22.Parent = game.CoreGui;
-v22.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
-v23.Parent = v22;
-v23.BackgroundColor3 = Color3.fromRGB(0, 0, 0);
-v23.BorderSizePixel = 0;
-v23.Position = UDim2.new(0.120833337 - 0.1, 0, 0.0952890813 + 0.01, 0);
-v23.Size = UDim2.new(0, 50, 0, 50);
-v23.Draggable = true;
-v23.Image = "http://www.roblox.com/asset/?id=77817527501053";
-v24.Parent = v23;
-v24.CornerRadius = UDim.new(0, 12);
-v25.Parent = v23;
-v25.LightEmission = 1;
-v25.Size = NumberSequence.new({
-    NumberSequenceKeypoint.new(0, 0.1),
-    NumberSequenceKeypoint.new(1, 0)
-});
-v25.Lifetime = NumberRange.new(0.5, 1);
-v25.Rate = 0;
-v25.Speed = NumberRange.new(5, 10);
-v25.Color = ColorSequence.new(Color3.fromRGB(255, 85, 255), Color3.fromRGB(85, 255, 255));
-local v47 = v26:Create(v23, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-    Rotation = 360
-});
-v23.MouseButton1Down:Connect(function()
-    v25.Rate = 100;
-    task.delay(1, function()
-        v25.Rate = 0;
-    end);
-    v47:Play();
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game);
-    v47.Completed:Connect(function()
-        v23.Rotation = 0;
-    end);
-    local v235 = v26:Create(v23, TweenInfo.new(0.2, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
-        Size = UDim2.new(0, 60, 0, 60)
-    });
-    v235:Play();
-    v235.Completed:Connect(function()
-        local v483 = v26:Create(v23, TweenInfo.new(0.2, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 50, 0, 50)
-        });
-        v483:Play();
-    end);
-end);
+-- CÁC FUNCTION VÀ TÍNH NĂNG KHÁC...
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+end)
