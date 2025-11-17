@@ -1,434 +1,149 @@
--- 🍌 ULTIMATE BANANA HUB + MARU HUB + REDZ HUB RECREATION
--- Tổng hợp tất cả tính năng tốt nhất + Logo cá nhân
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
 
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local VirtualInput = game:GetService("VirtualInputManager")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local localPlayer = Players.LocalPlayer
+       local Window = MakeWindow({
+         Hub = {
+         Title = "Tiến Roblox",
+         Animation = "Youtube: gà gaming"
+         },
+        Key = {
+        KeySystem = false,
+        Title = "Key System",
+        Description = "",
+        KeyLink = "",
+        Keys = {"1234"},
+        Notifi = {
+        Notifications = true,
+        CorrectKey = "Running the Script...",
+       Incorrectkey = "The key is incorrect",
+       CopyKeyLink = "Copied to Clipboard"
+      }
+    }
+  })
 
--- ID LOGO CÁ NHÂN CỦA EM
-local LOGO_ID = "84957548476668"
+       MinimizeButton({
+       Image = "http://www.roblox.com/asset/?id=83190276951914",
+       Size = {60, 60},
+       Color = Color3.fromRGB(10, 10, 10),
+       Corner = true,
+       Stroke = false,
+       StrokeColor = Color3.fromRGB(255, 0, 0)
+      })
+      
+------ Tab
+     local Tab1o = MakeTab({Name = "Script Farm"})
+     local Tab2o = MakeTab({Name = "Script Kaitun"})
+     local Tab3o = MakeTab({Name = "Script tổng hợp khác"})
+     local Tab4o = MakeTab({Name = "Script random"})
+------- BUTTON
+    
+    AddButton(Tab2o, {
+     Name = "ARYA Hub",
+    Callback = function()
+	  Config = {
 
--- CONFIG TẤT CẢ TÍNH NĂNG CAO CẤP
-local Config = {
-    -- 🎯 BANANA HUB FEATURES
-    AutoFarmLevel = false,
-    AutoFarmMastery = false,
-    AutoFarmBone = false,
-    AutoFarmEctoplasm = false,
-    AutoFarmChest = false,
-    AutoFarmPirates = false,
-    
-    -- 👑 MARU HUB FEATURES  
-    AutoAllBosses = false,
-    AutoDoughKing = false,
-    AutoSoulReaper = false,
-    AutoCakePrince = false,
-    AutoDarkbeard = false,
-    AutoRaid = false,
-    AutoFactory = false,
-    
-    -- 🔴 REDZ HUB FEATURES
-    AutoNewWorld = false,
-    AutoThirdSea = false,
-    AutoBartilo = false,
-    AutoEliteHunter = false,
-    AutoTushita = false,
-    AutoYama = false,
-    
-    -- ⚡ COMBAT ENHANCEMENTS
-    AutoClickMelee = false,
-    AutoClickSword = false,
-    AutoClickGun = false,
-    AutoClickFruit = false,
-    AutoSkillsCombo = false,
-    GodMode = false,
-    InfiniteEnergy = false,
-    
-    -- 🚀 MOVEMENT GODLIKE
-    SuperSpeed300 = false,
-    InfiniteJump = false,
-    Fly = false,
-    NoClip = false,
-    WalkOnWater = false,
-    TeleportToPlayer = false,
-    TeleportToIsland = false,
-    
-    -- 🔧 UTILITIES PRO
-    AutoBuyFruits = false,
-    AutoStoreFruits = false,
-    AutoRedeemCodes = false,
-    AutoHaki = false,
-    AutoKen = false,
-    AutoBuso = false,
-    
-    -- 🎮 ESP & VISUALS
-    PlayerESP = false,
-    MobESP = false,
-    BossESP = false,
-    ChestESP = false,
-    FruitESP = false,
-    IslandESP = false,
-    
-    -- 🛡️ SAFETY FEATURES
-    AntiAFK = false,
-    AntiStun = false,
-    AntiGrab = false,
-    SafeTeleport = false,
-    
-    MenuVisible = true
+Team = "Pirates",
+
+Configuration = {
+
+HopWhenIdle = true,
+
+AutoHop = true,
+
+AutoHopDelay = 60 * 60,
+
+FpsBoost = false,
+
+BlackScreen = true
+
+},
+
+Items = {
+
+-- Melees
+
+AutoFullyMelees = true,
+
+-- Swords
+
+Saber = true,
+
+CursedDualKatana = false,
+
+-- Guns
+
+SoulGuitar = false,
+
+-- Upgrades
+
+RaceV2 = true
+
+},
+
+Settings = {
+
+StayInSea2UntilHaveDarkFragments = false
+
 }
 
--- TẠO GUI ULTIMATE GIỐNG BANANA HUB
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "UltimateBananaHub"
-ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
--- 🖼️ LOGO CÁ NHÂN CÓ THỂ ẨN/HIỆN MENU
-local LogoButton = Instance.new("ImageButton")
-LogoButton.Name = "PersonalLogo"
-LogoButton.Size = UDim2.new(0, 70, 0, 70)
-LogoButton.Position = UDim2.new(0, 15, 0, 15)
-LogoButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-LogoButton.BackgroundTransparency = 1
-LogoButton.Image = "rbxassetid://" .. LOGO_ID
-LogoButton.ScaleType = Enum.ScaleType.Crop
-LogoButton.Parent = ScreenGui
-
-local LogoCorner = Instance.new("UICorner")
-LogoCorner.CornerRadius = UDim.new(0.2, 0)
-LogoCorner.Parent = LogoButton
-
-local LogoStroke = Instance.new("UIStroke")
-LogoStroke.Color = Color3.fromRGB(255, 204, 0) -- Màu vàng Banana Hub
-LogoStroke.Thickness = 3
-LogoStroke.Parent = LogoButton
-
--- MAIN CONTAINER ULTIMATE
-local MainContainer = Instance.new("Frame")
-MainContainer.Name = "UltimateContainer"
-MainContainer.Size = UDim2.new(0, 600, 0, 500)
-MainContainer.Position = UDim2.new(0.25, 0, 0.2, 0)
-MainContainer.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
-MainContainer.BorderSizePixel = 0
-MainContainer.Parent = ScreenGui
-MainContainer.Active = true
-MainContainer.Draggable = true
-
-local ContainerCorner = Instance.new("UICorner")
-ContainerCorner.CornerRadius = UDim.new(0.02, 0)
-ContainerCorner.Parent = MainContainer
-
-local ContainerStroke = Instance.new("UIStroke")
-ContainerStroke.Color = Color3.fromRGB(255, 204, 0)
-ContainerStroke.Thickness = 2
-ContainerStroke.Parent = MainContainer
-
--- HEADER BANANA HUB STYLE
-local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1, 0, 0, 50)
-Header.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-Header.BorderSizePixel = 0
-Header.Parent = MainContainer
-
-local HeaderCorner = Instance.new("UICorner")
-HeaderCorner.CornerRadius = UDim.new(0.02, 0)
-HeaderCorner.Parent = Header
-
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(0.6, 0, 1, 0)
-Title.Position = UDim2.new(0.02, 0, 0, 0)
-Title.BackgroundTransparency = 1
-Title.Text = "🍌 ULTIMATE BANANA HUB PRO"
-Title.TextColor3 = Color3.fromRGB(255, 204, 0)
-Title.Font = Enum.Font.GothamBlack
-Title.TextSize = 18
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = Header
-
-local SubTitle = Instance.new("TextLabel")
-SubTitle.Size = UDim2.new(0.35, 0, 1, 0)
-SubTitle.Position = UDim2.new(0.65, 0, 0, 0)
-SubTitle.BackgroundTransparency = 1
-SubTitle.Text = "v5.0 | All Features"
-SubTitle.TextColor3 = Color3.fromRGB(150, 150, 150)
-SubTitle.Font = Enum.Font.Gotham
-SubTitle.TextSize = 12
-SubTitle.TextXAlignment = Enum.TextXAlignment.Right
-SubTitle.Parent = Header
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 25, 0, 25)
-CloseButton.Position = UDim2.new(0.96, 0, 0.12, 0)
-CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextSize = 12
-CloseButton.Parent = Header
-
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
-
--- ULTIMATE TAB SYSTEM
-local Tabs = {
-    "🎯 AUTO FARM",
-    "👑 AUTO BOSS", 
-    "⚡ COMBAT PRO",
-    "🚀 MOVEMENT",
-    "🔧 UTILITIES",
-    "👁️ ESP VISUALS",
-    "🛡️ PROTECTION"
 }
 
-local CurrentTab = "🎯 AUTO FARM"
-
-local TabButtonsFrame = Instance.new("Frame")
-TabButtonsFrame.Size = UDim2.new(1, 0, 0, 40)
-TabButtonsFrame.Position = UDim2.new(0, 0, 0.1, 0)
-TabButtonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-TabButtonsFrame.BorderSizePixel = 0
-TabButtonsFrame.Parent = MainContainer
-
--- CONTENT FRAME VỚI SCROLLING
-local ContentFrame = Instance.new("ScrollingFrame")
-ContentFrame.Size = UDim2.new(1, 0, 0, 410)
-ContentFrame.Position = UDim2.new(0, 0, 0.18, 0)
-ContentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-ContentFrame.BorderSizePixel = 0
-ContentFrame.ScrollBarThickness = 5
-ContentFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 204, 0)
-ContentFrame.CanvasSize = UDim2.new(0, 0, 2, 0) -- Cho phép cuộn nhiều nội dung
-ContentFrame.Parent = MainContainer
-
--- TẠO TAB BUTTONS
-for i, tabName in pairs(Tabs) do
-    local tabButton = Instance.new("TextButton")
-    tabButton.Size = UDim2.new(0.142, 0, 1, 0)
-    tabButton.Position = UDim2.new(0.142 * (i-1), 0, 0, 0)
-    tabButton.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-    tabButton.Text = tabName
-    tabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
-    tabButton.Font = Enum.Font.GothamBold
-    tabButton.TextSize = 10
-    tabButton.Parent = TabButtonsFrame
-    
-    tabButton.MouseButton1Click:Connect(function()
-        CurrentTab = tabName
-        UpdateUltimateTabs()
-    end)
-end
-
--- HÀM TẠO TOGGLE CAO CẤP
-function CreateUltimateToggle(text, configKey, tooltip)
-    local toggleFrame = Instance.new("Frame")
-    toggleFrame.Size = UDim2.new(0.95, 0, 0, 35)
-    toggleFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-    toggleFrame.BorderSizePixel = 0
-    toggleFrame.Parent = ContentFrame
-    
-    local toggleCorner = Instance.new("UICorner")
-    toggleCorner.CornerRadius = UDim.new(0, 6)
-    toggleCorner.Parent = toggleFrame
-    
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0.7, 0, 1, 0)
-    label.Position = UDim2.new(0.05, 0, 0, 0)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    label.Font = Enum.Font.Gotham
-    label.TextSize = 12
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.Parent = toggleFrame
-    
-    local toggleBtn = Instance.new("TextButton")
-    toggleBtn.Size = UDim2.new(0.2, 0, 0.6, 0)
-    toggleBtn.Position = UDim2.new(0.75, 0, 0.2, 0)
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
-    toggleBtn.Text = "OFF"
-    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    toggleBtn.Font = Enum.Font.GothamBold
-    toggleBtn.TextSize = 10
-    toggleBtn.Parent = toggleFrame
-    
-    local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 4)
-    btnCorner.Parent = toggleBtn
-    
-    toggleBtn.MouseButton1Click:Connect(function()
-        Config[configKey] = not Config[configKey]
-        if Config[configKey] then
-            toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-            toggleBtn.Text = "ON"
-            print("🎯 ULTIMATE HUB: BẬT " .. text)
-        else
-            toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
-            toggleBtn.Text = "OFF"
-            print("🛑 ULTIMATE HUB: TẮT " .. text)
-        end
-    end)
-    
-    return toggleFrame
-end
-
--- THÊM TẤT CẢ TÍNH NĂNG CAO CẤP
-
--- 🎯 AUTO FARM TAB
-CreateUltimateToggle("Auto Farm Level", "AutoFarmLevel", "Farm level cực nhanh")
-CreateUltimateToggle("Auto Farm Mastery", "AutoFarmMastery", "Farm mastery mọi loại")
-CreateUltimateToggle("Auto Farm Bone", "AutoFarmBone", "Farm xương tự động")
-CreateUltimateToggle("Auto Farm Ectoplasm", "AutoFarmEctoplasm", "Farm ectoplasm")
-CreateUltimateToggle("Auto Farm Chest", "AutoFarmChest", "Tự động mở rương")
-CreateUltimateToggle("Auto Farm Pirates", "AutoFarmPirates", "Farm hải tặc")
-
--- 👑 AUTO BOSS TAB
-CreateUltimateToggle("Auto All Bosses", "AutoAllBosses", "Farm tất cả boss")
-CreateUltimateToggle("Auto Dough King", "AutoDoughKing", "Farm Dough King")
-CreateUltimateToggle("Auto Soul Reaper", "AutoSoulReaper", "Farm Soul Reaper")
-CreateUltimateToggle("Auto Cake Prince", "AutoCakePrince", "Farm Cake Prince")
-CreateUltimateToggle("Auto Darkbeard", "AutoDarkbeard", "Farm Darkbeard")
-CreateUltimateToggle("Auto Raid", "AutoRaid", "Tự động raid")
-CreateUltimateToggle("Auto Factory", "AutoFactory", "Tự động factory")
-
--- ⚡ COMBAT PRO TAB
-CreateUltimateToggle("Auto Click Melee", "AutoClickMelee", "Auto click võ siêu tốc")
-CreateUltimateToggle("Auto Click Sword", "AutoClickSword", "Auto click kiếm")
-CreateUltimateToggle("Auto Click Gun", "AutoClickGun", "Auto click súng")
-CreateUltimateToggle("Auto Click Fruit", "AutoClickFruit", "Auto click trái ác quỷ")
-CreateUltimateToggle("Auto Skills Combo", "AutoSkillsCombo", "Combo skill tự động")
-CreateUltimateToggle("God Mode", "GodMode", "Chế độ bất tử")
-CreateUltimateToggle("Infinite Energy", "InfiniteEnergy", "Năng lượng vô hạn")
-
--- 🚀 MOVEMENT TAB
-CreateUltimateToggle("Super Speed 300%", "SuperSpeed300", "Chạy siêu tốc 300%")
-CreateUltimateToggle("Infinite Jump", "InfiniteJump", "Nhảy vô hạn")
-CreateUltimateToggle("Fly", "Fly", "Bay tự do")
-CreateUltimateToggle("No Clip", "NoClip", "Xuyên tường")
-CreateUltimateToggle("Walk On Water", "WalkOnWater", "Đi trên nước")
-CreateUltimateToggle("Teleport To Player", "TeleportToPlayer", "Dịch đến người chơi")
-CreateUltimateToggle("Teleport To Island", "TeleportToIsland", "Dịch đến đảo")
-
--- 🔧 UTILITIES TAB
-CreateUltimateToggle("Auto Buy Fruits", "AutoBuyFruits", "Tự động mua trái")
-CreateUltimateToggle("Auto Store Fruits", "AutoStoreFruits", "Tự động cất trái")
-CreateUltimateToggle("Auto Redeem Codes", "AutoRedeemCodes", "Tự động nhập code")
-CreateUltimateToggle("Auto Haki", "AutoHaki", "Tự động bật Haki")
-CreateUltimateToggle("Auto Ken", "AutoKen", "Tự động bật Ken")
-CreateUltimateToggle("Auto Buso", "AutoBuso", "Tự động bật Buso")
-
--- 👁️ ESP VISUALS TAB
-CreateUltimateToggle("Player ESP", "PlayerESP", "Hiện vị trí người chơi")
-CreateUltimateToggle("Mob ESP", "MobESP", "Hiện vị trí quái")
-CreateUltimateToggle("Boss ESP", "BossESP", "Hiện vị trí boss")
-CreateUltimateToggle("Chest ESP", "ChestESP", "Hiện vị trí rương")
-CreateUltimateToggle("Fruit ESP", "FruitESP", "Hiện vị trí trái ác quỷ")
-CreateUltimateToggle("Island ESP", "IslandESP", "Hiện vị trí đảo")
-
--- 🛡️ PROTECTION TAB
-CreateUltimateToggle("Anti AFK", "AntiAFK", "Chống AFK")
-CreateUltimateToggle("Anti Stun", "AntiStun", "Chống choáng")
-CreateUltimateToggle("Anti Grab", "AntiGrab", "Chống grab")
-CreateUltimateToggle("Safe Teleport", "SafeTeleport", "Teleport an toàn")
-
--- 🖱️ CHỨC NĂNG ẨN/HIỆN MENU BẰNG LOGO
-LogoButton.MouseButton1Click:Connect(function()
-    Config.MenuVisible = not Config.MenuVisible
-    MainContainer.Visible = Config.MenuVisible
-    
-    if Config.MenuVisible then
-        LogoButton.ImageColor3 = Color3.fromRGB(255, 255, 255)
-    else
-        LogoButton.ImageColor3 = Color3.fromRGB(100, 100, 100)
-    end
-end)
-
--- HÀM CẬP NHẬT TAB
-function UpdateUltimateTabs()
-    -- Ở đây sẽ cập nhật hiển thị nội dung cho từng tab
-    -- (Code này cần được triển khai để ẩn/hiện nội dung tab phù hợp)
-end
-
--- 🚀 CÁC HÀM CHỨC NĂNG THỰC TẾ (CẦN ĐƯỢC TRIỂN KHAI)
-
-function UltimateAutoFarm()
-    spawn(function()
-        while task.wait(0.3) do
-            if not Config.AutoFarmLevel then break end
-            
-            local target = FindNearestEnemy()
-            if target then
-                -- Teleport và tấn công với tốc độ cao
-                localPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
-                
-                -- Auto click cực nhanh
-                if Config.AutoClickMelee then
-                    for i = 1, 5 do
-                        VirtualInput:SendKeyEvent(true, "X", false, game)
-                        task.wait(0.05)
-                        VirtualInput:SendKeyEvent(false, "X", false, game)
-                    end
-                end
-            end
-        end
-    end)
-end
-
-function ApplyGodMode()
-    if Config.GodMode then
-        localPlayer.Character.Humanoid.Health = math.huge
-    end
-end
-
-function ApplySuperSpeed()
-    if Config.SuperSpeed300 then
-        localPlayer.Character.Humanoid.WalkSpeed = 120
-    else
-        localPlayer.Character.Humanoid.WalkSpeed = 16
-    end
-end
-
-function FindNearestEnemy()
-    local nearest = nil
-    local shortestDistance = math.huge
-    
-    if Workspace:FindFirstChild("Enemies") then
-        for _, enemy in pairs(Workspace.Enemies:GetChildren()) do
-            if enemy:FindFirstChild("HumanoidRootPart") and enemy:FindFirstChild("Humanoid") then
-                if enemy.Humanoid.Health > 0 then
-                    local dist = (localPlayer.Character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
-                    if dist < shortestDistance then
-                        shortestDistance = dist
-                        nearest = enemy
-                    end
-                end
-            end
-        end
-    end
-    
-    return nearest
-end
-
--- 🔄 CHẠY TẤT CẢ TÍNH NĂNG
-spawn(function()
-    while task.wait(1) do
-        if Config.AutoFarmLevel then UltimateAutoFarm() end
-        ApplyGodMode()
-        ApplySuperSpeed()
-        
-        -- Anti AFK
-        if Config.AntiAFK then
-            local VirtualUser = game:GetService("VirtualUser")
-            game:GetService("Players").LocalPlayer.Idled:Connect(function()
-                VirtualUser:CaptureController()
-                VirtualUser:ClickButton2(Vector2.new())
-            end)
-        end
-    end
-end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hhl29042008-ops/script/refs/heads/main/cac"))()
+  end
+  })
+  
+  AddButton(Tab3o, {
+     Name = "Tổng Hợp By TBoy Roblox",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/TBoyRoblox727/TBoyRobloxYTB/refs/heads/main/AllScriptBF.txt"))()
+  end
+  }}
+  
+  AddButton(Tab1o, {
+     Name = "God Hub",
+    Callback = function()
+	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer loadstring(game:HttpGet("https://raw.githubusercontent.com/shinichi-dz/phucshinsayhi/refs/heads/main/Loader.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Andepzai Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/trongdeptraihucscript/Adz-Hub/refs/heads/main/Adz-Hub.lua"))()
+  end
+  })
+  
+  AddButton(Tab4o, {
+     Name = "x10",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/hnc-roblox/HNC_Hub/refs/heads/main/x10Luck.lua"))()
+  end
+  })
+  
+  AddButton(Tab4o, {
+     Name = "x5",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/qbaoscript/Luckyx5premium/refs/heads/main/RandomFruit.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "MaruHub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/hnc-roblox/Free/refs/heads/main/MaruHubPremiumFake.HNC%20Roblox.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "MaruHub free",
+    Callback = function()
+	  getgenv().Team = "Marines"loadstring(game:HttpGet("https://raw.githubusercontent.com/natoppo044/GGEZ/refs/heads/main/MaruHub.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "MaruHub Nguyên tí",
+    Callback = function()
+	  getgenv().Team = "Marines"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/MaruHub"))()
+  end
+  })
