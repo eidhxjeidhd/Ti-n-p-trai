@@ -1,16 +1,18 @@
+local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletgojo/Tubo-lite/refs/heads/main/Haidepzai"))()
+local SaveManager = 
 loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
 
        local Window = MakeWindow({
          Hub = {
-         Title = "Tiến Roblox",
-         Animation = "Youtube: gà gaming"
+         Title = "gà gaming",
+         Animation = "Script tổng hợp"
          },
         Key = {
         KeySystem = false,
         Title = "Key System",
         Description = "",
         KeyLink = "",
-        Keys = {"1234"},
+        Keys = {"Skibidi"},
         Notifi = {
         Notifications = true,
         CorrectKey = "Running the Script...",
@@ -21,8 +23,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
   })
 
        MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=83190276951914",
-       Size = {60, 60},
+       Image = "http://www.roblox.com/asset/?id=84957548476668",
+       Size = {40, 40},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
        Stroke = false,
@@ -31,119 +33,13 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
       
 ------ Tab
      local Tab1o = MakeTab({Name = "Script Farm"})
-     local Tab2o = MakeTab({Name = "Script Kaitun"})
-     local Tab3o = MakeTab({Name = "Script tổng hợp khác"})
-     local Tab4o = MakeTab({Name = "Script random"})
+     
+    
 ------- BUTTON
     
-    AddButton(Tab2o, {
-     Name = "ARYA Hub",
+    AddButton(Tab1o, {
+     Name = "Rubu Hub",
     Callback = function()
-	  Config = {
-
-Team = "Pirates",
-
-Configuration = {
-
-HopWhenIdle = true,
-
-AutoHop = true,
-
-AutoHopDelay = 60 * 60,
-
-FpsBoost = false,
-
-BlackScreen = true
-
-},
-
-Items = {
-
--- Melees
-
-AutoFullyMelees = true,
-
--- Swords
-
-Saber = true,
-
-CursedDualKatana = false,
-
--- Guns
-
-SoulGuitar = false,
-
--- Upgrades
-
-RaceV2 = true
-
-},
-
-Settings = {
-
-StayInSea2UntilHaveDarkFragments = false
-
-}
-
-}
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/hhl29042008-ops/script/refs/heads/main/cac"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua"))()
   end
-  })
-  
-  AddButton(Tab3o, {
-     Name = "Tổng Hợp By TBoy Roblox",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/TBoyRoblox727/TBoyRobloxYTB/refs/heads/main/AllScriptBF.txt"))()
-  end
-  }}
-  
-  AddButton(Tab1o, {
-     Name = "God Hub",
-    Callback = function()
-	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer loadstring(game:HttpGet("https://raw.githubusercontent.com/shinichi-dz/phucshinsayhi/refs/heads/main/Loader.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Andepzai Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/trongdeptraihucscript/Adz-Hub/refs/heads/main/Adz-Hub.lua"))()
-  end
-  })
-  
-  AddButton(Tab4o, {
-     Name = "x10",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/hnc-roblox/HNC_Hub/refs/heads/main/x10Luck.lua"))()
-  end
-  })
-  
-  AddButton(Tab4o, {
-     Name = "x5",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/qbaoscript/Luckyx5premium/refs/heads/main/RandomFruit.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "MaruHub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/hnc-roblox/Free/refs/heads/main/MaruHubPremiumFake.HNC%20Roblox.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "MaruHub free",
-    Callback = function()
-	  getgenv().Team = "Marines"loadstring(game:HttpGet("https://raw.githubusercontent.com/natoppo044/GGEZ/refs/heads/main/MaruHub.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "MaruHub Nguyên tí",
-    Callback = function()
-	  getgenv().Team = "Marines"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/MaruHub"))()
-  end
-  })
+     })
