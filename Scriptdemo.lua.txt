@@ -1,20 +1,18 @@
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletgojo/Tubo-lite/refs/heads/main/Haidepzai"))()
-local SaveManager = 
 loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
 
        local Window = MakeWindow({
          Hub = {
-         Title = "Skibidi",
-         Animation = "Script tổng hợp"
+         Title = "gà gaming",
+         Animation = "tổng hợp gà gaming"
          },
         Key = {
-        KeySystem = true,
+        KeySystem = false,
         Title = "Key System",
         Description = "",
         KeyLink = "",
-        Keys = {"gà gaming"},
+        Keys = {"1234"},
         Notifi = {
-        Notifications = false,
+        Notifications = true,
         CorrectKey = "Running the Script...",
        Incorrectkey = "The key is incorrect",
        CopyKeyLink = "Copied to Clipboard"
@@ -23,8 +21,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
   })
 
        MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=132088983898580",
-       Size = {40, 40},
+       Image = "http://www.roblox.com/asset/?id=83190276951914",
+       Size = {60, 60},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
        Stroke = false,
@@ -33,17 +31,32 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
       
 ------ Tab
      local Tab1o = MakeTab({Name = "Script Farm"})
-     local Tab2o = MakeTab({Name = "Script Farm người chơi"})
-    
+     local Tab2o = MakeTab({Name = "Script hồi trưa pvp"})
 ------- BUTTON
     
-    AddButton(Tab1o, {
-     Name = "TDT",
+    AddButton(Tab2o, {
+     Name = "trẩu roblox",
     Callback = function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/ThinhNek343/tdthub/refs/heads/main/maintdt.lua"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/TrauRobloxRedZV2.lua"))()
   end
-     })   AddButton(Tab2o, {
-     Name = "Bounty",
+  })
+  
+  AddButton(Tab1o, {
+     Name = "trẩu roblox",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/traurobloxv3.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Rubu Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "Hiru Auto Bounty"",
     Callback = function()
 	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 getgenv().Setting = {
@@ -100,11 +113,39 @@ getgenv().Setting = {
 }
 loadstring(game:HttpGet("https://raw.githubusercontent.com/KiddoHiru/BloxFruits/main/AutoBounty.lua"))()
   end
-  }}
+  })
   
   AddButton(Tab1o, {
-     Name = "Zyn Hub",
+     Name = "traurobloxv3",
     Callback = function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/GoblinKun009/Script/refs/heads/main/ZynHub", true))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/traurobloxv3.lua"))()
   end
-     }) 
+  })
+  
+  AddButton(Tab1o, {
+     Name = "TDT hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/ThinhNek343/tdthub/refs/heads/main/maintdt.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Min Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/Min/refs/heads/main/MinXt2Eng"))()
+  end
+  })
+ 
+ AddButton(Tab1o, {
+     Name = "Quantum Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "GravityHub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()
+  end
+  })
