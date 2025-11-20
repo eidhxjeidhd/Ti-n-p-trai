@@ -53,67 +53,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
     Callback = function()
 	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua"))()
   end
-  })
-  
-  AddButton(Tab2o, {
-     Name = "Hiru Auto Bounty"",
-    Callback = function()
-	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-getgenv().Setting = {
-    ["Team"] = "Pirates",
-    ["Skip Race V4"] = true,
-    ["Melee"] = {
-        ["Enable"] = true,
-        ["Z"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["X"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["C"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["Delay"] = 1
-    },
-    ["Sword"] = {
-        ["Enable"] = true,
-        ["Z"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["X"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["Delay"] = 1
-    },
-    ["Gun"] = {
-        ["Enable"] = true,
-        ["Z"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["X"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["Delay"] = 1,
-        ["GunMode"] = false
-    },
-    ["Fruit"] = {
-        ["Enable"] = true,
-        ["Z"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["X"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["C"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["V"] = { ["Enable"] = false, ["HoldTime"] = 0.1 },
-        ["F"] = { ["Enable"] = true, ["HoldTime"] = 0.1 },
-        ["Delay"] = 1
-    },
-    ["Hunt"] = {
-        ["Min"] = 0,
-        ["Max"] = 30000000
-    },
-    ["Skip"] = {
-        ["Fruit"] = false,
-        ["FruitList"] = { "Buddha", "Tiger", "T-Rex" },
-        ["SafeZone"] = true
-    },
-    ["SafeHealth"] = {
-        ["Health"] = 4500
-    },
-    ["Another"] = {
-        ["V3"] = true,
-        ["V4"] = true,
-        ["CustomHealth"] = true,
-        ["Health"] = 4500,
-        ["FPSBoots"] = false
-    }
-}
-loadstring(game:HttpGet("https://raw.githubusercontent.com/KiddoHiru/BloxFruits/main/AutoBounty.lua"))()
-  end
-  })
+  }
   
   AddButton(Tab1o, {
      Name = "traurobloxv3",
