@@ -3,7 +3,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
        local Window = MakeWindow({
          Hub = {
          Title = "gà gaming",
-         Animation = "Youtube: Tiến Roblox"
+         Animation = "tổng hợp: gà Roblox"
          },
         Key = {
         KeySystem = false,
@@ -21,7 +21,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
   })
 
        MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=84957548476668",
+       Image = "http://www.roblox.com/asset/?id=83190276951914",
        Size = {60, 60},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
@@ -31,41 +31,19 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
       
 ------ Tab
      local Tab1o = MakeTab({Name = "Script Farm"})
-     
+     local Tab2o = MakeTab({Name = "Script game khác"})
 ------- BUTTON
     
-    AddButton(Tab1o, {
-     Name = "Rubu Hub",
+    AddButton(Tab2o, {
+     Name = "tăng head box",
     Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/TrauHub/refs/heads/main/TrauXt"))()
   end
   })
   
-  AddButton(Tab1o, {
-     Name = "TDT Hub",
+  AddButton(Tab2o, {
+     Name = "bay",
     Callback = function()
-	  loadstring
-(game:HttpGet("https://raw.githubusercontent.com/ThinhNek343/tdthub/refs/heads/main/maintdt.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Quantum Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Min Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/Min/refs/heads/main/MinXt2Eng"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "traurobloxv3",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/traurobloxv3.lua"))()
+	  loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-gui-v3-30439"))()
   end
   })
