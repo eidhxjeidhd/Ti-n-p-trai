@@ -2,8 +2,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 
        local Window = MakeWindow({
          Hub = {
-         Title = "gà gaming",
-         Animation = "Youtube: gà gaming"
+         Title = "Gà gaming",
+         Animation = "Youtube: Gà gaming"
          },
         Key = {
         KeySystem = false,
@@ -21,8 +21,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
   })
 
        MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=96263683134910",
-       Size = {30, 30},
+       Image = "http://www.roblox.com/asset/?id=83190276951914",
+       Size = {60, 60},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
        Stroke = false,
@@ -35,54 +35,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 ------- BUTTON
     
     AddButton(Tab1o, {
-     Name = "Xeter Hub",
+     Name = "Redz Hub",
     Callback = function()
-	  getgenv().Version = "V4"
-getgenv().Team = "Marines"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Gravity Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Rubu Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Trẩu Roblox",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/TrauRobloxRedZV2.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "redz hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/luraobermeyer-jpg/redzhub/refs/heads/main/redzhub.lua.txt"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Đạt THG",
-    Callback = function()
-	  getgenv().Team = "Marines"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/DatThg/refs/heads/main/DatThgV2Vn"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "TeddyHub",
-    Callback = function()
-	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TeddyHub.lua"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/huy384/redzHub/refs/heads/main/redzHub.lua"))()
   end
   })
