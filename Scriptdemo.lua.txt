@@ -98,7 +98,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepza
   end
   })
   
-  AddButton(Tab1o, {
+  AddButton(Tab2o, {
      Name = "kkkk Hub",
     Callback = function()
 	  loadstring(game:HttpGet("https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"))()
