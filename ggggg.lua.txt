@@ -32,6 +32,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 ------ Tab
      local Tab1o = MakeTab({Name = "Script Farm"})
      local Tab2o = MakeTab({Name = "Script 99 đêm"})
+     local Tab3o = MakeTab({Name = "Script tất cả game"})
 ------- BUTTON
     
     AddButton(Tab1o, {
@@ -123,5 +124,12 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepza
      Name = "TBT",
     Callback = function()
 	  loadstring(game:HttpGet("https://raw.githubusercontent.com/DuyThinhNek12/Script/refs/heads/main/TDT99Night.lua.txt"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "bay",
+    Callback = function()
+	  loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-gui-v3-30439"))()
   end
   })
