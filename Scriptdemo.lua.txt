@@ -118,3 +118,10 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepza
 	  loadstring(game:HttpGet("https://raw.githubusercontent.com/GEC0/gec/refs/heads/main/Gec.Loader", true))()
   end
   })
+  
+  AddButton(Tab2o, {
+     Name = "TBT",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/DuyThinhNek12/Script/refs/heads/main/TDT99Night.lua.txt"))()
+  end
+  })
