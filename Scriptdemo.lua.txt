@@ -133,3 +133,17 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepza
 	  loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-gui-v3-30439"))()
   end
   })
+  
+  AddButton(Tab1o, {
+     Name = "Night Mystic Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://pandadevelopment.net/virtual/file/7f70d7a276ed4156"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Hiru Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/HiruKiddo/Source/main/HiruHubFree.lua"))()
+  end
+  })
