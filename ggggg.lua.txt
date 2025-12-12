@@ -6,7 +6,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
          Animation = "Youtube: Gà gaming"
          },
         Key = {
-        KeySystem = false,
+        KeySystem = true,
         Title = "Key System",
         Description = "",
         KeyLink = "",
@@ -33,6 +33,9 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
      local Tab1o = MakeTab({Name = "Script Farm"})
      local Tab2o = MakeTab({Name = "Script 99 đêm"})
      local Tab3o = MakeTab({Name = "Script tất cả game"})
+     local Tab4o = MakeTab({Name = "Script tất cả game"})
+     local Tab5o = MakeTab({Name = "Script tất cả game"})
+     local Tab6o = MakeTab({Name = "Script tất cả game"})
 ------- BUTTON
     
     AddButton(Tab1o, {
@@ -127,7 +130,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepza
   end
   })
   
-  AddButton(Tab2o, {
+  AddButton(Tab3o, {
      Name = "bay",
     Callback = function()
 	  loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-gui-v3-30439"))()
