@@ -2,8 +2,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 
        local Window = MakeWindow({
          Hub = {
-         Title = "TBoy Roblox",
-         Animation = "Youtube: TBoy Roblox"
+         Title = "Gà gaming",
+         Animation = "Youtube: Gà gaming"
          },
         Key = {
         KeySystem = false,
@@ -21,7 +21,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
   })
 
        MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=83190276951914",
+       Image = "http://www.roblox.com/asset/?id=84957548476668",
        Size = {60, 60},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
@@ -31,17 +31,62 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
       
 ------ Tab
      local Tab1o = MakeTab({Name = "Script Farm"})
-     
+     local Tab2o = MakeTab({Name = "Script Farm"})
+     local Tab3o = MakeTab({Name = "Script tất cả game"})
 ------- BUTTON
     
     AddButton(Tab1o, {
      Name = "Redz Hub",
     Callback = function()
-	  local Settings = {
-  JoinTeam = "Pirates"; -- Pirates/Marines
-  Translator = true; -- true/false
-}
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/realredz/BloxFruits/refs/heads/main/Source.lua"))(Settings)
+	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/20f318386e3fbf069ee3fa797cfc9f34.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Gravity Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "rubu Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "FoxnameHub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "TBT",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/DuyThinhNek12/Script/refs/heads/main/TDT99Night.lua.txt"))()
+  end
+  })
+  
+  AddButton(Tab3o, {
+     Name = "bay",
+    Callback = function()
+	  loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-gui-v3-30439"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Hiru Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/HiruKiddo/Source/main/HiruHubFree.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "MinVnV5",
+    Callback = function()
+	  loadstring(game:HttpGet("https://github.com/LuaCrack/Min/raw/refs/heads/main/MinVnV5"))()
   end
   })
