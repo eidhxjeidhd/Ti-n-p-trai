@@ -22,7 +22,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 
        MinimizeButton({
        Image = "http://www.roblox.com/asset/?id=84957548476668",
-       Size = {60, 60},
+       Size = {30, 30},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
        Stroke = false,
@@ -33,6 +33,10 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
      local Tab1o = MakeTab({Name = "Script Farm"})
      local Tab2o = MakeTab({Name = "Script Farm"})
      local Tab3o = MakeTab({Name = "Script tất cả game"})
+     local Tab4o = MakeTab({Name = "Script tất cả game"})
+     local Tab5o = MakeTab({Name = "Script tất cả game"})
+     local Tab6o = MakeTab({Name = "Script tất cả game"})
+     local Tab7o = MakeTab({Name = "Script tất cả game"})
 ------- BUTTON
     
     AddButton(Tab1o, {
