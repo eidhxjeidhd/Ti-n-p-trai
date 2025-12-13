@@ -22,7 +22,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 
        MinimizeButton({
        Image = "http://www.roblox.com/asset/?id=84957548476668",
-       Size = {40, 40},
+       Size = {60, 60},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
        Stroke = false,
@@ -33,20 +33,13 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
      local Tab1o = MakeTab({Name = "Script Farm"})
      local Tab2o = MakeTab({Name = "Script 99 đêm"})
      local Tab3o = MakeTab({Name = "Script tất cả game"})
+     local Tab4o = MakeTab({Name = "Script chuyển sever Boss})
 ------- BUTTON
     
     AddButton(Tab1o, {
-     Name = "Redz Hub 100%",
+     Name = "Redz Hub",
     Callback = function()
 	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/20f318386e3fbf069ee3fa797cfc9f34.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "TeddyHub",
-    Callback = function()
-	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TeddyHub.lua"))()
   end
   })
   
@@ -64,66 +57,24 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepza
   end
   })
   
-  AddButton(Tab1o, {
-     Name = "Falo Tiếng Việt",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/trungdao2k4/buffalo/refs/heads/main/buffalomain.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "OMG",
-    Callback = function()
-	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/20f318386e3fbf069ee3fa797cfc9f34.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Azure Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/85e904ae1ff30824c1aa007fc7324f8f.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Master Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/obfmoonsec/Masterhub/refs/heads/main/obf"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "NazuX Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenAnhKhoaX/Anhkhoa2279/refs/heads/main/BloxFruits.lua"))()
-  end
-  })
-  
   AddButton(Tab2o, {
-     Name = "kkkk Hub",
+     Name = "FoxnameHub",
     Callback = function()
 	  loadstring(game:HttpGet("https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"))()
   end
   })
   
   AddButton(Tab1o, {
-     Name = "redz Hub",
+     Name = "Hiru Hub",
     Callback = function()
-	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/20f318386e3fbf069ee3fa797cfc9f34.lua"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/HiruKiddo/Source/main/HiruHubFree.lua"))()
   end
   })
   
-  AddButton(Tab2o, {
-     Name = "...",
+  AddButton(Tab1o, {
+     Name = "MinVnV5",
     Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/GEC0/gec/refs/heads/main/Gec.Loader", true))()
-  end
-  })
-  
-  AddButton(Tab2o, {
-     Name = "TBT",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/DuyThinhNek12/Script/refs/heads/main/TDT99Night.lua.txt"))()
+	  loadstring(game:HttpGet("https://github.com/LuaCrack/Min/raw/refs/heads/main/MinVnV5"))()
   end
   })
   
@@ -134,16 +85,17 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepza
   end
   })
   
-  AddButton(Tab1o, {
-     Name = "Night Mystic Hub",
+  AddButton(Tab2o, {
+     Name = "TBT",
     Callback = function()
-	  loadstring(game:HttpGet("https://pandadevelopment.net/virtual/file/7f70d7a276ed4156"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/DuyThinhNek12/Script/refs/heads/main/TDT99Night.lua.txt"))()
   end
   })
   
-  AddButton(Tab1o, {
-     Name = "Hiru Hub",
+  AddButton(Tab4o, {
+     Name = "Teddy Hub",
     Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/HiruKiddo/Source/main/HiruHubFree.lua"))()
+	  repeat task.wait() until game:IsLoaded() and game:GetService("Players") and game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TEDDYHUB-FREEMIUM"))()
   end
   })
