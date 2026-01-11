@@ -1,119 +1,246 @@
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+-- ============================================
+-- GÀ GAMING MENU - CONCEPT DEMO
+-- (For Educational Purposes Only)
+-- ============================================
 
-       local Window = MakeWindow({
-         Hub = {
-         Title = "Gà gaming",
-         Animation = "Youtube:Gà gaming"
-         },
-        Key = {
-        KeySystem = false,
-        Title = "Key System",
-        Description = "",
-        KeyLink = "",
-        Keys = {"1234"},
-        Notifi = {
-        Notifications = true,
-        CorrectKey = "Running the Script...",
-       Incorrectkey = "The key is incorrect",
-       CopyKeyLink = "Copied to Clipboard"
-      }
-    }
-  })
+local GàGamingMenu = {
+    Name = "Gà Gaming Premium",
+    Version = "v2.5.1",
+    Author = "Gà Team",
+    Active = false
+}
 
-       MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=84957548476668",
-       Size = {30, 30},
-       Color = Color3.fromRGB(10, 10, 10),
-       Corner = true,
-       Stroke = false,
-       StrokeColor = Color3.fromRGB(255, 0, 0)
-      })
-      
------- Tab
-     local Tab1o = MakeTab({Name = "Script Farm"})
-     
-------- BUTTON
+-- GUI Framework Concept
+local MenuGUI = {
+    MainWindow = nil,
+    Tabs = {},
+    Buttons = {}
+}
+
+-- Features List
+local Features = {
+    AutoFarm = {
+        Level = {
+            Enabled = false,
+            Range = 500,
+            TargetNPC = "",
+            Priority = "Nearest"
+        },
+        Mastery = {
+            Enabled = false,
+            Weapon = "Melee",
+            Style = "Normal",
+            TargetLevel = 600
+        },
+        Boss = {
+            Enabled = false,
+            BossName = "",
+            AutoClaimReward = true,
+            AvoidPlayers = true
+        },
+        Bone = {
+            Enabled = false,
+            FarmType = "Random",
+            UseSkills = true
+        }
+    },
     
-    AddButton(Tab1o, {
-     Name = "Redz Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/20f318386e3fbf069ee3fa797cfc9f34.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Gravity",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Xero",
-    Callback = function()
-	  getgenv().Team = "Marines"
-getgenv().Hide_Menu = false
-getgenv().Auto_Execute = false
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Xero2409/XeroHub/refs/heads/main/main.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Ganteng",
-    Callback = function()
-	  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/a5c3af437cd698d64379cf75cacb9281.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Astral",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Overgustx2/Main/refs/heads/main/BloxFruits_25.html"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Thunderz",
-    Callback = function()
-	  _G.Webhook = ""
-_G.MetodeTeleport = "Tween" --"Tween" or "Instant"
-loadstring(game:HttpGet(('https://raw.githubusercontent.com/ThundarZ/Welcome/refs/heads/main/Main/BloxFruit/FindFruit.lua')))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "ANDEPZAI",
-    Callback = function()
-	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AnDepZaiHub/AnDepZaiHubBeta/refs/heads/main/AnDepZaiHubNewUpdated.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Quantum",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/FlazhGG/QTONYX/refs/heads/main/NextGeneration.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Bacon Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/vinh129150/hack/refs/heads/main/Bloxfruits.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Teddy Hub",
-    Callback = function()
-	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TeddyHub.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Ok Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/fakekuri/Okhubhere/refs/heads/main/MainBloxFruit.lua"))()
-  end
-  })
+    Teleport = {
+        Shop = {
+            Enabled = false,
+            ShopType = "Sword",
+            QuickBuy = true
+        },
+        Dungeon = {
+            Enabled = false,
+            AutoStart = true,
+            Difficulty = "Hard"
+        },
+        Island = {
+            Enabled = false,
+            SelectedIsland = ""
+        }
+    },
+    
+    Fruit = {
+        Finder = {
+            Enabled = false,
+            ESP = true,
+            ShowDistance = true,
+            HighlightColor = Color3.fromRGB(255, 0, 0)
+        },
+        Store = {
+            Enabled = false,
+            AutoStore = true,
+            KeepRareFruits = true,
+            MinValue = 1000000
+        },
+        MirageEvent = {
+            Enabled = false,
+            AutoTP = true,
+            AutoFarm = true
+        },
+        SeaEvent = {
+            Enabled = false,
+            AutoJoin = true,
+            AutoComplete = true
+        }
+    },
+    
+    Combat = {
+        Aimbot = {
+            Enabled = false,
+            Smoothness = 0.5,
+            FOV = 100,
+            TargetPart = "Head",
+            VisibleCheck = true
+        },
+        SkillAim = {
+            Enabled = false,
+            Prediction = true,
+            LeadTarget = true,
+            MagicOnly = false
+        },
+        FastAttack = {
+            Enabled = false,
+            AttackSpeed = 0.1,
+            NoCooldown = false,
+            AutoClick = true
+        }
+    },
+    
+    Utility = {
+        AutoDodge = {
+            Enabled = false,
+            ReactionTime = 0.2
+        },
+        NoClip = {
+            Enabled = false,
+            Speed = 50
+        },
+        InfiniteEnergy = {
+            Enabled = false
+        }
+    }
+}
+
+-- Function Prototypes
+local function createGUI()
+    print("[Gà Gaming] Initializing GUI...")
+    -- GUI creation logic would go here
+end
+
+local function toggleFeature(featureName, category)
+    local feature = Features
+    for _, cat in ipairs(category) do
+        feature = feature[cat]
+    end
+    
+    feature.Enabled = not feature.Enabled
+    print(string.format("[%s] %s: %s", 
+        table.concat(category, "."), 
+        featureName, 
+        feature.Enabled and "ENABLED" or "DISABLED"
+    ))
+    
+    if feature.Enabled then
+        startFeature(featureName, category)
+    else
+        stopFeature(featureName, category)
+    end
+end
+
+local function startFeature(name, category)
+    -- Feature activation logic
+    print(string.format("Starting %s...", name))
+    
+    if name == "AutoFarm Level" then
+        -- Auto farm logic
+        coroutine.wrap(function()
+            while Features.AutoFarm.Level.Enabled do
+                -- Find nearest NPC
+                -- Attack NPC
+                -- Collect drops
+                wait(1)
+            end
+        end)()
+        
+    elseif name == "Aimbot" then
+        -- Aimbot logic
+        print("Aimbot activated - Locking targets...")
+    end
+end
+
+local function stopFeature(name, category)
+    -- Feature deactivation logic
+    print(string.format("Stopping %s...", name))
+end
+
+-- ESP System Concept
+local ESPLibrary = {
+    Objects = {},
+    Boxes = {},
+    Tracers = {},
+    
+    CreateESP = function(object, color, name)
+        -- Create ESP visuals
+        print(string.format("ESP Created for: %s", name or object.Name))
+    end,
+    
+    UpdateESP = function()
+        -- Update ESP positions
+    end
+}
+
+-- Teleport System
+local TeleportService = {
+    Locations = {
+        ["Sword Dealer"] = Vector3.new(100, 50, 200),
+        ["Blacksmith"] = Vector3.new(150, 50, 250),
+        ["Dungeon Entrance"] = Vector3.new(300, 100, 400),
+        ["Second Sea"] = Vector3.new(5000, 500, 5000),
+        ["Third Sea"] = Vector3.new(10000, 1000, 10000)
+    },
+    
+    TeleportTo = function(locationName)
+        local location = TeleportService.Locations[locationName]
+        if location then
+            print(string.format("Teleporting to %s...", locationName))
+            -- Actual teleport logic
+        end
+    end
+}
+
+-- Main Execution
+local function initializeMenu()
+    print("===================================")
+    print("   GÀ GAMING MENU LOADED")
+    print("   Version: " .. GàGamingMenu.Version)
+    print("===================================")
+    
+    createGUI()
+    
+    -- Hotkey setup
+    game:GetService("UserInputService").InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.RightControl then
+            GàGamingMenu.Active = not GàGamingMenu.Active
+            print("Menu " .. (GàGamingMenu.Active and "shown" or "hidden"))
+        end
+    end)
+end
+
+-- Example Usage
+print("Available Commands:")
+print("  toggleFeature('Level', {'AutoFarm'})")
+print("  toggleFeature('Aimbot', {'Combat'})")
+print("  TeleportService.TeleportTo('Second Sea')")
+
+-- Initialize
+-- initializeMenu()
+
+return {
+    Menu = GàGamingMenu,
+    Features = Features,
+    ToggleFeature = toggleFeature,
+    Teleport = TeleportService
+}
