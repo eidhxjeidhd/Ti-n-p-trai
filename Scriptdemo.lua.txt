@@ -1,246 +1,516 @@
--- ============================================
--- GÀ GAMING MENU - CONCEPT DEMO
--- (For Educational Purposes Only)
--- ============================================
+-- Redz Hub Concept UI
+-- PURELY EDUCATIONAL DEMONSTRATION
 
-local GàGamingMenu = {
-    Name = "Gà Gaming Premium",
-    Version = "v2.5.1",
-    Author = "Gà Team",
-    Active = false
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+-- Redz Hub Core
+local RedzHub = {
+    Name = "Redz Hub",
+    Version = "v3.2.1",
+    Creator = "Redz Team",
+    Game = "Blox Fruits",
+    Loaded = false,
+    SafeMode = false
 }
 
--- GUI Framework Concept
-local MenuGUI = {
-    MainWindow = nil,
-    Tabs = {},
-    Buttons = {}
+-- Configuration
+local Config = {
+    UI = {
+        MainColor = Color3.fromRGB(255, 50, 50),
+        SecondaryColor = Color3.fromRGB(30, 30, 40),
+        BackgroundColor = Color3.fromRGB(20, 20, 30),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        AccentColor = Color3.fromRGB(0, 255, 200)
+    },
+    
+    Hotkeys = {
+        ToggleUI = Enum.KeyCode.RightShift,
+        PanicKey = Enum.KeyCode.Delete,
+        FarmToggle = Enum.KeyCode.F
+    },
+    
+    Settings = {
+        AutoSave = true,
+        Notifications = true,
+        CheckUpdates = true
+    }
 }
 
--- Features List
+-- Features Database
 local Features = {
     AutoFarm = {
-        Level = {
+        Enabled = false,
+        LevelFarm = {
             Enabled = false,
-            Range = 500,
-            TargetNPC = "",
-            Priority = "Nearest"
+            Distance = 25,
+            UseSkills = true,
+            Priority = "Highest Level",
+            Whitelist = {},
+            Blacklist = {"Marine Captain", "Shanda"}
         },
-        Mastery = {
+        MasteryFarm = {
             Enabled = false,
-            Weapon = "Melee",
+            Weapon = "Saber",
             Style = "Normal",
-            TargetLevel = 600
+            TargetNPC = "Desert Bandit"
         },
-        Boss = {
+        BossFarm = {
             Enabled = false,
-            BossName = "",
-            AutoClaimReward = true,
-            AvoidPlayers = true
+            AutoTeleport = true,
+            SkipLowHP = true,
+            AvoidPlayers = true,
+            CurrentBoss = "Saber Expert"
         },
-        Bone = {
+        BoneFarm = {
             Enabled = false,
-            FarmType = "Random",
-            UseSkills = true
+            Method = "Auto Quest",
+            AutoTurnIn = true
         }
     },
     
-    Teleport = {
-        Shop = {
+    Teleports = {
+        Islands = {
             Enabled = false,
-            ShopType = "Sword",
-            QuickBuy = true
+            SelectedIsland = "Middle Island",
+            InstantTP = true
         },
-        Dungeon = {
-            Enabled = false,
-            AutoStart = true,
-            Difficulty = "Hard"
+        Shops = {
+            SwordShop = false,
+            GunShop = false,
+            FruitShop = false,
+            AbilityShop = false
         },
-        Island = {
-            Enabled = false,
-            SelectedIsland = ""
+        Dungeons = {
+            AutoJoin = false,
+            AutoFarm = false,
+            HardMode = true
+        },
+        SeaEvents = {
+            AutoJoin = false,
+            AutoComplete = true,
+            Priority = "Fruit Spawns"
         }
     },
     
-    Fruit = {
-        Finder = {
-            Enabled = false,
-            ESP = true,
+    ESP = {
+        Enabled = false,
+        Fruits = {
+            Enabled = true,
             ShowDistance = true,
-            HighlightColor = Color3.fromRGB(255, 0, 0)
+            ShowRarity = true,
+            Tracer = true
         },
-        Store = {
+        Players = {
             Enabled = false,
-            AutoStore = true,
-            KeepRareFruits = true,
-            MinValue = 1000000
+            ShowLevel = true,
+            ShowFruit = true,
+            ShowCrew = false
         },
-        MirageEvent = {
-            Enabled = false,
-            AutoTP = true,
-            AutoFarm = true
+        Chests = {
+            Enabled = true,
+            ShowRarity = true
         },
-        SeaEvent = {
-            Enabled = false,
-            AutoJoin = true,
-            AutoComplete = true
+        Bosses = {
+            Enabled = true,
+            ShowHealth = true,
+            ShowReward = true
         }
     },
     
     Combat = {
         Aimbot = {
             Enabled = false,
-            Smoothness = 0.5,
-            FOV = 100,
-            TargetPart = "Head",
+            Smoothness = 0.4,
+            FOV = 120,
+            Priority = "Nearest",
+            Prediction = 0.15,
             VisibleCheck = true
         },
-        SkillAim = {
+        SilentAim = {
             Enabled = false,
-            Prediction = true,
-            LeadTarget = true,
-            MagicOnly = false
+            HitChance = 100,
+            HeadshotChance = 80
         },
-        FastAttack = {
+        AutoClick = {
             Enabled = false,
-            AttackSpeed = 0.1,
+            CPS = 20,
+            HoldMode = false,
+            Randomize = true
+        },
+        Skills = {
+            AutoUse = false,
             NoCooldown = false,
-            AutoClick = true
+            AimAssist = true,
+            Combo = {"Z", "X", "C", "V"}
         }
     },
     
-    Utility = {
-        AutoDodge = {
+    Player = {
+        Speed = {
             Enabled = false,
-            ReactionTime = 0.2
+            Value = 100,
+            WalkSpeed = 50,
+            JumpPower = 100
+        },
+        GodMode = {
+            Enabled = false,
+            NoDamage = false,
+            InfiniteEnergy = false,
+            NoStun = true
         },
         NoClip = {
             Enabled = false,
-            Speed = 50
+            Speed = 60,
+            VerticalSpeed = 40
         },
-        InfiniteEnergy = {
-            Enabled = false
+        Fly = {
+            Enabled = false,
+            Speed = 80,
+            Altitude = 10
+        }
+    },
+    
+    Fruits = {
+        AutoStore = {
+            Enabled = false,
+            KeepLegendary = true,
+            KeepMythical = true,
+            MinValue = 500000
+        },
+        FruitNotifier = {
+            Enabled = true,
+            Webhook = "",
+            SoundAlert = true
+        },
+        AutoBuy = {
+            Enabled = false,
+            MaxPrice = 2000000,
+            DesiredFruits = {"Dragon", "Leopard", "Venom"}
         }
     }
 }
 
--- Function Prototypes
-local function createGUI()
-    print("[Gà Gaming] Initializing GUI...")
-    -- GUI creation logic would go here
-end
+-- UI Library Concept
+local library = {}
 
-local function toggleFeature(featureName, category)
-    local feature = Features
-    for _, cat in ipairs(category) do
-        feature = feature[cat]
+function library:CreateWindow(name)
+    local RedzUI = {}
+    
+    -- Main ScreenGui
+    RedzUI.ScreenGui = Instance.new("ScreenGui")
+    RedzUI.ScreenGui.Name = "RedzHubUI"
+    RedzUI.ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    RedzUI.ScreenGui.ResetOnSpawn = false
+    
+    -- Main Frame
+    RedzUI.MainFrame = Instance.new("Frame")
+    RedzUI.MainFrame.Name = "MainFrame"
+    RedzUI.MainFrame.Size = UDim2.new(0, 600, 0, 400)
+    RedzUI.MainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+    RedzUI.MainFrame.BackgroundColor3 = Config.UI.BackgroundColor
+    RedzUI.MainFrame.BorderSizePixel = 0
+    
+    -- Title Bar
+    RedzUI.TitleBar = Instance.new("Frame")
+    RedzUI.TitleBar.Name = "TitleBar"
+    RedzUI.TitleBar.Size = UDim2.new(1, 0, 0, 30)
+    RedzUI.TitleBar.BackgroundColor3 = Config.UI.MainColor
+    
+    -- Title Text
+    RedzUI.TitleText = Instance.new("TextLabel")
+    RedzUI.TitleText.Name = "TitleText"
+    RedzUI.TitleText.Size = UDim2.new(0, 200, 1, 0)
+    RedzUI.TitleText.BackgroundTransparency = 1
+    RedzUI.TitleText.Text = "  " .. RedzHub.Name .. " | " .. RedzHub.Version
+    RedzUI.TitleText.TextColor3 = Config.UI.TextColor
+    RedzUI.TitleText.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Close Button
+    RedzUI.CloseButton = Instance.new("TextButton")
+    RedzUI.CloseButton.Name = "CloseButton"
+    RedzUI.CloseButton.Size = UDim2.new(0, 30, 1, 0)
+    RedzUI.CloseButton.Position = UDim2.new(1, -30, 0, 0)
+    RedzUI.CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    RedzUI.CloseButton.Text = "X"
+    
+    -- Tab System
+    RedzUI.Tabs = Instance.new("Frame")
+    RedzUI.Tabs.Name = "Tabs"
+    RedzUI.Tabs.Size = UDim2.new(0, 150, 1, -30)
+    RedzUI.Tabs.Position = UDim2.new(0, 0, 0, 30)
+    RedzUI.Tabs.BackgroundColor3 = Config.UI.SecondaryColor
+    
+    -- Tab Buttons
+    local tabsList = {
+        "Main",
+        "Auto Farm",
+        "Teleports",
+        "ESP & Visuals",
+        "Combat",
+        "Player",
+        "Fruits",
+        "Settings"
+    }
+    
+    for i, tabName in ipairs(tabsList) do
+        local tabButton = Instance.new("TextButton")
+        tabButton.Name = tabName .. "Tab"
+        tabButton.Size = UDim2.new(1, 0, 0, 40)
+        tabButton.Position = UDim2.new(0, 0, 0, (i-1)*40)
+        tabButton.BackgroundColor3 = i == 1 and Config.UI.MainColor or Config.UI.SecondaryColor
+        tabButton.Text = tabName
+        tabButton.TextColor3 = Config.UI.TextColor
+        tabButton.Parent = RedzUI.Tabs
     end
     
-    feature.Enabled = not feature.Enabled
-    print(string.format("[%s] %s: %s", 
-        table.concat(category, "."), 
-        featureName, 
-        feature.Enabled and "ENABLED" or "DISABLED"
-    ))
+    -- Content Frame
+    RedzUI.ContentFrame = Instance.new("Frame")
+    RedzUI.ContentFrame.Name = "ContentFrame"
+    RedzUI.ContentFrame.Size = UDim2.new(1, -150, 1, -30)
+    RedzUI.ContentFrame.Position = UDim2.new(0, 150, 0, 30)
+    RedzUI.ContentFrame.BackgroundColor3 = Config.UI.BackgroundColor
     
-    if feature.Enabled then
-        startFeature(featureName, category)
-    else
-        stopFeature(featureName, category)
+    -- Parent everything
+    RedzUI.TitleBar.Parent = RedzUI.MainFrame
+    RedzUI.TitleText.Parent = RedzUI.TitleBar
+    RedzUI.CloseButton.Parent = RedzUI.TitleBar
+    RedzUI.Tabs.Parent = RedzUI.MainFrame
+    RedzUI.ContentFrame.Parent = RedzUI.MainFrame
+    RedzUI.MainFrame.Parent = RedzUI.ScreenGui
+    RedzUI.ScreenGui.Parent = game.CoreGui
+    
+    return RedzUI
+end
+
+-- Feature Implementation Concepts
+local function createNotification(title, message, duration)
+    if Config.Settings.Notifications then
+        print(string.format("[REDZ HUB] %s: %s", title, message))
     end
 end
 
-local function startFeature(name, category)
-    -- Feature activation logic
-    print(string.format("Starting %s...", name))
-    
-    if name == "AutoFarm Level" then
-        -- Auto farm logic
-        coroutine.wrap(function()
-            while Features.AutoFarm.Level.Enabled do
-                -- Find nearest NPC
-                -- Attack NPC
-                -- Collect drops
-                wait(1)
-            end
-        end)()
-        
-    elseif name == "Aimbot" then
-        -- Aimbot logic
-        print("Aimbot activated - Locking targets...")
-    end
-end
-
-local function stopFeature(name, category)
-    -- Feature deactivation logic
-    print(string.format("Stopping %s...", name))
-end
-
--- ESP System Concept
-local ESPLibrary = {
-    Objects = {},
-    Boxes = {},
-    Tracers = {},
-    
-    CreateESP = function(object, color, name)
-        -- Create ESP visuals
-        print(string.format("ESP Created for: %s", name or object.Name))
-    end,
-    
-    UpdateESP = function()
-        -- Update ESP positions
-    end
+-- Auto Farm System
+local AutoFarm = {
+    Running = false,
+    Connection = nil
 }
 
--- Teleport System
-local TeleportService = {
-    Locations = {
-        ["Sword Dealer"] = Vector3.new(100, 50, 200),
-        ["Blacksmith"] = Vector3.new(150, 50, 250),
-        ["Dungeon Entrance"] = Vector3.new(300, 100, 400),
-        ["Second Sea"] = Vector3.new(5000, 500, 5000),
-        ["Third Sea"] = Vector3.new(10000, 1000, 10000)
-    },
+function AutoFarm:Start()
+    if self.Running then return end
     
-    TeleportTo = function(locationName)
-        local location = TeleportService.Locations[locationName]
-        if location then
-            print(string.format("Teleporting to %s...", locationName))
-            -- Actual teleport logic
+    self.Running = true
+    createNotification("Auto Farm", "Started farming", 3)
+    
+    self.Connection = RunService.Heartbeat:Connect(function(deltaTime)
+        if not Features.AutoFarm.Enabled then
+            self:Stop()
+            return
         end
-    end
-}
-
--- Main Execution
-local function initializeMenu()
-    print("===================================")
-    print("   GÀ GAMING MENU LOADED")
-    print("   Version: " .. GàGamingMenu.Version)
-    print("===================================")
-    
-    createGUI()
-    
-    -- Hotkey setup
-    game:GetService("UserInputService").InputBegan:Connect(function(input)
-        if input.KeyCode == Enum.KeyCode.RightControl then
-            GàGamingMenu.Active = not GàGamingMenu.Active
-            print("Menu " .. (GàGamingMenu.Active and "shown" or "hidden"))
+        
+        -- Auto Farm Logic Concept
+        if Features.AutoFarm.LevelFarm.Enabled then
+            -- Find NPCs
+            local npcs = game.Workspace:FindFirstChild("NPCs")
+            if npcs then
+                for _, npc in pairs(npcs:GetChildren()) do
+                    if npc:FindFirstChild("Humanoid") and npc.Humanoid.Health > 0 then
+                        -- Attack logic
+                        break
+                    end
+                end
+            end
+        end
+        
+        if Features.AutoFarm.BossFarm.Enabled then
+            -- Boss farming logic
         end
     end)
 end
 
--- Example Usage
-print("Available Commands:")
-print("  toggleFeature('Level', {'AutoFarm'})")
-print("  toggleFeature('Aimbot', {'Combat'})")
-print("  TeleportService.TeleportTo('Second Sea')")
+function AutoFarm:Stop()
+    if self.Connection then
+        self.Connection:Disconnect()
+        self.Connection = nil
+    end
+    self.Running = false
+    createNotification("Auto Farm", "Stopped farming", 3)
+end
 
--- Initialize
--- initializeMenu()
+-- ESP System Concept
+local ESP = {
+    Objects = {},
+    Enabled = false
+}
 
+function ESP:Toggle(state)
+    self.Enabled = state
+    
+    if state then
+        createNotification("ESP", "Enabled ESP", 3)
+        self:CreateESPForFruits()
+        self:CreateESPForChests()
+    else
+        createNotification("ESP", "Disabled ESP", 3)
+        self:ClearESP()
+    end
+end
+
+function ESP:CreateESPForFruits()
+    if not Features.ESP.Fruits.Enabled then return end
+    
+    -- Concept: Create billboard guis for fruits
+    for _, fruit in pairs(game.Workspace:GetChildren()) do
+        if fruit.Name:find("Fruit") then
+            -- Create ESP visual
+            print("ESP Created for: " .. fruit.Name)
+        end
+    end
+end
+
+function ESP:ClearESP()
+    -- Remove all ESP visuals
+end
+
+-- Aimbot System Concept
+local Aimbot = {
+    Target = nil,
+    Locked = false
+}
+
+function Aimbot:GetClosestPlayer()
+    local closest = nil
+    local distance = math.huge
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local char = player.Character
+            local humanoidRootPart = char:FindFirstChild("HumanoidRootPart")
+            
+            if humanoidRootPart then
+                local screenPoint, visible = workspace.CurrentCamera:WorldToViewportPoint(humanoidRootPart.Position)
+                local magnitude = (Vector2.new(screenPoint.X, screenPoint.Y) - Vector2.new(mouse.X, mouse.Y)).Magnitude
+                
+                if magnitude < Features.Combat.Aimbot.FOV and magnitude < distance then
+                    if Features.Combat.Aimbot.VisibleCheck then
+                        if visible then
+                            closest = player
+                            distance = magnitude
+                        end
+                    else
+                        closest = player
+                        distance = magnitude
+                    end
+                end
+            end
+        end
+    end
+    
+    return closest
+end
+
+-- Teleport System
+local Teleport = {
+    Locations = {
+        ["First Sea"] = {
+            ["Starter Island"] = Vector3.new(-1000, 50, -1000),
+            ["Marine Fortress"] = Vector3.new(-2000, 100, -2000),
+            ["Pirate Village"] = Vector3.new(3000, 50, 1500)
+        },
+        ["Second Sea"] = {
+            ["Kingdom of Rose"] = Vector3.new(5000, 500, 5000),
+            ["Cafe"] = Vector3.new(5500, 500, 5200)
+        },
+        ["Third Sea"] = {
+            ["Port Town"] = Vector3.new(10000, 1000, 10000),
+            ["Castle on the Sea"] = Vector3.new(11000, 1100, 10500)
+        }
+    }
+}
+
+function Teleport:ToLocation(sea, island)
+    local location = self.Locations[sea][island]
+    if location and LocalPlayer.Character then
+        local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = CFrame.new(location)
+            createNotification("Teleport", "Teleported to " .. island, 3)
+        end
+    end
+end
+
+-- Keybind System
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    -- Toggle UI
+    if input.KeyCode == Config.Hotkeys.ToggleUI then
+        -- Toggle UI visibility
+        print("UI Toggled")
+    
+    -- Panic Key
+    elseif input.KeyCode == Config.Hotkeys.PanicKey then
+        -- Disable all features
+        Features.AutoFarm.Enabled = false
+        Features.ESP.Enabled = false
+        Features.Combat.Aimbot.Enabled = false
+        createNotification("Panic", "All features disabled", 5)
+    
+    -- Farm Toggle
+    elseif input.KeyCode == Config.Hotkeys.FarmToggle then
+        Features.AutoFarm.Enabled = not Features.AutoFarm.Enabled
+        if Features.AutoFarm.Enabled then
+            AutoFarm:Start()
+        else
+            AutoFarm:Stop()
+        end
+    end
+end)
+
+-- Main Load Function
+local function LoadRedzHub()
+    if RedzHub.Loaded then return end
+    
+    print("=====================================")
+    print("       REDZ HUB LOADED")
+    print("       Version: " .. RedzHub.Version)
+    print("       Game: " .. RedzHub.Game)
+    print("=====================================")
+    
+    createNotification("Redz Hub", "Successfully loaded!", 5)
+    
+    -- Create UI
+    local MainWindow = library:CreateWindow(RedzHub.Name)
+    
+    -- Load saved config
+    if Config.Settings.AutoSave then
+        -- Load from save file concept
+    end
+    
+    RedzHub.Loaded = true
+    
+    -- Safety warning
+    task.wait(2)
+    createNotification("Warning", "Using exploits may result in a ban", 10)
+end
+
+-- Auto-Execute
+coroutine.wrap(function()
+    task.wait(1)
+    LoadRedzHub()
+end)()
+
+-- Return the hub for external control
 return {
-    Menu = GàGamingMenu,
+    Hub = RedzHub,
+    Config = Config,
     Features = Features,
-    ToggleFeature = toggleFeature,
-    Teleport = TeleportService
+    ToggleFeature = function(category, feature)
+        -- Toggle feature function
+    end,
+    Teleport = Teleport,
+    Notify = createNotification
 }
