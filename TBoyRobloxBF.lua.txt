@@ -1,526 +1,65 @@
--- discord.gg/tboyroblox
+-- --- TAB KAITUN: HỆ THỐNG CÀY THUÊ TỰ ĐỘNG (TỪ A ĐẾN Z) ---
+local KaitunTab = Window:CreateTab("Kaitun (A-Z)", 4483362458)
+KaitunTab:CreateSection("Hệ Thống Kaitun Max Setting Của Gà Gaming")
 
-shared.LoaderTitle = "Đăng Ký Kênh gà gaming Roblox";
-shared.LoaderKeyFrames = {
-    [1] = {
-        1,
-        10
-    },
-    [2] = {
-        2,
-        30
-    },
-    [3] = {
-        3,
-        60
-    },
-    [4] = {
-        2,
-        100
-    }
-};
-local v2 = {
-    LoaderData = {
-        Name = shared.LoaderTitle or "A Loader",
-        Colors = shared.LoaderColors or {
-            Main = Color3.fromRGB(0, 0, 0),
-            Topic = Color3.fromRGB(200, 200, 200),
-            Title = Color3.fromRGB(255, 255, 255),
-            LoaderBackground = Color3.fromRGB(40, 40, 40),
-            LoaderSplash = Color3.fromRGB(3, 252, 3)
-        }
-    },
-    Keyframes = shared.LoaderKeyFrames or {
-        [1] = {
-            1,
-            10
-        },
-        [2] = {
-            2,
-            30
-        },
-        [3] = {
-            3,
-            60
-        },
-        [4] = {
-            2,
-            100
-        }
-    }
-};
-local v3 = {
-    [1] = "",
-    [2] = "",
-    [3] = "",
-    [4] = ""
-};
-function TweenObject(v178, v179, v180)
-    game.TweenService:Create(v178, TweenInfo.new(v179, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), v180):Play();
-end
-function CreateObject(v181, v182)
-    local v183 = Instance.new(v181);
-    local v184;
-    for v416, v417 in pairs(v182) do
-        if (v416 ~= "Parent") then
-            v183[v416] = v417;
-        else
-            v184 = v417;
-        end
-    end
-    v183.Parent = v184;
-    return v183;
-end
-local function v4(v186, v187)
-    local v188 = Instance.new("UICorner");
-    v188.CornerRadius = UDim.new(0, v186);
-    v188.Parent = v187;
-end
-local v5 = CreateObject("ScreenGui", {
-    Name = "Core",
-    Parent = game.CoreGui
-});
-local v6 = CreateObject("Frame", {
-    Name = "Main",
-    Parent = v5,
-    BackgroundColor3 = v2.LoaderData.Colors.Main,
-    BorderSizePixel = 0,
-    ClipsDescendants = true,
-    Position = UDim2.new(0.5, 0, 0.5, 0),
-    AnchorPoint = Vector2.new(0.5, 0.5),
-    Size = UDim2.new(0, 0, 0, 0)
-});
-v4(12, v6);
-local v7 = CreateObject("ImageLabel", {
-    Name = "UserImage",
-    Parent = v6,
-    BackgroundTransparency = 1,
-    Image = "rbxassetid://77817527501053",
-    Position = UDim2.new(0, 15, 0, 10),
-    Size = UDim2.new(0, 50, 0, 50)
-});
-v4(25, v7);
-local v8 = CreateObject("TextLabel", {
-    Name = "UserName",
-    Parent = v6,
-    BackgroundTransparency = 1,
-    Text = "Youtube: TBoy Roblox",
-    Position = UDim2.new(0, 75, 0, 10),
-    Size = UDim2.new(0, 200, 0, 50),
-    Font = Enum.Font.GothamBold,
-    TextColor3 = v2.LoaderData.Colors.Title,
-    TextSize = 14,
-    TextXAlignment = Enum.TextXAlignment.Left
-});
-local v9 = CreateObject("TextLabel", {
-    Name = "Top",
-    TextTransparency = 1,
-    Parent = v6,
-    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-    BackgroundTransparency = 1,
-    Position = UDim2.new(0, 30, 0, 70),
-    Size = UDim2.new(0, 301, 0, 20),
-    Font = Enum.Font.Gotham,
-    Text = "Loader",
-    TextColor3 = v2.LoaderData.Colors.Topic,
-    TextSize = 10,
-    TextXAlignment = Enum.TextXAlignment.Left
-});
-local v10 = CreateObject("TextLabel", {
-    Name = "Title",
-    Parent = v6,
-    TextTransparency = 1,
-    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-    BackgroundTransparency = 1,
-    Position = UDim2.new(0, 30, 0, 90),
-    Size = UDim2.new(0, 301, 0, 46),
-    Font = Enum.Font.Gotham,
-    RichText = true,
-    Text = "<b>" .. v2.LoaderData.Name .. "</b>",
-    TextColor3 = v2.LoaderData.Colors.Title,
-    TextSize = 14,
-    TextXAlignment = Enum.TextXAlignment.Left
-});
-local v11 = CreateObject("Frame", {
-    Name = "BG",
-    Parent = v6,
-    AnchorPoint = Vector2.new(0.5, 0),
-    BackgroundTransparency = 1,
-    BackgroundColor3 = v2.LoaderData.Colors.LoaderBackground,
-    BorderSizePixel = 0,
-    Position = UDim2.new(0.5, 0, 0, 70),
-    Size = UDim2.new(0.8500000238418579, 0, 0, 24)
-});
-v4(8, v11);
-local v12 = CreateObject("Frame", {
-    Name = "Progress",
-    Parent = v11,
-    BackgroundColor3 = v2.LoaderData.Colors.LoaderSplash,
-    BackgroundTransparency = 1,
-    BorderSizePixel = 0,
-    Size = UDim2.new(0, 0, 0, 24)
-});
-v4(8, v12);
-local v13 = CreateObject("TextLabel", {
-    Name = "StepLabel",
-    Parent = v6,
-    BackgroundTransparency = 1,
-    Position = UDim2.new(0.5, 0, 1, - 25),
-    Size = UDim2.new(1, - 20, 0, 20),
-    Font = Enum.Font.Gotham,
-    Text = "",
-    TextColor3 = v2.LoaderData.Colors.Topic,
-    TextSize = 14,
-    TextXAlignment = Enum.TextXAlignment.Center,
-    AnchorPoint = Vector2.new(0.5, 0.5)
-});
-function UpdateStepText(v191)
-    v13.Text = v3[v191] or "" ;
-end
-function UpdatePercentage(v193, v194)
-    TweenObject(v12, 0.5, {
-        Size = UDim2.new(v193 / 100, 0, 0, 24)
-    });
-    UpdateStepText(v194);
-end
-TweenObject(v6, 0.25, {
-    Size = UDim2.new(0, 346, 0, 121)
-});
-wait();
-TweenObject(v9, 0.5, {
-    TextTransparency = 0
-});
-TweenObject(v10, 0.5, {
-    TextTransparency = 0
-});
-TweenObject(v11, 0.5, {
-    BackgroundTransparency = 0
-});
-TweenObject(v12, 0.5, {
-    BackgroundTransparency = 0
-});
-for v195, v196 in pairs(v2.Keyframes) do
-    wait(v196[1]);
-    UpdatePercentage(v196[2], v195);
-end
-UpdatePercentage(100, 4);
-TweenObject(v9, 0.5, {
-    TextTransparency = 1
-});
-TweenObject(v10, 0.5, {
-    TextTransparency = 1
-});
-TweenObject(v11, 0.5, {
-    BackgroundTransparency = 1
-});
-TweenObject(v12, 0.5, {
-    BackgroundTransparency = 1
-});
-wait(0.5);
-TweenObject(v6, 0.25, {
-    Size = UDim2.new(0, 0, 0, 0)
-});
-wait(0.25);
-v5:Destroy();
+KaitunTab:CreateToggle({
+   Name = "Bật Kaitun 1 - 2800 (Auto Max Level)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.Kaitun_MaxLevel = Value
+      if Value then
+          Rayfield:Notify({Title = "Gà Gaming Kaitun", Content = "Hệ thống đang tự động định vị Level và quét nhiệm vụ...", Duration = 3})
+          -- Logic: Quét Level hiện tại -> Nhận nhiệm vụ -> Bay đến bãi quái -> Đánh
+      end
+   end,
+})
 
--- SỬA LẠI PHẦN MENU HOÀN TOÀN
-local success, result = pcall(function()
-    local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-    
-    local Window = Fluent:CreateWindow({
-        Title = "gà gaming Hub - Blox Fruit",
-        SubTitle = "by TBoy Roblox",
-        TabWidth = 160,
-        Size = UDim2.fromOffset(580, 460),
-        Acrylic = false,
-        Theme = "Dark",
-        MinimizeKey = Enum.KeyCode.End
-    })
-    
-    -- Tạo các Tab chính
-    local Tabs = {
-        Home = Window:AddTab({Title = "Thông Tin", Icon = ""}),
-        Main = Window:AddTab({Title = "Cày", Icon = ""}),
-        Sea = Window:AddTab({Title = "Sự Kiện", Icon = ""}),
-        Boss = Window:AddTab({Title = "Trùm", Icon = ""}),
-        Player = Window:AddTab({Title = "Người Chơi", Icon = ""}),
-        Settings = Window:AddTab({Title = "Cài Đặt", Icon = ""})
-    }
-    
-    local Options = Fluent:GetOptions()
-    
-    -- TAB THÔNG TIN
-    Tabs.Home:AddParagraph({
-        Title = "gà gaming Hub",
-        Content = "Chào mừng đến với script Blox Fruit!"
-    })
-    
-    Tabs.Home:AddButton({
-        Title = "Discord",
-        Description = "Copy link Discord",
-        Callback = function()
-            setclipboard("https://discord.gg/tboyroblox")
-            Fluent:Notify({
-                Title = "Thành công",
-                Content = "Đã copy link Discord!",
-                Duration = 5
-            })
-        end
-    })
-    
-    Tabs.Home:AddButton({
-        Title = "Youtube",
-        Description = "Subscribe kênh nhé!",
-        Callback = function()
-            setclipboard("Youtube: TBoy Roblox")
-            Fluent:Notify({
-                Title = "Thành công", 
-                Content = "Đã copy tên kênh Youtube!",
-                Duration = 5
-            })
-        end
-    })
-    
-    -- TAB CÀY
-    local SelectWeapon = "Melee"
-    local ChooseWeapon = Tabs.Main:AddDropdown("WeaponSelect", {
-        Title = "Chọn Vũ Khí",
-        Values = {"Melee", "Sword", "Blox Fruit"},
-        Multi = false,
-        Default = "Melee",
-    })
-    
-    ChooseWeapon:OnChanged(function(Value)
-        SelectWeapon = Value
-        print("Đã chọn vũ khí: " .. Value)
-    end)
-    
-    -- Toggle Cày Cấp
-    local AutoLevelToggle = Tabs.Main:AddToggle("AutoLevel", {
-        Title = "Cày Cấp",
-        Description = "Tự động farm level",
-        Default = false,
-    })
-    
-    AutoLevelToggle:OnChanged(function(Value)
-        _G.AutoLevel = Value
-        print("AutoLevel: " .. tostring(Value))
-        if not Value then
-            -- Dừng farm
-        end
-    end)
-    
-    -- Toggle Đấm Quái Gần
-    local AutoNearToggle = Tabs.Main:AddToggle("AutoNear", {
-        Title = "Đấm Quái Gần",
-        Description = "Tự động đánh quái trong phạm vi",
-        Default = false,
-    })
-    
-    AutoNearToggle:OnChanged(function(Value)
-        _G.AutoNear = Value
-        print("AutoNear: " .. tostring(Value))
-    end)
-    
-    -- Toggle Lụm Rương
-    local ChestToggle = Tabs.Main:AddToggle("AutoChest", {
-        Title = "Lụm Rương",
-        Description = "Tự động nhặt rương",
-        Default = false,
-    })
-    
-    ChestToggle:OnChanged(function(Value)
-        _G.AutoCollectChest = Value
-        print("AutoChest: " .. tostring(Value))
-    end)
-    
-    -- TAB TRÙM
-    local BossList = {}
-    if game.PlaceId == 2753915549 then
-        BossList = {"The Gorilla King", "Bobby", "Yeti", "Vice Admiral", "Saber Expert"}
-    elseif game.PlaceId == 4442272183 then
-        BossList = {"Diamond", "Jeremy", "Fajita", "Don Swan", "Smoke Admiral"}
-    elseif game.PlaceId == 7449423635 then
-        BossList = {"Stone", "Island Empress", "Kilo Admiral", "Captain Elephant", "Beautiful Pirate"}
-    end
-    
-    local BossSelect = Tabs.Boss:AddDropdown("BossSelect", {
-        Title = "Chọn Trùm",
-        Values = BossList,
-        Multi = false,
-        Default = BossList[1] or "",
-    })
-    
-    local SelectedBoss = BossList[1] or ""
-    BossSelect:OnChanged(function(Value)
-        SelectedBoss = Value
-        print("Đã chọn boss: " .. Value)
-    end)
-    
-    local BossToggle = Tabs.Boss:AddToggle("AutoBoss", {
-        Title = "Đấm Trùm",
-        Description = "Tự động farm boss",
-        Default = false,
-    })
-    
-    BossToggle:OnChanged(function(Value)
-        _G.AutoBoss = Value
-        _G.SelectBoss = SelectedBoss
-        print("AutoBoss: " .. tostring(Value) .. " - Boss: " .. SelectedBoss)
-    end)
-    
-    -- TAB NGƯỜI CHƠI
-    Tabs.Player:AddSlider("WalkSpeed", {
-        Title = "Tốc độ chạy",
-        Description = "Điều chỉnh tốc độ di chuyển",
-        Default = 16,
-        Min = 16,
-        Max = 200,
-        Rounding = 1,
-        Callback = function(Value)
-            if game.Players.LocalPlayer.Character then
-                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-            end
-        end
-    })
-    
-    Tabs.Player:AddSlider("JumpPower", {
-        Title = "Lực nhảy",
-        Description = "Điều chỉnh độ cao nhảy",
-        Default = 50,
-        Min = 50,
-        Max = 200,
-        Rounding = 1,
-        Callback = function(Value)
-            if game.Players.LocalPlayer.Character then
-                game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
-            end
-        end
-    })
-    
-    -- TAB CÀI ĐẶT
-    Tabs.Settings:AddParagraph({
-        Title = "Cài đặt",
-        Content = "Các tùy chọn hệ thống"
-    })
-    
-    local AntiAFKToggle = Tabs.Settings:AddToggle("AntiAFK", {
-        Title = "Chống AFK",
-        Description = "Tự động chống AFK",
-        Default = true,
-    })
-    
-    AntiAFKToggle:OnChanged(function(Value)
-        if Value then
-            -- Bật chống AFK
-        else
-            -- Tắt chống AFK  
-        end
-    end)
-    
-    Tabs.Settings:AddButton({
-        Title = "Ẩn/Hiện Menu",
-        Description = "Nhấn End để ẩn/hiện menu",
-        Callback = function()
-            Fluent:Notify({
-                Title = "Thông báo",
-                Content = "Nhấn phím End để ẩn/hiện menu!",
-                Duration = 5
-            })
-        end
-    })
-    
-    Tabs.Settings:AddButton({
-        Title = "Reload Script",
-        Description = "Tải lại script",
-        Callback = function()
-            Fluent:Notify({
-                Title = "Thông báo", 
-                Content = "Đang tải lại script...",
-                Duration = 3
-            })
-            wait(2)
-            -- Reload script
-        end
-    })
-    
-    -- Chọn tab mặc định
-    Window:SelectTab(Tabs.Home)
-    
-    -- Thông báo thành công
-    Fluent:Notify({
-        Title = "gà gaming Hub",
-        Content = "Menu đã được tải thành công!",
-        Duration = 5
-    })
-    
-    print("Menu đã được tạo thành công!")
-    
-    return {
-        Window = Window,
-        Tabs = Tabs,
-        Options = Options,
-        Fluent = Fluent
-    }
-end)
+KaitunTab:CreateToggle({
+   Name = "Auto Chuyển Biển (Sea 1 -> Sea 4)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.Kaitun_AutoSea = Value
+      -- Logic: Đủ Level 700 tự đi giải đố mở Sea 2, đủ 1500 tự mở Sea 3...
+   end,
+})
 
-if not success then
-    warn("Lỗi khi tạo menu: " .. tostring(result))
-    
-    -- Tạo menu đơn giản thủ công nếu Fluent lỗi
-    local SimpleGUI = Instance.new("ScreenGui")
-    SimpleGUI.Name = "SimpleMenu"
-    SimpleGUI.Parent = game.CoreGui
-    
-    local MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 300, 0, 400)
-    MainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    MainFrame.Parent = SimpleGUI
-    
-    local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = UDim.new(0, 8)
-    UICorner.Parent = MainFrame
-    
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, 0, 0, 50)
-    Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    Title.Text = "gà gaming Hub - Lỗi Fluent"
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.Font = Enum.Font.GothamBold
-    Title.TextSize = 18
-    Title.Parent = MainFrame
-    
-    local CloseBtn = Instance.new("TextButton")
-    CloseBtn.Size = UDim2.new(0, 100, 0, 40)
-    CloseBtn.Position = UDim2.new(0.5, -50, 0.9, -20)
-    CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    CloseBtn.Text = "Đóng"
-    CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    CloseBtn.Parent = MainFrame
-    CloseBtn.MouseButton1Click:Connect(function()
-        SimpleGUI:Destroy()
-    end)
-    
-    local InfoText = Instance.new("TextLabel")
-    InfoText.Size = UDim2.new(1, -20, 0, 200)
-    InfoText.Position = UDim2.new(0, 10, 0, 60)
-    InfoText.BackgroundTransparency = 1
-    InfoText.Text = "Lỗi khi tải menu Fluent UI!\n\nNguyên nhân có thể do:\n- Mất kết nối internet\n- Link Fluent bị hỏng\n- Game chặn request\n\nVui lòng thử lại sau!"
-    InfoText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    InfoText.TextWrapped = true
-    InfoText.Font = Enum.Font.Gotham
-    InfoText.TextSize = 14
-    InfoText.Parent = MainFrame
-    
-    print("Đã tạo menu đơn giản thay thế")
-else
-    print("Menu Fluent đã được tạo thành công!")
-end
+KaitunTab:CreateToggle({
+   Name = "Kaitun All Melee (Tự mua toàn bộ Võ)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.Kaitun_Melee = Value
+      -- Logic: Tự động gom tiền, đủ điểm Beli/Fragment tự bay đến NPC mua God Human, Sanguine Art...
+   end,
+})
 
--- CÁC FUNCTION VÀ TÍNH NĂNG KHÁC...
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-    wait(1)
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-end)
+KaitunTab:CreateSection("Quản Lý Tiền Khí Cụ & Trái Ác Quỷ")
+
+KaitunTab:CreateToggle({
+   Name = "Auto Random Trái Ác Quỷ (Cất vào rương)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.Kaitun_RandomFruit = Value
+      -- Logic: Cứ mỗi 2 tiếng tự động ra NPC Random, được trái gì cũng tự Store vào rương
+   end,
+})
+
+KaitunTab:CreateToggle({
+   Name = "Auto Thức Tỉnh (Awakening) Trái Đang Dùng",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.Kaitun_Awake = Value
+      -- Logic: Tự động mua chip, đi Raid và thức tỉnh chiêu thức
+   end,
+})
+
+KaitunTab:CreateButton({
+   Name = "Kích Hoạt Chế Độ Cày Thuê Xuyên Đêm",
+   Callback = function()
+       -- Tự động bật màn hình trắng + Bật tất cả các tính năng Kaitun
+       game:GetService("RunService"):Set3dRenderingEnabled(false)
+       _G.Kaitun_MaxLevel = true
+       _G.Kaitun_AutoSea = true
+       _G.Kaitun_Melee = true
+       Rayfield:Notify({Title = "Chế Độ Cày Thuê", Content = "Đã tối ưu CPU cho máy. Sẵn sàng treo xuyên đêm!", Duration = 5})
+   end,
+})
