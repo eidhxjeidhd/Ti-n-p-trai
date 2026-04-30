@@ -1,0 +1,229 @@
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+
+       local Window = MakeWindow({
+         Hub = {
+         Title = "Gà gaming",
+         Animation = "Youtube: Gà gaming"
+         },
+        Key = {
+        KeySystem = true,
+        Title = "Key System",
+        Description = "",
+        KeyLink = "https://link4m.co/st?api=67d2f114875f8e29865d1fa9&url=yourdestinationlink.com",
+        Keys = {"284738473"},
+        Notifi = {
+        Notifications = true,
+        CorrectKey = "Running the Script...",
+       Incorrectkey = "The key is incorrect",
+       CopyKeyLink = "Copied to Clipboard"
+      }
+    }
+  })
+
+       MinimizeButton({
+       Image = "http://www.roblox.com/asset/?id=121549042790518",
+       Size = {40, 40},
+       Color = Color3.fromRGB(10, 10, 10),
+       Corner = true,
+       Stroke = false,
+       StrokeColor = Color3.fromRGB(255, 0, 0)
+      })
+      
+------ Tab
+     local Tab1o = MakeTab({Name = "Script Farm"})
+     local Tab2o = MakeTab({Name = "Script kaitun"})
+     
+------- BUTTON
+    
+    AddButton(Tab1o, {
+     Name = "bacon Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/BloxFruit-Hub/Lonely-Hub/refs/heads/main/Admin.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "radz Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MeowOnTopHub/Khtu/refs/heads/main/Loader.luau"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Night mystric",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-NightMystic/Bloxfruits/refs/heads/main/Script.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Tày hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VTDROBLOX/Animehub/refs/heads/main/Tayhub.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Banana",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/kaimm2/Owner-Tthanhhub/refs/heads/main/BloxFruit/Main.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Mixi hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/mixihubvip/mixihubvip/refs/heads/main/MixiBanana.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Lonely hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LongHip12/LonelyHub/refs/heads/main/LonelyHub-PVP.lua"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "PANDA HUB",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nvb201112/the_real_Panda-Hub/refs/heads/main/BloxFruitsKaitun.luau"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "blue hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+getgenv().Config = {
+    ["Setting"] = {
+        ["UiCheckItem"] = false,
+        ["White Screen"] = false
+    },       
+    ["MainItem"] = {
+        ["Saber"] = true,         
+        ["Hallow Scythe"] = true,
+        ["GodHuman"] = true,
+        ["Skull Guitar"] = true,
+        ["Cursed Dual Katana"] = true
+    },
+    ["MiscItem"] = {
+        ["Feathered Visage"] = true,
+        ["Pole1st"] = true,
+        ["Dragon Trident"] = true,
+        ["Spikey Trident"] = true,
+        ["Buddy"] = true,
+        ["Cavender"] = true,
+        ["Twin Hooks"] = true,
+        ["Gravity Blade"] = true,
+        ["Venom Bow"] = true
+    },
+    ["Fruits"] = {
+        ["Fruits Eat"] = {"Gravity-Gravity","Pain-Pain"},
+        ["Auto Eat Fruits"] = false,
+        ["Farm Mastery Fruits"] = true
+    },
+    ["Quest"] = {
+        ["Race V2-V3"] = true,
+        ["Haki Rainbow"] = true
+    },
+    ["Webhook"] = {
+        ["Enable"] = false,
+        ["UrlWebhook"] = ""
+    }
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/KaitunBloxFruits.lua"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "3TN",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+Config = {
+Team = "Pirates",
+Configuration = {
+HopWhenIdle = true,
+AutoHop = true,
+AutoHopDelay = 60 * 60,
+FpsBoost = false,
+BlackScreen = true
+},
+Items = {
+-- Melees
+AutoFullyMelees = true,
+-- Swords
+Saber = true,
+CursedDualKatana = false,
+-- Guns
+SoulGuitar = false,
+-- Upgrades
+RaceV2 = true
+},
+Settings = {
+StayInSea2UntilHaveDarkFragments = false
+}
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hhl29042008-ops/script/refs/heads/main/cac"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Gà gaming",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://https://raw.githubusercontent.com/eidhxjeidhd/Ti-n-p-trai/refs/heads/main/Scriptdemo.lua.txt"))()
+  end
+  })
