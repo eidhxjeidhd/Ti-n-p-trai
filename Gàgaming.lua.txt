@@ -9,7 +9,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
         KeySystem = true,
         Title = "Key System",
         Description = "",
-        KeyLink = "https://link4m.co/st?api=67d2f114875f8e29865d1fa9&url=yourdestinationlink.com",
+        KeyLink = "https://link4m.com/EHBtYAq",
         Keys = {"284738473"},
         Notifi = {
         Notifications = true,
@@ -225,5 +225,171 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hhl29042008-ops/scrip
 }
 
 loadstring(game:HttpGet("https://https://raw.githubusercontent.com/eidhxjeidhd/Ti-n-p-trai/refs/heads/main/Scriptdemo.lua.txt"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "Orange Kaitun Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+getgenv().Config = {
+    ["Auto Farm"] = true,
+    ["Settings"] = {
+        ["FPS Boost"] = true,
+    } ,
+    ["Melee"] = {
+        ["All Melee V1"] = true,
+        ["Super Huamn"] = true,
+        ["Dragon Talon"] = true,
+        ["Sharkman Karate"] = true,
+        ["Elechic Claw"] = true,
+        ["GodHuman"] = true,
+    },
+    ["Sword"] = {
+        ["All Sword"] = true,
+        ["Saber"] = true,
+        ["Pole"] = true,
+        ["Rengoku"] = true,
+        ["Midnight Blade"] = true,
+        ["Soul Cane"] = true,
+        ["Gravity Cane"] = true,
+        ["Dragon Trident"] = true,
+        ["Legendary Sword"] = true,
+        ["True Triple Katana"] = true,
+        ["Twin Hooks"] = true,
+        ["Canvander"] = true,
+        ["Buddy Sword"] = true,
+        ["Hallow Scythe"] = true,
+        ["Yama"] = true,
+        ["Tushita"] = true,
+        ["Cursed Dual Katana"] = true,
+    },
+    ["Gun"] = {
+        ["All Gun"] = true,
+        ["Acidum Rifle"] = true,
+        ["Kabucha"] = true,
+        ["Serpent Bow"] = true,
+        ["Soul Guitar"] = true,
+    },
+    ["Race"] = {
+        ["Auto V2"] = true,
+        ["Auto V3"] = true,
+    },
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HieuDepTrai-Z/Dev_OrangeVip/refs/heads/main/OrangeKaitun.lua"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "Bamia Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+(getgenv())["Configs"] = {
+    ["Quest"] = {
+        ["Evo Race V1"] = true,
+        ["Evo Race V2"] = true;
+        ["RGB Haki"] = true,
+        ["Pull Lerver"] = true
+    };
+    ["Sword"] = {
+        "Dual-Headed Blade",
+        "Smoke Admiral",
+        "Wardens Sword",
+        "Cutlass",
+        "Katana";
+        "Dual Katana";
+        "Triple Katana",
+        "Iron Mace",
+        "Saber";
+        "Pole (1st Form)",
+        "Gravity Blade",
+        "Longsword";
+        "Rengoku";
+        "Midnight Blade",
+        "Soul Cane",
+        "Bisento",
+        "Yama";
+        "Tushita";
+        "Cursed Dual Katana"
+    };
+    ["Gun"] = {
+        "Soul Guitar";
+        "Kabucha",
+        "Venom Bow",
+        "Musket";
+        "Flintlock",
+        "Refined Slingshot",
+        "Magma Blaster";
+        "Dual Flintlock",
+        "Cannon",
+        "Bizarre Revolver";
+        "Bazooka"
+    };
+    ["FPS Booster"] = true
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Graihub/Loader-bamiahub/refs/heads/main/Bamia-kaitun"))()
+  end
+  })
+  
+  AddButton(Tab2o, {
+     Name = "Dragon Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+getgenv().Team = "Pirates"
+repeat task.wait() until game:IsLoaded()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/dragonhubdev/dragonwitheveryone/refs/heads/main/FreeKaitunBF.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Sigma Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/SigmaHubDangCap/BloxFruit/refs/heads/main/MainBloxFruit.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Jade Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/GoblinKun009/Script/refs/heads/main/JadeHub", true))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Eclipse Hub",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+getgenv().ECp4 = {
+    ["Team"] = "Pirates", -- Marines/Pirates
+    ["Fix Lag"] = false,  -- true/false
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Eclipse2408/Scripts/refs/heads/main/PhahattiScripts.lua"))()
   end
   })
