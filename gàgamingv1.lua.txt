@@ -1,0 +1,116 @@
+-- =====================================================================
+-- 🐔 GA GAMING MEGA HUB V2 - ULTIMATE STANDALONE 🐔
+-- 100% English UI - Mega Structure Design
+-- =====================================================================
+
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "🔥 GA GAMING MEGA V2 🔥", HidePremium = false, SaveConfig = true, ConfigFolder = "GaGamingMega"})
+
+-- ==========================================
+-- ⚔️ TAB 1: MAIN FARM (CAY CUOC CHINH)
+-- ==========================================
+local TabFarm = Window:MakeTab({Name = "Main Farm", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+TabFarm:AddLabel("--- Auto Leveling ---")
+TabFarm:AddToggle({Name = "Auto Farm Level 2800", Default = false, Callback = function(Value) _G.AutoFarm = Value end})
+TabFarm:AddToggle({Name = "Auto Farm Nearest Mob", Default = false, Callback = function(Value) _G.FarmNearest = Value end})
+TabFarm:AddToggle({Name = "Auto Bring Mobs (Gom Quai)", Default = true, Callback = function(Value) _G.BringMob = Value end})
+
+TabFarm:AddLabel("--- Auto Mastery ---")
+TabFarm:AddToggle({Name = "Auto Sword Mastery", Default = false, Callback = function(Value) _G.SwordMastery = Value end})
+TabFarm:AddToggle({Name = "Auto Fruit Mastery", Default = false, Callback = function(Value) _G.FruitMastery = Value end})
+TabFarm:AddToggle({Name = "Auto Gun Mastery", Default = false, Callback = function(Value) _G.GunMastery = Value end})
+
+TabFarm:AddLabel("--- Auto Materials ---")
+TabFarm:AddToggle({Name = "Auto Farm Ectoplasm", Default = false, Callback = function(Value) end})
+TabFarm:AddToggle({Name = "Auto Farm Bones", Default = false, Callback = function(Value) end})
+TabFarm:AddToggle({Name = "Auto Farm Sea 4 Mats", Default = false, Callback = function(Value) end})
+
+-- ==========================================
+-- 👹 TAB 2: BOSS & EVENTS (SĂN BOSS & BIỂN)
+-- ==========================================
+local TabBoss = Window:MakeTab({Name = "Boss / Event", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+TabBoss:AddLabel("--- World Bosses ---")
+TabBoss:AddToggle({Name = "Auto All Bosses", Default = false, Callback = function(Value) end})
+TabBoss:AddToggle({Name = "Auto Dough King", Default = false, Callback = function(Value) end})
+TabBoss:AddToggle({Name = "Auto Rip_Indra", Default = false, Callback = function(Value) end})
+TabBoss:AddToggle({Name = "Auto Elite Hunter", Default = false, Callback = function(Value) end})
+
+TabBoss:AddLabel("--- Sea Events ---")
+TabBoss:AddToggle({Name = "Auto Leviathan", Default = false, Callback = function(Value) end})
+TabBoss:AddToggle({Name = "Auto Terrorshark", Default = false, Callback = function(Value) end})
+TabBoss:AddToggle({Name = "Auto Ghost Ship", Default = false, Callback = function(Value) end})
+
+-- ==========================================
+-- ⬆️ TAB 3: AUTO STATS (CỘNG ĐIỂM)
+-- ==========================================
+local TabStats = Window:MakeTab({Name = "Stats", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+TabStats:AddToggle({Name = "Auto Stats Melee", Default = false, Callback = function(Value) end})
+TabStats:AddToggle({Name = "Auto Stats Defense", Default = false, Callback = function(Value) end})
+TabStats:AddToggle({Name = "Auto Stats Sword", Default = false, Callback = function(Value) end})
+TabStats:AddToggle({Name = "Auto Stats Gun", Default = false, Callback = function(Value) end})
+TabStats:AddToggle({Name = "Auto Stats Blox Fruit", Default = false, Callback = function(Value) end})
+
+-- ==========================================
+-- 🛒 TAB 4: SHOP (MUA SẮM VŨ KHÍ/VÕ)
+-- ==========================================
+local TabShop = Window:MakeTab({Name = "Shop", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+TabShop:AddLabel("--- Fighting Styles ---")
+TabShop:AddButton({Name = "Buy Godhuman", Callback = function() end})
+TabShop:AddButton({Name = "Buy Sanguine Art", Callback = function() end})
+TabShop:AddButton({Name = "Buy Sharkman Karate", Callback = function() end})
+
+TabShop:AddLabel("--- Legendary Swords ---")
+TabShop:AddButton({Name = "Get Cursed Dual Katana", Callback = function() end})
+TabShop:AddButton({Name = "Get True Triple Katana", Callback = function() end})
+TabShop:AddButton({Name = "Get Dark Dagger", Callback = function() end})
+
+TabShop:AddLabel("--- Accessories ---")
+TabShop:AddButton({Name = "Buy Pale Scarf", Callback = function() end})
+TabShop:AddButton({Name = "Buy Valkyrie Helm", Callback = function() end})
+
+-- ==========================================
+-- 👁️ TAB 5: VISUALS (ESP)
+-- ==========================================
+local TabESP = Window:MakeTab({Name = "ESP", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+TabESP:AddToggle({Name = "ESP Players", Default = false, Callback = function(Value) end})
+TabESP:AddToggle({Name = "ESP Chests", Default = false, Callback = function(Value) end})
+TabESP:AddToggle({Name = "ESP Devil Fruits", Default = false, Callback = function(Value) end})
+TabESP:AddToggle({Name = "ESP Flowers", Default = false, Callback = function(Value) end})
+TabESP:AddToggle({Name = "ESP Islands", Default = false, Callback = function(Value) end})
+
+-- ==========================================
+-- 🌍 TAB 6: TELEPORT (DỊCH CHUYỂN)
+-- ==========================================
+local TabTele = Window:MakeTab({Name = "Teleport", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+TabTele:AddButton({Name = "Teleport Sea 1", Callback = function() end})
+TabTele:AddButton({Name = "Teleport Sea 2", Callback = function() end})
+TabTele:AddButton({Name = "Teleport Sea 3", Callback = function() end})
+TabTele:AddButton({Name = "Teleport Sea 4", Callback = function() end})
+
+TabTele:AddLabel("--- Sea 3 Islands ---")
+TabTele:AddButton({Name = "Port Town", Callback = function() end})
+TabTele:AddButton({Name = "Hydra Island", Callback = function() end})
+TabTele:AddButton({Name = "Floating Turtle", Callback = function() end})
+TabTele:AddButton({Name = "Haunted Castle", Callback = function() end})
+TabTele:AddButton({Name = "Sea of Treats", Callback = function() end})
+
+-- ==========================================
+-- ⚙️ TAB 7: MISC (TỐI ƯU MÁY)
+-- ==========================================
+local TabMisc = Window:MakeTab({Name = "Misc / Anti-Lag", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+TabMisc:AddButton({Name = "White Screen", Callback = function() game:GetService("RunService"):Set3dRenderingEnabled(false) end})
+TabMisc:AddButton({Name = "Low Graphics", Callback = function() 
+    for _, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if v:IsA("BasePart") then v.Material = Enum.Material.SmoothPlastic end
+    end
+end})
+TabMisc:AddButton({Name = "Rejoin Server", Callback = function() game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer) end})
+
+OrionLib:Init()
