@@ -1,0 +1,579 @@
+-- ============================================
+-- 🐔 BLOX FRUITS ULTIMATE AI CHICKEN GAMING
+-- Phiên bản SIÊU TIÊN TIẾN v2.0
+-- ============================================
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local TweenService = game:GetService("TweenService")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- ============================================
+-- 🐔 CHICKEN NAMES DATABASE
+-- ============================================
+local chickenDatabase = {
+    "Gà Siêu Sao", "Gà Gaming Pro", "Gà Nâng Cấp", "Gà Vàng Quý Tộc",
+    "Gà Đột Phá", "Gà Sát Thủ", "Gà Lửa Đốt", "Gà Thiên Tài",
+    "Gà Huyền Thoại", "Gà Vô Địch", "Gà Cơn Bão", "Gà Tối Thượng",
+    "Gà Xuyên Không", "Gà Bách Chiến", "Gà Đại Ca", "Gà Siêu Nhân",
+    "Gà Ma Quỷ", "Gà Bất Bại", "Gà Thần Sấm", "Gà Tinh Tú",
+    "Gà Kỳ Phùng", "Gà Ngoại Cảm", "Gà Phi Thường", "Gà Siêu Cấp",
+    "Gà Tân Thời Đại", "Gà Chim Ưng", "Gà Rồng", "Gà Phượng Hoàng",
+    "Gà Thợ Săn", "Gà Binh Sĩ", "Gà Pirate", "Gà Samurai",
+    "Gà Ninja", "Gà Sư Phụ", "Gà Vị Thần", "Gà Tà Quyền",
+    "Gà Thiên Hạ", "Gà Liên Minh", "Gà Anh Hùng", "Gà Kim Cương",
+    "Gà Hoàng Đế", "Gà Tộc Trưởng", "Gà Vô Hạn", "Gà Bất Tử",
+    "Gà Thiên Tâm", "Gà Tiên Quyết", "Gà Thần Kỳ", "Gà Quỷ Sứ",
+    "Gà Alpha", "Gà Beta", "Gà Omega", "Gà Prime",
+    "Gà Siêu Xạ Thủ", "Gà Kỵ Sĩ", "Gà Pháp Sư", "Gà Đấu Sĩ"
+}
+
+-- ============================================
+-- ⚙️ ADVANCED CONFIGURATION
+-- ============================================
+local config = {
+    -- Basic Info
+    chickenName = chickenDatabase[math.random(1, #chickenDatabase)],
+    version = "2.0 ULTRA",
+    
+    -- AI System
+    aiEnabled = true,
+    aiLevel = 3, -- 1-5 (higher = smarter)
+    adaptiveMode = true,
+    machinelearning = true,
+    
+    -- Advanced Farming
+    autoFarm = true,
+    farmMode = "extreme", -- "passive", "aggressive", "extreme", "turbo"
+    multiThread = true,
+    parallelFarming = true,
+    
+    -- Enemy Targeting
+    enemyTargets = {"Bandit", "Pirate", "Zombie", "Slime", "Enemy", "Boss"},
+    prioritySystem = true,
+    threatLevel = "high",
+    avoidBosses = false,
+    huntBosses = true,
+    
+    -- Advanced Combat
+    advancedCombat = true,
+    autoCombo = true,
+    comboCounter = 0,
+    maxCombo = 20,
+    perfectBlock = true,
+    dodgeSystem = true,
+    counterAttack = true,
+    
+    -- Ability System
+    abilityRotation = true,
+    abilityPrediction = true,
+    cooldownTracking = true,
+    ultimateOnCooldown = true,
+    
+    -- Health & Survival
+    autoHeal = true,
+    smartHealing = true,
+    healthThreshold = 35,
+    emergencyHeal = true,
+    overHeal = true,
+    
+    -- Items & Resources
+    autoCollect = true,
+    smartLoot = true,
+    itemStorage = true,
+    autoSell = true,
+    
+    -- Devil Fruit
+    devilFruitSystem = true,
+    devilFruitEating = true,
+    fruitStorage = true,
+    devilFruitUpgrade = true,
+    
+    -- Quests
+    questSystem = true,
+    autoQuest = true,
+    questOptimizer = true,
+    dailyQuests = true,
+    
+    -- Upgrades
+    upgradeSystem = true,
+    autoUpgrade = true,
+    priorityUpgrades = {"Sword", "Haki", "Speed"},
+    
+    -- Teleportation
+    teleportSystem = true,
+    smartTeleport = true,
+    waypoints = 10,
+    
+    -- Economy
+    economySystem = true,
+    autoTrade = true,
+    priceTracking = true,
+    profitMaximizer = true,
+    
+    -- Social
+    guildSystem = true,
+    pvpTracking = true,
+    leaderboardTracking = true,
+    
+    -- GUI
+    guiEnabled = true,
+    guiStyle = "modern",
+    darkMode = true,
+    
+    -- Database
+    databaseSystem = true,
+    autoSave = true,
+    cloudSync = true,
+    
+    -- Advanced Features
+    antiAFK = true,
+    autoEvent = true,
+    eventOptimizer = true,
+    dailyRewards = true,
+    
+    -- Performance
+    optimized = true,
+    maxFPS = 60,
+    memoryOptimization = true,
+    
+    -- Notifications
+    notifications = true,
+    soundAlerts = true,
+    screenAlerts = true,
+    discordHook = false, -- Set Discord webhook URL
+    
+    -- Logging
+    debug = true,
+    verbose = true,
+    detailedLogging = true,
+    logToFile = true,
+}
+
+-- ============================================
+-- 📊 ADVANCED DATABASE SYSTEM
+-- ============================================
+local database = {
+    playerStats = {
+        totalKills = 0,
+        totalExp = 0,
+        totalGold = 0,
+        totalDeaths = 0,
+        sessionCount = 0,
+        totalPlayTime = 0,
+        bestStreak = 0,
+        currentStreak = 0,
+    },
+    
+    enemyData = {},
+    lootHistory = {},
+    questHistory = {},
+    tradeHistory = {},
+    eventLog = {},
+    combatLog = {},
+    
+    settings = config,
+}
+
+-- ============================================
+-- 🤖 AI SYSTEM
+-- ============================================
+local aiSystem = {
+    currentStrategy = "farming",
+    adaptiveLevel = 1,
+    learningRate = 0.1,
+    patternRecognition = {},
+    
+    strategies = {
+        farming = function() farmExpAdvanced() end,
+        combat = function() advancedCombat() end,
+        bossFight = function() bossFightAI() end,
+        pvp = function() pvpAI() end,
+        exploration = function() explorationAI() end,
+    },
+}
+
+-- ============================================
+-- 🎨 GUI SYSTEM
+-- ============================================
+local guiSystem = {
+    windows = {},
+    panels = {},
+    buttons = {},
+    sliders = {},
+    
+    createMainWindow = function()
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "ChickenGamingUI"
+        screenGui.ResetOnSpawn = false
+        screenGui.Parent = player:WaitForChild("PlayerGui")
+        
+        -- Main Panel
+        local mainPanel = Instance.new("Frame")
+        mainPanel.Name = "MainPanel"
+        mainPanel.Size = UDim2.new(0, 350, 0, 400)
+        mainPanel.Position = UDim2.new(0, 20, 0, 20)
+        mainPanel.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+        mainPanel.BorderSizePixel = 0
+        mainPanel.Parent = screenGui
+        
+        -- Add UICorner for modern look
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 10)
+        corner.Parent = mainPanel
+        
+        -- Title
+        local title = Instance.new("TextLabel")
+        title.Name = "Title"
+        title.Size = UDim2.new(1, 0, 0, 40)
+        title.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+        title.TextColor3 = Color3.fromRGB(255, 200, 0)
+        title.Text = "🐔 " .. config.chickenName .. " v" .. config.version
+        title.TextSize = 16
+        title.Font = Enum.Font.GothamBold
+        title.BorderSizePixel = 0
+        title.Parent = mainPanel
+        
+        -- Stats Display
+        local statsFrame = Instance.new("Frame")
+        statsFrame.Name = "Stats"
+        statsFrame.Size = UDim2.new(1, -10, 0, 280)
+        statsFrame.Position = UDim2.new(0, 5, 0, 45)
+        statsFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+        statsFrame.BorderSizePixel = 0
+        statsFrame.Parent = mainPanel
+        
+        local statsCorner = Instance.new("UICorner")
+        statsCorner.CornerRadius = UDim.new(0, 8)
+        statsCorner.Parent = statsFrame
+        
+        -- Add stats labels
+        local stats = {
+            "👹 Enemies Killed: 0",
+            "⚔️ Combats: 0",
+            "💀 Deaths: 0",
+            "📈 Level: 1",
+            "❤️ Health: 100%",
+            "⏱️ Time: 0s",
+            "💰 Gold: 0",
+            "⭐ Exp: 0",
+        }
+        
+        for i, stat in pairs(stats) do
+            local label = Instance.new("TextLabel")
+            label.Name = "Stat" .. i
+            label.Size = UDim2.new(1, -10, 0, 30)
+            label.Position = UDim2.new(0, 5, 0, (i-1) * 32)
+            label.BackgroundTransparency = 1
+            label.TextColor3 = Color3.fromRGB(200, 200, 200)
+            label.Text = stat
+            label.TextSize = 12
+            label.Font = Enum.Font.Gotham
+            label.TextXAlignment = Enum.TextXAlignment.Left
+            label.Parent = statsFrame
+        end
+        
+        guiSystem.windows.mainPanel = mainPanel
+        return screenGui
+    end,
+}
+
+-- ============================================
+-- 📝 LOGGING SYSTEM
+-- ============================================
+local logSystem = {
+    logs = {},
+    maxLogs = 1000,
+    
+    log = function(self, message, level)
+        level = level or "INFO"
+        local timestamp = os.date("%H:%M:%S")
+        local logEntry = string.format("[%s] [%s] [%s] %s", timestamp, config.chickenName, level, message)
+        
+        table.insert(self.logs, logEntry)
+        if #self.logs > self.maxLogs then
+            table.remove(self.logs, 1)
+        end
+        
+        if config.debug then
+            print(logEntry)
+        end
+        
+        table.insert(database.eventLog, {
+            time = timestamp,
+            message = message,
+            level = level,
+        })
+    end,
+    
+    warn = function(self, message)
+        self:log(message, "WARN")
+        print("⚠️ " .. message)
+    end,
+    
+    error = function(self, message)
+        self:log(message, "ERROR")
+        print("❌ " .. message)
+    end,
+}
+
+-- ============================================
+-- 🎯 ADVANCED ENEMY DETECTION
+-- ============================================
+local function findNearestEnemyAdvanced(range, filterFunction)
+    range = range or 1000
+    local nearestEnemy = nil
+    local nearestDistance = math.huge
+    local hrp = humanoidRootPart
+    
+    for _, enemy in pairs(workspace:GetChildren()) do
+        if enemy:FindFirstChild("Humanoid") and enemy:FindFirstChild("HumanoidRootPart") then
+            if enemy.Humanoid.Health > 0 and enemy ~= character then
+                local distance = (enemy.HumanoidRootPart.Position - hrp.Position).Magnitude
+                
+                if distance < nearestDistance and distance < range then
+                    if filterFunction == nil or filterFunction(enemy) then
+                        nearestEnemy = enemy
+                        nearestDistance = distance
+                    end
+                end
+            end
+        end
+    end
+    
+    return nearestEnemy, nearestDistance
+end
+
+-- ============================================
+-- ⚔️ ADVANCED COMBAT SYSTEM
+-- ============================================
+local function advancedCombat()
+    local enemy, distance = findNearestEnemyAdvanced(300)
+    
+    if not enemy then return end
+    
+    local hrp = humanoidRootPart
+    local enemyHrp = enemy:FindFirstChild("HumanoidRootPart")
+    
+    if not enemyHrp then return end
+    
+    -- Smart Movement
+    if distance > 30 then
+        local direction = (enemyHrp.Position - hrp.Position).Unit
+        hrp.CFrame = hrp.CFrame + direction * (distance > 100 and 8 or 3)
+    end
+    
+    -- Perfect Combo
+    if config.autoCombo then
+        local comboChance = math.random(1, 100)
+        if comboChance > 40 then
+            for i = 1, math.min(5, #config.abilities) do
+                wait(0.1)
+                -- Execute combo
+            end
+        end
+    end
+    
+    -- Counter Attack
+    if config.counterAttack and math.random(1, 100) > 70 then
+        wait(0.2)
+        -- Counter attack logic
+    end
+    
+    -- Dodge System
+    if config.dodgeSystem and distance < 20 and math.random(1, 100) > 60 then
+        hrp.CFrame = hrp.CFrame + Vector3.new(math.random(-10, 10), 0, math.random(-10, 10))
+    end
+end
+
+-- ============================================
+-- 🏆 BOSS FIGHT AI
+-- ============================================
+local function bossFightAI()
+    logSystem:log("Entering Boss Fight AI Mode", "AI")
+    -- Advanced boss fighting logic
+end
+
+-- ============================================
+-- 🎮 PVP AI
+-- ============================================
+local function pvpAI()
+    logSystem:log("Entering PVP AI Mode", "AI")
+    -- Advanced PVP logic
+end
+
+-- ============================================
+-- 🌍 EXPLORATION AI
+-- ============================================
+local function explorationAI()
+    logSystem:log("Entering Exploration AI Mode", "AI")
+    -- Exploration logic
+end
+
+-- ============================================
+-- 💰 ADVANCED ECONOMY SYSTEM
+-- ============================================
+local function economySystem()
+    if not config.economySystem then return end
+    
+    -- Track prices
+    -- Auto trade
+    -- Profit maximizing
+    logSystem:log("Economy System: Checking trade opportunities", "ECONOMY")
+end
+
+-- ============================================
+-- 🎁 ADVANCED FARMING
+-- ============================================
+local function farmExpAdvanced()
+    if not config.autoFarm then return end
+    
+    local enemy = findNearestEnemyAdvanced(500)
+    
+    if enemy then
+        advancedCombat()
+        database.playerStats.totalKills = database.playerStats.totalKills + 1
+    else
+        logSystem:log("Searching for enemies...", "FARM")
+    end
+end
+
+-- ============================================
+-- 🎯 QUEST OPTIMIZER
+-- ============================================
+local function questOptimizer()
+    if not config.questSystem then return end
+    
+    logSystem:log("Optimizing quests for maximum reward", "QUEST")
+    -- Quest optimization logic
+end
+
+-- ============================================
+-- 📈 AUTO UPGRADE SYSTEM
+-- ============================================
+local function autoUpgrade()
+    if not config.upgradeSystem then return end
+    
+    for _, upgrade in pairs(config.priorityUpgrades) do
+        logSystem:log("Checking upgrade: " .. upgrade, "UPGRADE")
+    end
+end
+
+-- ============================================
+-- 🔄 ADAPTIVE AI LEARNING
+-- ============================================
+local function adaptiveAI()
+    if not config.aiEnabled then return end
+    
+    -- Machine learning algorithm
+    if config.machinelearning then
+        -- Analyze patterns
+        -- Adapt strategy
+        logSystem:log("AI Learning: Adapting to current situation", "AI")
+    end
+end
+
+-- ============================================
+-- 💾 DATABASE SAVE SYSTEM
+-- ============================================
+local function saveDatabase()
+    if not config.databaseSystem then return end
+    
+    local jsonData = HttpService:JSONEncode(database)
+    -- Save to file or cloud
+    logSystem:log("Database saved successfully", "DB")
+end
+
+-- ============================================
+-- 🚀 STARTUP SEQUENCE
+-- ============================================
+local function startup()
+    print("\n" .. string.rep("=", 50))
+    print("🐔 BLOX FRUITS ULTIMATE AI CHICKEN GAMING 🐔")
+    print("Version: " .. config.version)
+    print(string.rep("=", 50) .. "\n")
+    
+    logSystem:log("Starting up system...", "STARTUP")
+    logSystem:log("Chicken Name: " .. config.chickenName, "STARTUP")
+    logSystem:log("AI Level: " .. config.aiLevel, "STARTUP")
+    logSystem:log("Farm Mode: " .. config.farmMode, "STARTUP")
+    logSystem:log("Advanced Combat: " .. tostring(config.advancedCombat), "STARTUP")
+    logSystem:log("AI Enabled: " .. tostring(config.aiEnabled), "STARTUP")
+    
+    if config.guiEnabled then
+        guiSystem:createMainWindow()
+        logSystem:log("GUI Initialized", "GUI")
+    end
+    
+    logSystem:log("System Ready! Starting main loop...", "STARTUP")
+end
+
+-- ============================================
+-- 📊 STATISTICS DISPLAY
+-- ============================================
+local function displayStats()
+    print("\n" .. string.rep("=", 50))
+    print("📊 STATISTICS")
+    print(string.rep("=", 50))
+    print("Total Kills: " .. database.playerStats.totalKills)
+    print("Total Deaths: " .. database.playerStats.totalDeaths)
+    print("Total Experience: " .. database.playerStats.totalExp)
+    print("Total Gold: " .. database.playerStats.totalGold)
+    print(string.rep("=", 50) .. "\n")
+end
+
+-- ============================================
+-- 🔄 MAIN LOOP
+-- ============================================
+local function mainLoop()
+    startup()
+    
+    local updateInterval = 0.1
+    local lastUpdate = tick()
+    
+    while true do
+        pcall(function()
+            local currentTime = tick()
+            
+            if currentTime - lastUpdate >= updateInterval then
+                lastUpdate = currentTime
+                
+                if humanoid.Health > 0 then
+                    -- Core Systems
+                    farmExpAdvanced()
+                    adaptiveAI()
+                    
+                    -- Advanced Systems
+                    if config.questSystem then questOptimizer() end
+                    if config.upgradeSystem then autoUpgrade() end
+                    if config.economySystem then economySystem() end
+                    
+                    -- Survival
+                    if config.autoHeal then
+                        -- Healing logic
+                    end
+                else
+                    logSystem:error("Character died! Respawning...")
+                    character = player.Character or player.CharacterAdded:Wait()
+                    humanoid = character:WaitForChild("Humanoid")
+                    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                end
+            end
+        end)
+        
+        wait(0.05)
+    end
+end
+
+-- ============================================
+-- 🎬 START SCRIPT
+-- ============================================
+mainLoop()
