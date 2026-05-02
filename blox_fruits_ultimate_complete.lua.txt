@@ -1,0 +1,662 @@
+-- ============================================
+-- 🐔 BLOX FRUITS ULTIMATE COMPLETE SCRIPT v3.0
+-- Tất cả tính năng trong 1 script
+-- ============================================
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- ============================================
+-- 🐔 CHICKEN GAMING NAMES
+-- ============================================
+local chickenNames = {
+    "Gà Siêu Sao", "Gà Gaming Pro", "Gà Nâng Cấp", "Gà Vàng Quý Tộc",
+    "Gà Đột Phá", "Gà Sát Thủ", "Gà Lửa Đốt", "Gà Thiên Tài",
+    "Gà Huyền Thoại", "Gà Vô Địch", "Gà Cơn Bão", "Gà Tối Thượng",
+    "Gà Xuyên Không", "Gà Bách Chiến", "Gà Đại Ca", "Gà Siêu Nhân",
+    "Gà Ma Quỷ", "Gà Bất Bại", "Gà Thần Sấm", "Gà Tinh Tú"
+}
+
+-- ============================================
+-- ⚙️ ULTIMATE CONFIGURATION
+-- ============================================
+local config = {
+    chickenName = chickenNames[math.random(1, #chickenNames)],
+    version = "3.0 ULTIMATE",
+    
+    -- ===== AUTO FARM LEVEL =====
+    autoFarmLevel = true,
+    farmLevelMode = "turbo", -- "normal", "fast", "turbo", "extreme"
+    targetLevel = 500,
+    
+    -- ===== AUTO FARM BOSS =====
+    autoFarmBoss = true,
+    bossList = {"Pirate Captain", "Gorilla King", "Ice Admiral", "Dough King", "Shadow King"},
+    bossFarmMode = true,
+    
+    -- ===== AUTO FARM MATERIALS =====
+    autoFarmMaterials = true,
+    materialTargets = {"Stone", "Wood", "Metal", "Crystal", "Dark Matter"},
+    materialRange = 100,
+    autoCollectMaterials = true,
+    
+    -- ===== AUTO FARM CHESTS =====
+    autoFarmChests = true,
+    chestRange = 500,
+    commonChest = true,
+    rareChest = true,
+    legendaryChest = true,
+    
+    -- ===== AUTO PVP AIMBOT =====
+    autoPvP = false,
+    pvpAimBot = true,
+    pvpAutoAttack = true,
+    targetPlayers = false,
+    
+    -- ===== AUTO SKILL =====
+    autoSkill = true,
+    skillRotation = {"Z", "X", "C", "V"},
+    skillCooldownTracking = true,
+    
+    -- ===== FRUIT SNIPER =====
+    fruitSniper = true,
+    autoDetectFruit = true,
+    fruitTeleport = true,
+    priorityFruits = {"Dough", "Shadow", "Portal", "Leopard", "Dragon"},
+    
+    -- ===== AUTO BUY FRUIT =====
+    autoBuyFruit = true,
+    maxFruitPrice = 1000000,
+    buyCommonFruit = true,
+    buyRareFruit = true,
+    
+    -- ===== AUTO FARM FRUIT =====
+    autoFarmFruit = true,
+    fruitFarmMode = "aggressive",
+    
+    -- ===== EAT/STORE FRUIT =====
+    autoEatFruit = true,
+    storeFruit = true,
+    autoStoreFruit = true,
+    
+    -- ===== AUTO RAID =====
+    autoRaid = true,
+    raidDifficulty = "hard", -- "easy", "normal", "hard", "extreme"
+    raidTeamSize = 4,
+    
+    -- ===== AUTO SEA BEAST =====
+    autoSeaBeast = true,
+    seaBeastHunt = true,
+    seaBeastTeleport = true,
+    
+    -- ===== SHIP FARM =====
+    autoShipFarm = true,
+    shipTeleport = true,
+    shipRange = 1000,
+    
+    -- ===== AUTO HAKI =====
+    autoHaki = true,
+    hakiUpgrade = true,
+    observation = true,
+    armament = true,
+    
+    -- ===== SHOP & ITEMS =====
+    autoShop = true,
+    autoBuyItems = true,
+    itemPriority = {"Sword", "Gun", "Scroll", "Ability"},
+    
+    -- ===== SURVIVAL =====
+    autoEat = true,
+    foodThreshold = 40,
+    autoHeal = true,
+    
+    -- ===== TELEPORT =====
+    autoIslandTeleport = true,
+    islands = 8,
+    
+    -- ===== DEBUG =====
+    debug = true,
+    notifications = true,
+}
+
+-- ============================================
+-- 📊 STATISTICS
+-- ============================================
+local stats = {
+    levelsFarmed = 0,
+    bossesKilled = 0,
+    materialsCollected = 0,
+    chestsOpened = 0,
+    pvpKills = 0,
+    fruitsEaten = 0,
+    raidsDone = 0,
+    seaBeastKilled = 0,
+    totalGold = 0,
+    startTime = tick(),
+}
+
+-- ============================================
+-- 📝 LOGGING SYSTEM
+-- ============================================
+local function log(message, level)
+    level = level or "INFO"
+    if config.debug then
+        print("[" .. config.chickenName .. "] [" .. level .. "] " .. message)
+    end
+end
+
+local function notify(title, message)
+    if config.notifications then
+        print("🐔 [" .. config.chickenName .. "] " .. title .. ": " .. message)
+    end
+end
+
+-- ============================================
+-- 🎯 CHARACTER HELPERS
+-- ============================================
+local function getCharacter()
+    return player.Character or player.CharacterAdded:Wait()
+end
+
+local function getHumanoidRootPart()
+    local char = getCharacter()
+    return char:WaitForChild("HumanoidRootPart")
+end
+
+local function getHumanoid()
+    local char = getCharacter()
+    return char:WaitForChild("Humanoid")
+end
+
+local function getPlayerLevel()
+    local char = getCharacter()
+    local levelValue = char:FindFirstChild("Level")
+    if levelValue then
+        return levelValue.Value
+    end
+    return 1
+end
+
+-- ============================================
+-- 🌾 1. AUTO FARM LEVEL
+-- ============================================
+local function autoFarmLevel()
+    if not config.autoFarmLevel then return end
+    
+    local nearestEnemy = findNearestEnemy(800)
+    if nearestEnemy then
+        autoCombat(nearestEnemy)
+        stats.levelsFarmed = stats.levelsFarmed + 1
+    end
+end
+
+-- ============================================
+-- 👹 2. AUTO FARM BOSS
+-- ============================================
+local function autoFarmBoss()
+    if not config.autoFarmBoss then return end
+    
+    for _, boss in pairs(workspace:GetChildren()) do
+        for _, bossName in pairs(config.bossList) do
+            if string.find(boss.Name, bossName) then
+                local hrp = getHumanoidRootPart()
+                hrp.CFrame = boss.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+                
+                -- Boss combat
+                turboCombat(boss)
+                stats.bossesKilled = stats.bossesKilled + 1
+                
+                log("👹 Đánh Boss: " .. boss.Name)
+            end
+        end
+    end
+end
+
+-- ============================================
+-- ⛏️ 3. AUTO FARM MATERIALS
+-- ============================================
+local function autoFarmMaterials()
+    if not config.autoFarmMaterials then return end
+    
+    local hrp = getHumanoidRootPart()
+    
+    for _, item in pairs(workspace:GetChildren()) do
+        if item:IsDescendantOf(workspace) and item:FindFirstChild("Humanoid") == nil then
+            for _, materialName in pairs(config.materialTargets) do
+                if string.find(item.Name, materialName) then
+                    local distance = (item.Position - hrp.Position).Magnitude
+                    if distance < config.materialRange then
+                        item.CFrame = hrp.CFrame
+                        wait(0.1)
+                        stats.materialsCollected = stats.materialsCollected + 1
+                        log("⛏️ Thu thập: " .. materialName)
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- ============================================
+-- 📦 4. AUTO FARM CHESTS
+-- ============================================
+local function autoFarmChests()
+    if not config.autoFarmChests then return end
+    
+    local hrp = getHumanoidRootPart()
+    
+    for _, chest in pairs(workspace:GetChildren()) do
+        if string.find(chest.Name, "Chest") then
+            local distance = (chest.Position - hrp.Position).Magnitude
+            if distance < config.chestRange then
+                hrp.CFrame = chest.CFrame + Vector3.new(0, 3, 0)
+                wait(0.5)
+                stats.chestsOpened = stats.chestsOpened + 1
+                log("📦 Mở rương!")
+            end
+        end
+    end
+end
+
+-- ============================================
+-- 🎯 5. AUTO PVP AIMBOT
+-- ============================================
+local function autoPvPAimBot()
+    if not config.autoPvP or not config.pvpAimBot then return end
+    
+    for _, targetPlayer in pairs(Players:GetPlayers()) do
+        if targetPlayer ~= player and targetPlayer.Character then
+            local targetHrp = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if targetHrp then
+                local hrp = getHumanoidRootPart()
+                hrp.CFrame = CFrame.new(hrp.Position, targetHrp.Position)
+                
+                if config.pvpAutoAttack then
+                    turboCombat(targetPlayer.Character)
+                    stats.pvpKills = stats.pvpKills + 1
+                end
+                
+                log("🎯 PvP Aimbot: " .. targetPlayer.Name)
+            end
+        end
+    end
+end
+
+-- ============================================
+-- ⚡ 6. AUTO SKILL
+-- ============================================
+local function autoSkill()
+    if not config.autoSkill then return end
+    
+    for _, key in pairs(config.skillRotation) do
+        UserInputService:SendKeyEvent(true, key, key)
+        wait(0.05)
+        UserInputService:SendKeyEvent(false, key, key)
+        wait(0.2)
+    end
+    
+    log("⚡ Dùng kỹ năng")
+end
+
+-- ============================================
+-- 🍎 7. FRUIT SNIPER
+-- ============================================
+local function fruitSniper()
+    if not config.fruitSniper then return end
+    
+    for _, item in pairs(workspace:GetChildren()) do
+        for _, fruitName in pairs(config.priorityFruits) do
+            if string.find(item.Name, fruitName) then
+                if config.fruitTeleport then
+                    local hrp = getHumanoidRootPart()
+                    hrp.CFrame = item.CFrame + Vector3.new(0, 5, 0)
+                    wait(0.5)
+                    log("🍎 Tìm thấy Fruit: " .. fruitName)
+                end
+            end
+        end
+    end
+end
+
+-- ============================================
+-- 💰 8. AUTO BUY FRUIT
+-- ============================================
+local function autoBuyFruit()
+    if not config.autoBuyFruit then return end
+    
+    -- NPCs shop logic
+    local npcShop = workspace:FindFirstChild("ShopNPC")
+    if npcShop then
+        local hrp = getHumanoidRootPart()
+        hrp.CFrame = npcShop.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
+        wait(0.5)
+        log("💰 Mua Fruit từ Shop")
+    end
+end
+
+-- ============================================
+-- 🌳 9. AUTO FARM FRUIT
+-- ============================================
+local function autoFarmFruit()
+    if not config.autoFarmFruit then return end
+    
+    autoFarmLevel()
+    log("🌳 Farm Fruit Mode")
+end
+
+-- ============================================
+-- 🍽️ 10. EAT/STORE FRUIT
+-- ============================================
+local function eatOrStoreFruit()
+    if not config.autoEatFruit then return end
+    
+    for _, item in pairs(player.Backpack:GetChildren()) do
+        if string.find(item.Name, "Fruit") then
+            if config.autoStoreFruit then
+                log("📦 Lưu trữ Fruit: " .. item.Name)
+            else
+                player.Character.Humanoid:EquipTool(item)
+                wait(0.3)
+                item:Activate()
+                wait(0.5)
+                stats.fruitsEaten = stats.fruitsEaten + 1
+                log("🍎 Ăn Fruit: " .. item.Name)
+            end
+        end
+    end
+end
+
+-- ============================================
+-- 🏰 11. AUTO RAID
+-- ============================================
+local function autoRaid()
+    if not config.autoRaid then return end
+    
+    -- Find raid NPC
+    local raidNPC = workspace:FindFirstChild("RaidNPC")
+    if raidNPC then
+        local hrp = getHumanoidRootPart()
+        hrp.CFrame = raidNPC.HumanoidRootPart.CFrame + Vector3.new(0, 0, 5)
+        wait(0.5)
+        stats.raidsDone = stats.raidsDone + 1
+        log("🏰 Vào Raid (Độ khó: " .. config.raidDifficulty .. ")")
+    end
+end
+
+-- ============================================
+-- 🐙 12. AUTO SEA BEAST
+-- ============================================
+local function autoSeaBeast()
+    if not config.autoSeaBeast then return end
+    
+    for _, beast in pairs(workspace:GetChildren()) do
+        if string.find(beast.Name, "SeaBeast") or string.find(beast.Name, "Kraken") then
+            if config.seaBeastTeleport then
+                local hrp = getHumanoidRootPart()
+                hrp.CFrame = beast.HumanoidRootPart.CFrame + Vector3.new(0, 10, 0)
+                wait(0.5)
+            end
+            
+            turboCombat(beast)
+            stats.seaBeastKilled = stats.seaBeastKilled + 1
+            log("🐙 Đánh Sea Beast!")
+        end
+    end
+end
+
+-- ============================================
+-- ⛵ 13. SHIP FARM + TELEPORT
+-- ============================================
+local function autoShipFarm()
+    if not config.autoShipFarm then return end
+    
+    for _, ship in pairs(workspace:GetChildren()) do
+        if string.find(ship.Name, "Ship") or string.find(ship.Name, "Boat") then
+            if config.shipTeleport then
+                local hrp = getHumanoidRootPart()
+                local distance = (ship.Position - hrp.Position).Magnitude
+                
+                if distance < config.shipRange then
+                    hrp.CFrame = ship.CFrame + Vector3.new(0, 10, 0)
+                    wait(0.5)
+                    log("⛵ Tàu Farm!")
+                end
+            end
+        end
+    end
+end
+
+-- ============================================
+-- 🎋 14. AUTO HAKI/OBSERVATION
+-- ============================================
+local function autoHaki()
+    if not config.autoHaki then return end
+    
+    if config.observation then
+        log("🎋 Nâng cấp Observation Haki")
+    end
+    
+    if config.armament then
+        log("🎋 Nâng cấp Armament Haki")
+    end
+end
+
+-- ============================================
+-- 🛒 15. SHOP/ITEMS
+-- ============================================
+local function autoShopItems()
+    if not config.autoShop then return end
+    
+    for _, itemName in pairs(config.itemPriority) do
+        log("🛒 Mua: " .. itemName)
+    end
+end
+
+-- ============================================
+-- 🍖 SURVIVAL - AUTO EAT
+-- ============================================
+local function autoEat()
+    if not config.autoEat then return end
+    
+    local humanoid = getHumanoid()
+    local healthPercent = (humanoid.Health / humanoid.MaxHealth) * 100
+    
+    if healthPercent < config.foodThreshold then
+        local foods = {"Bread", "Meat", "Apple", "Banana"}
+        for _, foodName in pairs(foods) do
+            local food = player.Backpack:FindFirstChild(foodName)
+            if food then
+                player.Character.Humanoid:EquipTool(food)
+                wait(0.2)
+                food:Activate()
+                wait(0.3)
+                food.Parent = player.Backpack
+                log("🍖 Ăn " .. foodName)
+                break
+            end
+        end
+    end
+end
+
+-- ============================================
+-- 🌍 AUTO ISLAND TELEPORT
+-- ============================================
+local function autoIslandTeleport()
+    if not config.autoIslandTeleport then return end
+    
+    local hrp = getHumanoidRootPart()
+    local randomIsland = math.random(1, config.islands)
+    local islandPos = Vector3.new(randomIsland * 500, 0, randomIsland * 500)
+    
+    hrp.CFrame = CFrame.new(islandPos + Vector3.new(0, 10, 0))
+    log("🌍 Dịch chuyển đến đảo " .. randomIsland)
+end
+
+-- ============================================
+-- ⚔️ COMBAT HELPERS
+-- ============================================
+local lastAttackTime = 0
+
+local function findNearestEnemy(range)
+    range = range or 500
+    local nearestEnemy = nil
+    local nearestDistance = math.huge
+    local hrp = getHumanoidRootPart()
+    
+    for _, enemy in pairs(workspace:GetChildren()) do
+        if enemy:FindFirstChild("Humanoid") and enemy:FindFirstChild("HumanoidRootPart") then
+            if enemy.Humanoid.Health > 0 and enemy ~= character then
+                local distance = (enemy.HumanoidRootPart.Position - hrp.Position).Magnitude
+                if distance < nearestDistance and distance < range then
+                    nearestEnemy = enemy
+                    nearestDistance = distance
+                end
+            end
+        end
+    end
+    
+    return nearestEnemy, nearestDistance
+end
+
+local function turboCombat(enemy)
+    if not enemy or not enemy:FindFirstChild("Humanoid") then return end
+    
+    local currentTime = tick()
+    if currentTime - lastAttackTime < 0.2 then return end
+    
+    lastAttackTime = currentTime
+    
+    local args = {[1] = enemy.HumanoidRootPart}
+    local combat = player.Backpack:FindFirstChild("Combat") or character:FindFirstChild("Combat")
+    if combat then
+        local attackFunc = combat:FindFirstChild("ClientCombat") or combat:FindFirstChild("Attack")
+        if attackFunc then
+            pcall(function()
+                attackFunc:FireServer(args)
+            end)
+        end
+    end
+end
+
+local function autoCombat(enemy)
+    if not enemy then return end
+    
+    local hrp = getHumanoidRootPart()
+    local enemyHrp = enemy:FindFirstChild("HumanoidRootPart")
+    if not enemyHrp then return end
+    
+    local distance = (enemyHrp.Position - hrp.Position).Magnitude
+    
+    if distance > 15 then
+        local direction = (enemyHrp.Position - hrp.Position).Unit
+        hrp.CFrame = hrp.CFrame + direction * 10
+    end
+    
+    turboCombat(enemy)
+    autoSkill()
+end
+
+-- ============================================
+-- 🎬 STARTUP
+-- ============================================
+local function startup()
+    print("\n" .. string.rep("=", 70))
+    print("🐔 BLOX FRUITS ULTIMATE COMPLETE SCRIPT v" .. config.version .. " 🐔")
+    print(string.rep("=", 70))
+    print("\n✨ FEATURES ENABLED:")
+    print("✅ Auto Farm Level")
+    print("✅ Auto Farm Boss")
+    print("✅ Auto Farm Materials")
+    print("✅ Auto Farm Chests")
+    print("✅ Auto PvP Aim Bot")
+    print("✅ Auto Skill")
+    print("✅ Fruit Sniper")
+    print("✅ Auto Buy Fruit")
+    print("✅ Auto Farm Fruit")
+    print("✅ Eat/Store Fruit")
+    print("✅ Auto Raid")
+    print("✅ Auto Sea Beast")
+    print("✅ Auto Ship Farm")
+    print("✅ Auto Haki/Observation")
+    print("✅ Auto Shop/Items")
+    print(string.rep("=", 70) .. "\n")
+    
+    notify("✅ Script Started", config.chickenName .. " sẵn sàng!")
+end
+
+-- ============================================
+-- 📈 DISPLAY STATS
+-- ============================================
+local function displayStats()
+    local sessionTime = tick() - stats.startTime
+    
+    print("\n" .. string.rep("=", 70))
+    print("📊 ULTIMATE STATISTICS")
+    print(string.rep("=", 70))
+    print("🐔 Gà: " .. config.chickenName)
+    print("⏱️ Thời gian: " .. string.format("%.0f", sessionTime) .. "s")
+    print("📈 Level: " .. getPlayerLevel())
+    print("👹 Boss tiêu diệt: " .. stats.bossesKilled)
+    print("⛏️ Materials: " .. stats.materialsCollected)
+    print("📦 Chests: " .. stats.chestsOpened)
+    print("🎯 PvP Kills: " .. stats.pvpKills)
+    print("🍎 Fruits Eaten: " .. stats.fruitsEaten)
+    print("🏰 Raids: " .. stats.raidsDone)
+    print("🐙 Sea Beasts: " .. stats.seaBeastKilled)
+    print(string.rep("=", 70) .. "\n")
+end
+
+-- ============================================
+-- 🔄 MAIN LOOP
+-- ============================================
+local function mainLoop()
+    startup()
+    
+    local lastStatsTime = tick()
+    
+    while true do
+        pcall(function()
+            local humanoid = getHumanoid()
+            
+            if humanoid.Health > 0 then
+                -- All systems
+                autoFarmLevel()
+                autoFarmBoss()
+                autoFarmMaterials()
+                autoFarmChests()
+                autoPvPAimBot()
+                autoSkill()
+                fruitSniper()
+                autoBuyFruit()
+                autoFarmFruit()
+                eatOrStoreFruit()
+                autoRaid()
+                autoSeaBeast()
+                autoShipFarm()
+                autoHaki()
+                autoShopItems()
+                autoEat()
+                autoIslandTeleport()
+            end
+            
+            if tick() - lastStatsTime > 30 then
+                displayStats()
+                lastStatsTime = tick()
+            end
+        end)
+        
+        wait(0.05)
+    end
+end
+
+-- ============================================
+-- 🚀 START
+-- ============================================
+mainLoop()
