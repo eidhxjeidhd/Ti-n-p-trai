@@ -1,0 +1,437 @@
+-- Blox Fruit - Menu Bật/Tắt Bằng Ảnh ID
+-- Sử dụng image ID cho switch bật/tắt
+
+repeat wait() until game:IsLoaded()
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+-- =============================================
+-- IMAGE IDs
+-- =============================================
+
+local IMAGES = {
+    -- Nền và khung
+    Background = "rbxassetid://84957548476668",
+    Frame = "rbxassetid://84957548476668",
+    Panel = "rbxassetid://84957548476668",
+    
+    -- Switch bật/tắt
+    SwitchOff = "rbxassetid://84957548476668",     -- Nền switch khi tắt
+    SwitchOn = "rbxassetid://84957548476668",      -- Nền switch khi bật
+    KnobOff = "rbxassetid://84957548476668",       -- Nút tròn khi tắt
+    KnobOn = "rbxassetid://84957548476668",        -- Nút tròn khi bật
+    
+    -- Icon cho các nút
+    IconFarm = "rbxassetid://84957548476668",
+    IconBoss = "rbxassetid://84957548476668",
+    IconFruit = "rbxassetid://8495754847666884957548476668",
+    IconCollect = "rbxassetid://84957548476668",
+    IconHeal = "rbxassetid://84957548476668",
+    IconAnti = "rbxassetid://84957548476668",
+    IconKill = "rbxassetid://84957548476668",
+    IconSpeed = "rbxassetid://84957548476668",
+}
+
+-- =============================================
+-- TẠO MENU VỚI IMAGE ID
+-- =============================================
+
+local function createImageMenu()
+    -- Xóa menu cũ
+    if player.PlayerGui:FindFirstChild("BloxFarmMenu") then
+        player.PlayerGui.BloxFarmMenu:Destroy()
+    end
+    
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "BloxFarmMenu"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+    
+    -- Main Frame
+    local mainFrame = Instance.new("ImageLabel")
+    mainFrame.Size = UDim2.new(0, 400, 0, 550)
+    mainFrame.Position = UDim2.new(0.5, -200, 0.5, -275)
+    mainFrame.Image = IMAGES.Background
+    mainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 25)
+    mainFrame.BackgroundTransparency = 0.1
+    mainFrame.Active = true
+    mainFrame.Draggable = true
+    mainFrame.Parent = screenGui
+    
+    local mainCorner = Instance.new("UICorner")
+    mainCorner.CornerRadius = UDim.new(0, 15)
+    mainCorner.Parent = mainFrame
+    
+    -- Title
+    local titleFrame = Instance.new("ImageLabel")
+    titleFrame.Size = UDim2.new(1, 0, 0, 50)
+    titleFrame.Image = IMAGES.Frame
+    titleFrame.BackgroundColor3 = Color3.fromRGB(255, 40, 40)
+    titleFrame.BackgroundTransparency = 0.2
+    titleFrame.Parent = mainFrame
+    
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 10)
+    titleCorner.Parent = titleFrame
+    
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 1, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "⚡ BLOX FARM PRO ⚡"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextScaled = true
+    title.Font = Enum.Font.Bold
+    title.Parent = titleFrame
+    
+    -- Status
+    local status = Instance.new("TextLabel")
+    status.Size = UDim2.new(0.9, 0, 0, 22)
+    status.Position = UDim2.new(0.05, 0, 0.11, 0)
+    status.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+    status.BackgroundTransparency = 0.3
+    status.Text = "✅ BYPASS | F9: Ẩn/Hiện"
+    status.TextColor3 = Color3.fromRGB(0, 255, 0)
+    status.TextScaled = true
+    status.Parent = mainFrame
+    
+    local statusCorner = Instance.new("UICorner")
+    statusCorner.CornerRadius = UDim.new(0, 5)
+    statusCorner.Parent = status
+    
+    -- =============================================
+    -- SWITCH BẬT/TẮT BẰNG IMAGE
+    -- =============================================
+    
+    local toggles = {
+        {name = "Auto Farm", key = "AutoFarm", icon = "rbxassetid://1318875445"},
+        {name = "Auto Boss", key = "AutoBoss", icon = "rbxassetid://1318875445"},
+        {name = "Auto Fruit", key = "AutoFruit", icon = "rbxassetid://1318875445"},
+        {name = "Auto Collect", key = "AutoCollect", icon = "rbxassetid://1318875445"},
+        {name = "Auto Heal", key = "AutoHeal", icon = "rbxassetid://1318875445"},
+        {name = "Anti Ban", key = "AntiBan", icon = "rbxassetid://1318875445"},
+        {name = "Kill Aura", key = "KillAura", icon = "rbxassetid://1318875445"},
+        {name = "Speed Hack", key = "SpeedHack", icon = "rbxassetid://1318875445"}
+    }
+    
+    local yPos = 0.17
+    local states = {}
+    local switchObjects = {}
+    
+    for _, toggle in pairs(toggles) do
+        -- Row frame
+        local rowFrame = Instance.new("ImageLabel")
+        rowFrame.Size = UDim2.new(0.9, 0, 0, 42)
+        rowFrame.Position = UDim2.new(0.05, 0, yPos, 0)
+        rowFrame.Image = IMAGES.Frame
+        rowFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 45)
+        rowFrame.BackgroundTransparency = 0.2
+        rowFrame.Parent = mainFrame
+        
+        local rowCorner = Instance.new("UICorner")
+        rowCorner.CornerRadius = UDim.new(0, 8)
+        rowCorner.Parent = rowFrame
+        
+        -- Icon
+        local iconImg = Instance.new("ImageLabel")
+        iconImg.Size = UDim2.new(0, 30, 0, 30)
+        iconImg.Position = UDim2.new(0.03, 0, 0.5, -15)
+        iconImg.Image = toggle.icon
+        iconImg.BackgroundTransparency = 1
+        iconImg.Parent = rowFrame
+        
+        -- Name
+        local nameLabel = Instance.new("TextLabel")
+        nameLabel.Size = UDim2.new(0.4, 0, 1, 0)
+        nameLabel.Position = UDim2.new(0.13, 0, 0, 0)
+        nameLabel.BackgroundTransparency = 1
+        nameLabel.Text = toggle.name
+        nameLabel.TextColor3 = Color3.fromRGB(220, 220, 255)
+        nameLabel.TextScaled = true
+        nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+        nameLabel.Parent = rowFrame
+        
+        -- Switch container (dùng ImageLabel)
+        local switchBg = Instance.new("ImageLabel")
+        switchBg.Size = UDim2.new(0, 55, 0, 28)
+        switchBg.Position = UDim2.new(0.75, 0, 0.5, -14)
+        switchBg.Image = IMAGES.SwitchOff
+        switchBg.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+        switchBg.BackgroundTransparency = 0
+        switchBg.Parent = rowFrame
+        
+        local switchCorner = Instance.new("UICorner")
+        switchCorner.CornerRadius = UDim.new(1, 0)
+        switchCorner.Parent = switchBg
+        
+        -- Knob (nút tròn bên trong switch)
+        local knob = Instance.new("ImageLabel")
+        knob.Size = UDim2.new(0, 22, 0, 22)
+        knob.Position = UDim2.new(0.04, 0, 0.5, -11)
+        knob.Image = IMAGES.KnobOff
+        knob.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+        knob.BackgroundTransparency = 0
+        knob.Parent = switchBg
+        
+        local knobCorner = Instance.new("UICorner")
+        knobCorner.CornerRadius = UDim.new(1, 0)
+        knobCorner.Parent = knob
+        
+        states[toggle.key] = false
+        switchObjects[toggle.key] = {
+            bg = switchBg,
+            knob = knob,
+            row = rowFrame,
+            label = nameLabel,
+            icon = iconImg
+        }
+        
+        -- Click để bật/tắt
+        rowFrame.MouseButton1Click:Connect(function()
+            states[toggle.key] = not states[toggle.key]
+            
+            if states[toggle.key] then
+                -- Bật
+                switchBg.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
+                switchBg.Image = IMAGES.SwitchOn
+                knob.Position = UDim2.new(0.54, 0, 0.5, -11)
+                knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                knob.Image = IMAGES.KnobOn
+                rowFrame.BackgroundColor3 = Color3.fromRGB(0, 80, 30)
+                nameLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+                -- Đổi màu icon
+                iconImg.ImageColor3 = Color3.fromRGB(0, 255, 0)
+            else
+                -- Tắt
+                switchBg.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+                switchBg.Image = IMAGES.SwitchOff
+                knob.Position = UDim2.new(0.04, 0, 0.5, -11)
+                knob.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+                knob.Image = IMAGES.KnobOff
+                rowFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 45)
+                nameLabel.TextColor3 = Color3.fromRGB(220, 220, 255)
+                iconImg.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            end
+            
+            -- Gọi hàm
+            if toggle.key == "AutoFarm" and states[toggle.key] then
+                startAutoFarm()
+            end
+            if toggle.key == "AntiBan" and states[toggle.key] then
+                enableAntiBan()
+            end
+            if toggle.key == "SpeedHack" and states[toggle.key] then
+                enableSpeedHack()
+            end
+        end)
+        
+        yPos = yPos + 0.095
+    end
+    
+    -- =============================================
+    -- INFO
+    -- =============================================
+    
+    local infoFrame = Instance.new("ImageLabel")
+    infoFrame.Size = UDim2.new(0.9, 0, 0, 30)
+    infoFrame.Position = UDim2.new(0.05, 0, 0.88, 0)
+    infoFrame.Image = IMAGES.Frame
+    infoFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+    infoFrame.BackgroundTransparency = 0.3
+    infoFrame.Parent = mainFrame
+    
+    local infoCorner = Instance.new("UICorner")
+    infoCorner.CornerRadius = UDim.new(0, 5)
+    infoCorner.Parent = infoFrame
+    
+    local infoText = Instance.new("TextLabel")
+    infoText.Size = UDim2.new(1, 0, 1, 0)
+    infoText.BackgroundTransparency = 1
+    infoText.Text = "📊 Lv: " .. (player:GetAttribute("Level") or 0) .. " | 💰 " .. (player:GetAttribute("Beli") or 0)
+    infoText.TextColor3 = Color3.fromRGB(200, 200, 255)
+    infoText.TextScaled = true
+    infoText.Parent = infoFrame
+    
+    -- Update info
+    coroutine.wrap(function()
+        while wait(2) do
+            local lvl = player:GetAttribute("Level") or 0
+            local beli = player:GetAttribute("Beli") or 0
+            infoText.Text = "📊 Lv: " .. lvl .. " | 💰 " .. beli
+        end
+    end)()
+    
+    -- =============================================
+    -- NÚT ĐÓNG
+    -- =============================================
+    
+    local closeBtn = Instance.new("ImageLabel")
+    closeBtn.Size = UDim2.new(0.25, 0, 0, 30)
+    closeBtn.Position = UDim2.new(0.7, 0, 0.93, 0)
+    closeBtn.Image = IMAGES.Frame
+    closeBtn.BackgroundColor3 = Color3.fromRGB(150, 30, 30)
+    closeBtn.Parent = mainFrame
+    
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0, 5)
+    closeCorner.Parent = closeBtn
+    
+    local closeText = Instance.new("TextLabel")
+    closeText.Size = UDim2.new(1, 0, 1, 0)
+    closeText.BackgroundTransparency = 1
+    closeText.Text = "❌ ĐÓNG"
+    closeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeText.TextScaled = true
+    closeText.Parent = closeBtn
+    
+    closeBtn.MouseButton1Click:Connect(function()
+        screenGui.Enabled = false
+    end)
+    
+    -- Reset button
+    local resetBtn = Instance.new("ImageLabel")
+    resetBtn.Size = UDim2.new(0.25, 0, 0, 30)
+    resetBtn.Position = UDim2.new(0.4, 0, 0.93, 0)
+    resetBtn.Image = IMAGES.Frame
+    resetBtn.BackgroundColor3 = Color3.fromRGB(200, 150, 0)
+    resetBtn.Parent = mainFrame
+    
+    local resetCorner = Instance.new("UICorner")
+    resetCorner.CornerRadius = UDim.new(0, 5)
+    resetCorner.Parent = resetBtn
+    
+    local resetText = Instance.new("TextLabel")
+    resetText.Size = UDim2.new(1, 0, 1, 0)
+    resetText.BackgroundTransparency = 1
+    resetText.Text = "🔄 RESET"
+    resetText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    resetText.TextScaled = true
+    resetText.Parent = resetBtn
+    
+    resetBtn.MouseButton1Click:Connect(function()
+        for k, v in pairs(states) do
+            states[k] = false
+            if switchObjects[k] then
+                local obj = switchObjects[k]
+                obj.bg.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+                obj.bg.Image = IMAGES.SwitchOff
+                obj.knob.Position = UDim2.new(0.04, 0, 0.5, -11)
+                obj.knob.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+                obj.knob.Image = IMAGES.KnobOff
+                obj.row.BackgroundColor3 = Color3.fromRGB(25, 25, 45)
+                obj.label.TextColor3 = Color3.fromRGB(220, 220, 255)
+                obj.icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            end
+        end
+        print("🔄 Reset all!")
+    end)
+    
+    return screenGui, states
+end
+
+-- =============================================
+-- CÁC HÀM
+-- =============================================
+
+local function startAutoFarm()
+    print("⚡ Auto Farm started!")
+    coroutine.wrap(function()
+        while player:FindFirstChild("Humanoid") and humanoid.Health > 0 do
+            local target = nil
+            local minDist = math.huge
+            for _, v in pairs(game.Workspace:GetChildren()) do
+                if v:IsA("Model") and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") then
+                    if v.Name ~= player.Name and v.Humanoid.Health > 0 then
+                        local dist = (rootPart.Position - v.HumanoidRootPart.Position).Magnitude
+                        if dist < minDist and dist < 250 then
+                            target = v
+                            minDist = dist
+                        end
+                    end
+                end
+            end
+            
+            if target then
+                rootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
+                wait(0.05)
+                humanoid:Attack()
+                wait(0.02)
+            else
+                local pos = Vector3.new(math.random(-500, 500), 0, math.random(-500, 500))
+                rootPart.CFrame = CFrame.new(pos)
+                wait(0.5)
+            end
+            wait(0.05)
+        end
+    end)()
+end
+
+local function enableAntiBan()
+    print("🛡️ Anti-Ban enabled!")
+    pcall(function()
+        for _, v in pairs(getfenv()) do
+            if type(v) == "table" then
+                if v.RedzHub then
+                    v.RedzHub.Detect = nil
+                    v.RedzHub.Check = nil
+                    v.RedzHub.Ban = nil
+                end
+            end
+        end
+    end)
+end
+
+local function enableSpeedHack()
+    print("🚀 Speed Hack enabled!")
+    coroutine.wrap(function()
+        while player:FindFirstChild("Humanoid") do
+            humanoid.WalkSpeed = 100
+            humanoid.JumpPower = 80
+            wait(0.5)
+        end
+    end)()
+end
+
+-- =============================================
+-- KHỞI CHẠY
+-- =============================================
+
+print("========================================")
+print("  🔴 BLOX FARM PRO - IMAGE MENU")
+print("  Version: 5.0 - Switch bằng ảnh ID")
+print("========================================")
+
+local menu, states = createImageMenu()
+
+-- F9
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.F9 then
+        if menu then
+            menu.Enabled = not menu.Enabled
+        end
+    end
+end)
+
+-- Auto Anti-Ban
+enableAntiBan()
+
+-- Anti AFK
+coroutine.wrap(function()
+    while wait(30) do
+        pcall(function()
+            local vu = game:GetService("VirtualUser")
+            if vu then
+                vu:CaptureController()
+                vu:ClickButton2(Vector2.new())
+            end
+        end)
+    end
+end)()
+
+print("✅ Menu đã tạo thành công!")
+print("📌 Nhấn F9 để ẩn/hiện")
+print("📌 Click vào dòng để bật/tắt (có ảnh switch)")
+print("========================================")
