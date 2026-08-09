@@ -1,0 +1,632 @@
+-- Roblox Script - AIM Circle with Adjustable Ring
+-- Auto adjust circle radius for aiming and target tracking
+-- Run on executor (Delta, Arceus X, Synapse, KRNL...)
+
+repeat wait() until game:IsLoaded()
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+local camera = workspace.CurrentCamera
+local mouse = player:GetMouse()
+local userInput = game:GetService("UserInputService")
+local runService = game:GetService("RunService")
+local virtualUser = game:GetService("VirtualUser")
+
+-- =============================================
+-- CONFIG
+-- =============================================
+
+AIM_CIRCLE = {
+    Enabled = true,
+    
+    CircleRadius = 150,
+    CircleColor = Color3.fromRGB(0, 255, 0),
+    CircleTransparency = 0.3,
+    CircleThickness = 2,
+    ShowCircle = true,
+    
+    AutoAim = true,
+    AimBone = "Head",
+    AimSmoothness = 0.2,
+    AimDistance = 300,
+    SilentAim = false,
+    LockTarget = true,
+    
+    TargetMode = "Closest",
+    ShowTarget = true,
+    TargetColor = Color3.fromRGB(255, 0, 0),
+    
+    AutoAdjust = true,
+    AdjustSpeed = 5,
+    MinRadius = 50,
+    MaxRadius = 300,
+    AdjustOnMiss = true,
+    
+    ShowPrediction = true,
+    ShowDistance = true,
+    ShowHealth = true,
+    ShowName = true,
+}
+
+-- =============================================
+-- CREATE CIRCLE
+-- =============================================
+
+local circle = nil
+local targetIndicator = nil
+local predictionDot = nil
+local distanceLabel = nil
+
+local function createCircle()
+    if circle then circle:Destroy() end
+    
+    circle = Instance.new("Part")
+    circle.Name = "AimCircle"
+    circle.Shape = Enum.PartType.Cylinder
+    circle.Size = Vector3.new(AIM_CIRCLE.CircleRadius * 2, 0.2, AIM_CIRCLE.CircleRadius * 2)
+    circle.BrickColor = BrickColor.new("Bright green")
+    circle.Material = Enum.Material.SmoothPlastic
+    circle.Transparency = AIM_CIRCLE.CircleTransparency
+    circle.Anchored = true
+    circle.CanCollide = false
+    circle.Parent = workspace
+    
+    local border = Instance.new("Part")
+    border.Name = "CircleBorder"
+    border.Shape = Enum.PartType.Cylinder
+    border.Size = Vector3.new(AIM_CIRCLE.CircleRadius * 2 + 0.5, 0.3, AIM_CIRCLE.CircleRadius * 2 + 0.5)
+    border.BrickColor = BrickColor.new("Bright green")
+    border.Material = Enum.Material.Neon
+    border.Transparency = 0.5
+    border.Anchored = true
+    border.CanCollide = false
+    border.Parent = circle
+    
+    local center = Instance.new("Part")
+    center.Name = "CenterDot"
+    center.Shape = Enum.PartType.Ball
+    center.Size = Vector3.new(2, 2, 2)
+    center.BrickColor = BrickColor.new("Bright green")
+    center.Material = Enum.Material.Neon
+    center.Transparency = 0.3
+    center.Anchored = true
+    center.CanCollide = false
+    center.Parent = circle
+    
+    for i = 0, 3 do
+        local line = Instance.new("Part")
+        line.Name = "Crosshair"
+        line.Shape = Enum.PartType.Block
+        line.Size = Vector3.new(0.2, 0.2, AIM_CIRCLE.CircleRadius * 0.3)
+        line.BrickColor = BrickColor.new("Bright green")
+        line.Material = Enum.Material.Neon
+        line.Transparency = 0.4
+        line.Anchored = true
+        line.CanCollide = false
+        line.CFrame = circle.CFrame * CFrame.Angles(0, math.rad(i * 90), 0) * CFrame.new(0, 0, -AIM_CIRCLE.CircleRadius * 0.5)
+        line.Parent = circle
+    end
+    
+    return circle
+end
+
+local function createTargetIndicator()
+    if targetIndicator then targetIndicator:Destroy() end
+    
+    targetIndicator = Instance.new("Part")
+    targetIndicator.Name = "TargetIndicator"
+    targetIndicator.Shape = Enum.PartType.Ball
+    targetIndicator.Size = Vector3.new(3, 3, 3)
+    targetIndicator.BrickColor = BrickColor.new("Bright red")
+    targetIndicator.Material = Enum.Material.Neon
+    targetIndicator.Transparency = 0.3
+    targetIndicator.Anchored = true
+    targetIndicator.CanCollide = false
+    targetIndicator.Parent = workspace
+    
+    local ring = Instance.new("Part")
+    ring.Name = "TargetRing"
+    ring.Shape = Enum.PartType.Cylinder
+    ring.Size = Vector3.new(4, 0.2, 4)
+    ring.BrickColor = BrickColor.new("Bright red")
+    ring.Material = Enum.Material.Neon
+    ring.Transparency = 0.5
+    ring.Anchored = true
+    ring.CanCollide = false
+    ring.Parent = targetIndicator
+    
+    return targetIndicator
+end
+
+local function createPredictionDot()
+    if predictionDot then predictionDot:Destroy() end
+    
+    predictionDot = Instance.new("Part")
+    predictionDot.Name = "PredictionDot"
+    predictionDot.Shape = Enum.PartType.Ball
+    predictionDot.Size = Vector3.new(1, 1, 1)
+    predictionDot.BrickColor = BrickColor.new("Bright yellow")
+    predictionDot.Material = Enum.Material.Neon
+    predictionDot.Transparency = 0.5
+    predictionDot.Anchored = true
+    predictionDot.CanCollide = false
+    predictionDot.Parent = workspace
+    
+    return predictionDot
+end
+
+-- =============================================
+-- UPDATE CIRCLE
+-- =============================================
+
+local function updateCircle()
+    if not circle then return end
+    
+    local camPos = camera.CFrame.Position
+    local lookDir = camera.CFrame.LookVector
+    local circlePos = camPos + lookDir * AIM_CIRCLE.CircleRadius
+    
+    circle.CFrame = CFrame.new(circlePos) * CFrame.Angles(math.rad(90), 0, 0)
+    
+    local border = circle:FindFirstChild("CircleBorder")
+    if border then
+        border.Size = Vector3.new(AIM_CIRCLE.CircleRadius * 2 + 0.5, 0.3, AIM_CIRCLE.CircleRadius * 2 + 0.5)
+        border.CFrame = circle.CFrame * CFrame.new(0, 0.2, 0)
+    end
+    
+    local center = circle:FindFirstChild("CenterDot")
+    if center then
+        center.Position = circlePos
+    end
+    
+    for _, line in pairs(circle:GetChildren()) do
+        if line.Name == "Crosshair" then
+            line.Size = Vector3.new(0.2, 0.2, AIM_CIRCLE.CircleRadius * 0.3)
+        end
+    end
+    
+    circle.Transparency = AIM_CIRCLE.ShowCircle and AIM_CIRCLE.CircleTransparency or 1
+    if border then border.Transparency = AIM_CIRCLE.ShowCircle and 0.5 or 1 end
+    if center then center.Transparency = AIM_CIRCLE.ShowCircle and 0.3 or 1 end
+end
+
+-- =============================================
+-- FIND TARGETS
+-- =============================================
+
+local function findTargets()
+    local targets = {}
+    local rootPos = rootPart.Position
+    local camPos = camera.CFrame.Position
+    local lookDir = camera.CFrame.LookVector
+    
+    for _, v in pairs(game.Players:GetPlayers()) do
+        if v ~= player then
+            local char = v.Character
+            if char and char:FindFirstChild("Humanoid") and char.Humanoid.Health > 0 then
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    local dist = (rootPos - hrp.Position).Magnitude
+                    if dist < AIM_CIRCLE.AimDistance then
+                        local targetDir = (hrp.Position - camPos).Unit
+                        local angle = math.acos(lookDir:Dot(targetDir))
+                        local isInCircle = angle <= math.rad(AIM_CIRCLE.CircleRadius / 10)
+                        
+                        table.insert(targets, {
+                            Player = v,
+                            Character = char,
+                            Humanoid = char.Humanoid,
+                            RootPart = hrp,
+                            Distance = dist,
+                            Health = char.Humanoid.Health,
+                            IsInCircle = isInCircle,
+                            Position = hrp.Position,
+                            Velocity = hrp.Velocity or Vector3.new(0, 0, 0),
+                        })
+                    end
+                end
+            end
+        end
+    end
+    
+    return targets
+end
+
+local function getBestTarget()
+    local targets = findTargets()
+    if #targets == 0 then return nil end
+    
+    if AIM_CIRCLE.TargetMode == "Circle" then
+        local circleTargets = {}
+        for _, t in pairs(targets) do
+            if t.IsInCircle then
+                table.insert(circleTargets, t)
+            end
+        end
+        if #circleTargets > 0 then
+            targets = circleTargets
+        end
+    end
+    
+    if AIM_CIRCLE.TargetMode == "Closest" or AIM_CIRCLE.TargetMode == "Circle" then
+        table.sort(targets, function(a, b) return a.Distance < b.Distance end)
+        return targets[1]
+    end
+    
+    if AIM_CIRCLE.TargetMode == "LowestHP" then
+        table.sort(targets, function(a, b) return a.Health < b.Health end)
+        return targets[1]
+    end
+    
+    if AIM_CIRCLE.TargetMode == "Mouse" then
+        local mousePos = mouse.Hit.Position
+        table.sort(targets, function(a, b)
+            local da = (a.Position - mousePos).Magnitude
+            local db = (b.Position - mousePos).Magnitude
+            return da < db
+        end)
+        return targets[1]
+    end
+    
+    return targets[1]
+end
+
+-- =============================================
+-- GET AIM POSITION
+-- =============================================
+
+local function getAimPosition(target)
+    if not target then return nil end
+    
+    local bone = target.Character:FindFirstChild(AIM_CIRCLE.AimBone)
+    if not bone then
+        bone = target.RootPart
+    end
+    
+    if bone then
+        local velocity = target.Velocity or Vector3.new(0, 0, 0)
+        local predictionTime = target.Distance / 300
+        local predictedPos = bone.Position + velocity * predictionTime
+        
+        if AIM_CIRCLE.ShowPrediction and predictionDot then
+            predictionDot.Position = predictedPos
+            predictionDot.Transparency = 0.3
+        end
+        
+        return predictedPos
+    end
+    
+    return target.Position
+end
+
+-- =============================================
+-- AUTO AIM
+-- =============================================
+
+local currentTarget = nil
+local lockedTarget = nil
+
+local function autoAim()
+    if not AIM_CIRCLE.AutoAim or not AIM_CIRCLE.Enabled then return end
+    
+    local target = nil
+    
+    if AIM_CIRCLE.LockTarget and lockedTarget then
+        if lockedTarget.Character and lockedTarget.Character:FindFirstChild("Humanoid") and 
+           lockedTarget.Character.Humanoid.Health > 0 then
+            local dist = (rootPart.Position - lockedTarget.Character.HumanoidRootPart.Position).Magnitude
+            if dist < AIM_CIRCLE.AimDistance then
+                target = {
+                    Player = lockedTarget,
+                    Character = lockedTarget.Character,
+                    Humanoid = lockedTarget.Character.Humanoid,
+                    RootPart = lockedTarget.Character.HumanoidRootPart,
+                    Distance = dist,
+                    Health = lockedTarget.Character.Humanoid.Health,
+                    Position = lockedTarget.Character.HumanoidRootPart.Position,
+                    Velocity = lockedTarget.Character.HumanoidRootPart.Velocity or Vector3.new(0, 0, 0),
+                }
+            end
+        end
+    end
+    
+    if not target then
+        target = getBestTarget()
+        if target then
+            lockedTarget = target.Player
+        else
+            lockedTarget = nil
+        end
+    end
+    
+    currentTarget = target
+    
+    if not target then
+        if targetIndicator then targetIndicator.Transparency = 1 end
+        if predictionDot then predictionDot.Transparency = 1 end
+        return
+    end
+    
+    local aimPos = getAimPosition(target)
+    if not aimPos then return end
+    
+    if AIM_CIRCLE.SilentAim then
+        return aimPos
+    end
+    
+    local camPos = camera.CFrame.Position
+    local lookAt = CFrame.new(camPos, aimPos)
+    camera.CFrame = camera.CFrame:Lerp(lookAt, AIM_CIRCLE.AimSmoothness)
+    
+    if targetIndicator and AIM_CIRCLE.ShowTarget then
+        targetIndicator.Position = aimPos
+        targetIndicator.Transparency = 0.3
+    end
+end
+
+-- =============================================
+-- AUTO ADJUST CIRCLE
+-- =============================================
+
+local function autoAdjustCircle()
+    if not AIM_CIRCLE.AutoAdjust or not AIM_CIRCLE.Enabled then return end
+    
+    local target = currentTarget
+    if not target then return end
+    
+    local dist = target.Distance
+    local idealRadius = math.clamp(dist / 2, AIM_CIRCLE.MinRadius, AIM_CIRCLE.MaxRadius)
+    
+    local currentRadius = AIM_CIRCLE.CircleRadius
+    local newRadius = currentRadius + (idealRadius - currentRadius) / AIM_CIRCLE.AdjustSpeed
+    
+    AIM_CIRCLE.CircleRadius = math.clamp(newRadius, AIM_CIRCLE.MinRadius, AIM_CIRCLE.MaxRadius)
+    
+    if circle then
+        circle.Size = Vector3.new(AIM_CIRCLE.CircleRadius * 2, 0.2, AIM_CIRCLE.CircleRadius * 2)
+    end
+end
+
+-- =============================================
+-- SHOOT
+-- =============================================
+
+local function autoShoot()
+    if not AIM_CIRCLE.AutoShoot or not AIM_CIRCLE.Enabled then return end
+    if not currentTarget then return end
+    
+    local camPos = camera.CFrame.Position
+    local targetPos = getAimPosition(currentTarget)
+    if targetPos then
+        local dir = (targetPos - camPos).Unit
+        local angle = math.acos(camera.CFrame.LookVector:Dot(dir))
+        if angle <= math.rad(AIM_CIRCLE.CircleRadius / 10) then
+            mouse1click()
+        end
+    end
+end
+
+-- =============================================
+-- CREATE UI
+-- =============================================
+
+local function createUI()
+    if player.PlayerGui:FindFirstChild("AimCircleUI") then
+        player.PlayerGui.AimCircleUI:Destroy()
+    end
+    
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "AimCircleUI"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 320, 0, 480)
+    frame.Position = UDim2.new(0.5, -160, 0.5, -240)
+    frame.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
+    frame.BackgroundTransparency = 0.05
+    frame.Active = true
+    frame.Draggable = true
+    frame.Parent = screenGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 15)
+    corner.Parent = frame
+    
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 40)
+    title.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+    title.BackgroundTransparency = 0.2
+    title.Text = "AIM CIRCLE PRO"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextScaled = true
+    title.Font = Enum.Font.Bold
+    title.Parent = frame
+    
+    local status = Instance.new("TextLabel")
+    status.Size = UDim2.new(1, 0, 0, 20)
+    status.Position = UDim2.new(0, 0, 0, 40)
+    status.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+    status.BackgroundTransparency = 0.2
+    status.Text = "F4: TOGGLE | F5: RESET"
+    status.TextColor3 = Color3.fromRGB(0, 255, 0)
+    status.TextScaled = true
+    status.Parent = frame
+    
+    local radiusLabel = Instance.new("TextLabel")
+    radiusLabel.Size = UDim2.new(0.4, 0, 0, 25)
+    radiusLabel.Position = UDim2.new(0.05, 0, 0.15, 0)
+    radiusLabel.BackgroundTransparency = 1
+    radiusLabel.Text = "Radius: " .. AIM_CIRCLE.CircleRadius
+    radiusLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
+    radiusLabel.TextScaled = true
+    radiusLabel.Parent = frame
+    
+    local radiusSlider = Instance.new("TextButton")
+    radiusSlider.Size = UDim2.new(0.4, 0, 0, 20)
+    radiusSlider.Position = UDim2.new(0.5, 0, 0.16, 0)
+    radiusSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 100)
+    radiusSlider.Text = "───●───"
+    radiusSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+    radiusSlider.TextScaled = true
+    radiusSlider.Parent = frame
+    
+    radiusSlider.MouseButton1Down:Connect(function()
+        local startX = mouse.X
+        local startRadius = AIM_CIRCLE.CircleRadius
+        
+        local connection
+        connection = mouse.Move:Connect(function()
+            local diff = (mouse.X - startX) / 2
+            local newRadius = math.clamp(startRadius + diff, AIM_CIRCLE.MinRadius, AIM_CIRCLE.MaxRadius)
+            AIM_CIRCLE.CircleRadius = newRadius
+            radiusLabel.Text = "Radius: " .. math.round(newRadius)
+            if circle then
+                circle.Size = Vector3.new(newRadius * 2, 0.2, newRadius * 2)
+            end
+        end)
+        
+        mouse.ButtonUp:Connect(function()
+            connection:Disconnect()
+        end)
+    end)
+    
+    local toggles = {
+        {name = "Auto Aim", key = "AutoAim"},
+        {name = "Auto Shoot", key = "AutoShoot"},
+        {name = "Auto Adjust", key = "AutoAdjust"},
+        {name = "Lock Target", key = "LockTarget"},
+        {name = "Silent Aim", key = "SilentAim"},
+        {name = "Show Circle", key = "ShowCircle"},
+        {name = "Show Target", key = "ShowTarget"},
+        {name = "Show Prediction", key = "ShowPrediction"},
+    }
+    
+    local yPos = 0.22
+    for _, toggle in pairs(toggles) do
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(0.9, 0, 0, 30)
+        btn.Position = UDim2.new(0.05, 0, yPos, 0)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+        btn.BackgroundTransparency = 0.2
+        btn.Text = toggle.name .. " [ON]"
+        btn.TextColor3 = Color3.fromRGB(200, 200, 255)
+        btn.TextScaled = true
+        btn.Parent = frame
+        
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 5)
+        btnCorner.Parent = btn
+        
+        local state = true
+        btn.MouseButton1Click:Connect(function()
+            state = not state
+            AIM_CIRCLE[toggle.key] = state
+            btn.Text = toggle.name .. " [" .. (state and "ON" or "OFF") .. "]"
+            btn.BackgroundColor3 = state and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(60, 30, 30)
+            btn.TextColor3 = state and Color3.fromRGB(100, 255, 100) or Color3.fromRGB(255, 100, 100)
+        end)
+        
+        yPos = yPos + 0.085
+    end
+    
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0.3, 0, 0, 30)
+    closeBtn.Position = UDim2.new(0.35, 0, 0, 0.90)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(150, 30, 30)
+    closeBtn.Text = "CLOSE"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.TextScaled = true
+    closeBtn.Parent = frame
+    
+    closeBtn.MouseButton1Click:Connect(function()
+        screenGui.Enabled = false
+    end)
+end
+
+-- =============================================
+-- MAIN LOOP
+-- =============================================
+
+coroutine.wrap(function()
+    while AIM_CIRCLE.Enabled and player:FindFirstChild("Humanoid") do
+        updateCircle()
+        autoAim()
+        autoAdjustCircle()
+        autoShoot()
+        wait(0.03)
+    end
+end)()
+
+-- =============================================
+-- KEYBINDS
+-- =============================================
+
+userInput.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.F4 then
+        AIM_CIRCLE.Enabled = not AIM_CIRCLE.Enabled
+        print("AIM CIRCLE: " .. (AIM_CIRCLE.Enabled and "[ON]" or "[OFF]"))
+    end
+    
+    if input.KeyCode == Enum.KeyCode.F5 then
+        AIM_CIRCLE.CircleRadius = 150
+        if circle then
+            circle.Size = Vector3.new(300, 0.2, 300)
+        end
+        lockedTarget = nil
+        print("Reset circle!")
+    end
+    
+    if input.KeyCode == Enum.KeyCode.F then
+        if currentTarget then
+            lockedTarget = currentTarget.Player
+            print("Locked target: " .. (lockedTarget and lockedTarget.Name or "None"))
+        end
+    end
+end)
+
+-- =============================================
+-- CLEANUP
+-- =============================================
+
+player.CharacterAdded:Connect(function()
+    if circle then circle:Destroy() end
+    if targetIndicator then targetIndicator:Destroy() end
+    if predictionDot then predictionDot:Destroy() end
+    circle = nil
+    targetIndicator = nil
+    predictionDot = nil
+    createCircle()
+    createTargetIndicator()
+    createPredictionDot()
+end)
+
+-- =============================================
+-- START
+-- =============================================
+
+print("========================================")
+print("  AIM CIRCLE PRO")
+print("  Version: 2.0")
+print("========================================")
+print("  Auto Aim with circle")
+print("  Auto adjust radius")
+print("  Lock target")
+print("  Silent Aim")
+print("  Prediction")
+print("========================================")
+print("  F4: Toggle")
+print("  F5: Reset circle")
+print("  F: Lock target")
+print("========================================")
+
+createCircle()
+createTargetIndicator()
+createPredictionDot()
+createUI()
+
+print("[+] AIM CIRCLE PRO started!")
