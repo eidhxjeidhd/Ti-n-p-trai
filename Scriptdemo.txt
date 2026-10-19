@@ -2,15 +2,15 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 
        local Window = MakeWindow({
          Hub = {
-         Title = "Tiến Roblox",
+         Title = "Gà gaming",
          Animation = "Youtube: gà gaming"
          },
         Key = {
         KeySystem = false,
-        Title = "Key System",
+        Title = "get key",
         Description = "",
         KeyLink = "",
-        Keys = {"1234"},
+        Keys = {""},
         Notifi = {
         Notifications = true,
         CorrectKey = "Running the Script...",
@@ -21,7 +21,7 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
   })
 
        MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=125111550968154",
+       Image = "http://www.roblox.com/asset/?id=105960850525996",
        Size = {30, 30},
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
@@ -32,108 +32,128 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 ------ Tab
      local Tab1o = MakeTab({Name = "Script farm"})
      local Tab2o = MakeTab({Name = "Script kaitun"})
-     local Tab3o = MakeTab({Name = "Script Hop"})
-     local Tab4o = MakeTab({Name = "Script các game khác"})
 ------- BUTTON
     
     AddButton(Tab1o, {
-     Name = "gravity Hub",
+     Name = "Banana",
     Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Banana/refs/heads/main/Banana/script.luau"))()
   end
   })
   
   AddButton(Tab1o, {
-     Name = "ChicKen Hub",
+     Name = "Garnet Hub",
     Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/DevHub-roblox/script-Chicken-Hub/refs/heads/main/game/BloxFruit/main.lua"))()
-  end
-  })
-  
-  AddButton(Tab1o, {
-     Name = "Meo x Hub",
-    Callback = function()
-	  loadstring(game:HttpGet("https://raw.githubusercontent.com/VanHoangIOS/MeoXHub/refs/heads/main/Main.lua"))()
-  end
-  })
-  
-  AddButton(Tab3o, {
-     Name = "Teddy Hub",
-    Callback = function()
-	  repeat task.wait() until game:IsLoaded() and game:GetService("Players") and game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TEDDYHUB-FREEMIUM"))()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Redz/refs/heads/main/Garnet/script.luau"))()
   end
   })
   
   AddButton(Tab2o, {
-     Name = "Gravity Hub Kaitun",
+     Name = "Bacon hub",
     Callback = function()
-	  repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Kaitun.lua"))()
-  end
-  })
-  
-  AddButton(Tab2o, {
-     Name = "Hinishi Hub Kaitun",
-    Callback = function()
-	  _G.Hinishi_Hub_Kaitun_Blox_Fruits = {
-    ["Misc"] = {
-        ["Hop If Admin Join"] = true,
-        ["Unlock Dough Chip"] = true,
-        ["Auto Aura RGB"] = true,
-        ["Auto Pull Lever"] = true,
-        ["Big Hitbox"] = true
-    },
-    ["Upgrade Race"] = {
-        ["Race"] = {"Human","Fishman","Skypiea","Mink"},
-        ["Upgrade Race V3"] = true,
-        ["Lock Race Select"] = true
-    },
-    ["Fighting Styles"] = {
-        ["Melee V2"] = true,
-        ["Godhuman"] = true
-    },
-    ["Swords"] = {
-        ["True Triple Katana"] = true,
-        ["Cursed Dual Katana"] = true,
-        ["Shark Anchor"] = true,
-        ["Saber"] = true,
-        ["Midnight Blade"] = true,
-        ["Shisui"] = true,
-        ["Saddi"] = true,
-        ["Wando"] = true,
-        ["Yama"] = true,
-        ["Koko"] = false,
-        ["Rengoku"] = true,
-        ["Canvander"] = true,
-        ["Buddy Sword"] = true,
-        ["Twin Hooks"] = true,
-        ["Spikey Trident"] = true,
-        ["Hallow Scryte"] = true,
-        ["Dark Dagger"] = true,
-        ["Tushita"] = true
-    },
-    ["Guns"] = {
-        ["Soul Guitar"] = true,
-        ["Kabucha"] = true,
-        ["Acidum Rifle"] = true,
-        ["Serpent Bow"] = true
-    },
-    ["BloxFruits"] = {
-        ["Sub Fruits"] = {"Rocket-Rocket","Spin-Spin"},
-        ["Safe Fruits"] = {"Dragon-Dragon","T-Rex-T-Rex","Kitsune-Kitsune"}
-    },
-    ["Mastery"] = {
-        ["Blox Fruit"] = true,
-        ["Fighting Styles"] = true,
-        ["Swords"] = true
-    },
-    ["Settings"] = {
-        ["Tween Speed"] = 300,
-        ["Fix Lag"] = true,
-        ["Safe Mode"] = false
-    }
+	  getgenv().SettingConfig = {
+ NoBypassItems = {
+ "God's Chalice",
+ "Red Key",
+ "Apple",
+ "Banana",
+ "Pineapple",
+ "Flower 1",
+ "Flower 2",
+ "Flower 3",
+ "Sweet Chalice",
+ "Fist of Darkness",
+ "Holy Torch",
+ "Hidden Key",
+ "Library Key",
+ "Water Key",
+ "Fire Essence",
+ "Special Microchip",
+ },
+ Setting = {
+ UI = true,
+ UISize = 0.9,
+ Team = "Marines",
+ FPS = 60,
+ TweenSpeed = 150,
+ BringRange = 300,
+ BringCount = 4,
+ BypassTP = true,
+ BypassDist = 700,
+ MaxHops = 4,
+ },
+ SettingFarm = {
+ GOD = true,
+ Godhuman = true,
+ Saber = true,
+ CDK = false,
+ SkullGuitar = false,
+ RaceV3 = false,
+ SmartFarm = true,
+ SmartFruit = true,
+ AutoChestBeforeReset = true,
+ AutoDarkbeard = true,
+ },
 }
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-Hinishi/Hinishi-Hub/refs/heads/main/Kaitun"))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BaconHub/hack/refs/heads/main/KaitunBF.lua"))()
+Koko hub
+loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Banana/refs/heads/main/Koko/script.luau"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "EZ Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Fluent/refs/heads/main/EZ/script.luau"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Basic Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Fluent/refs/heads/main/Basic/loader.luau"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Flen Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Fluent/refs/heads/main/Flen/loader.luau"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "Ruby Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Redz/refs/heads/main/Ruby/loader.luau"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "vihieuhub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/hieuhieu989/script-vihieu-hub/refs/heads/main/vihiwuhubv2"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "TeddyHub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/teddyhubdev/diepvy/refs/heads/main/TeddyHub-kaitunBF.lua"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "redz Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Redz/refs/heads/main/Redz/loader.luau"))()
+  end
+  })
+  
+  AddButton(Tab1o, {
+     Name = "ARC Hub",
+    Callback = function()
+	  loadstring(game:HttpGet("https://luaegis.net/scripts/v4/loaders/f4c0252a-28e4-487c-9cbb-0f45aa6aa629.lua"))()
   end
   })
